@@ -1,0 +1,28 @@
+{
+  "_comment": "Example diagnosis.json — verification diagnosis with all 6 mandatory dimensions",
+  "validation": {
+    "status": "passed",
+    "solution_available": true,
+    "objective_recomputed": true,
+    "constraint_check_performed": true,
+    "coverage": "full"
+  },
+  "failure_type": "none",
+  "attribution": {
+    "owner": "none",
+    "confidence": 1.0,
+    "alternatives": []
+  },
+  "evidence": [
+    "problem_class=MILP",
+    "solver_status=optimal",
+    "objective_value=5230.0",
+    "objective_recomputed=5230.0 (match)",
+    "all 10 constraints satisfied",
+    "all variable domains valid",
+    "no Big-M risks detected",
+    "no scale imbalance detected"
+  ],
+  "next_action": "proceed_to_reporter",
+  "notes": []
+}

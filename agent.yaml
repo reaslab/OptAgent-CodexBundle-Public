@@ -1,0 +1,100 @@
+schemaVersion: 1
+
+agent:
+  id: reaslab-optagent
+  name: Reaslab OptAgent
+  description: Optimization modeling workflow with specialist roles for formulation, solving, verification, and reporting.
+
+roles:
+  - id: opt-formulator
+    name: Opt Formulator
+    description: Optimization formulation specialist for data semantics, variables, constraints, objectives, and assumptions.
+    model:
+      inheritance: root
+      capabilityPolicy: warn
+  - id: opt-solver
+    name: Opt Solver
+    description: Solver engineering specialist for backend selection, reproducible implementation, and formal solve evidence.
+    model:
+      inheritance: root
+      capabilityPolicy: warn
+  - id: opt-verifier
+    name: Opt Verifier
+    description: Independent verification specialist for feasibility, objective recomputation, reproducibility, and diagnosis.
+    model:
+      inheritance: root
+      capabilityPolicy: warn
+  - id: opt-reporter
+    name: Opt Reporter
+    description: Evidence-grounded reporting specialist for the selected LaTeX or Markdown deliverable contract.
+    model:
+      inheritance: root
+      capabilityPolicy: warn
+
+commands: []
+
+configSchema:
+  - key: language
+    name: Language
+    description: Controls the user-visible response and report language.
+    control: select
+    valueType: string
+    required: true
+    default: auto
+    options:
+      - value: auto
+        name: Auto
+      - value: zh-CN
+        name: 中文
+      - value: en
+        name: English
+
+  - key: coordinator-user-requirements
+    name: Coordinator requirements
+    description: Optional user preferences and constraints supplied only to the coordinator.
+    control: text
+    valueType: string
+    required: false
+    default: ""
+    constraints:
+      maxLength: 4000
+
+  - key: formulator-user-requirements
+    name: Formulator requirements
+    description: Optional user preferences and constraints supplied only to the formulation role.
+    control: text
+    valueType: string
+    required: false
+    default: ""
+    constraints:
+      maxLength: 4000
+
+  - key: solver-user-requirements
+    name: Solver requirements
+    description: Optional user preferences and constraints supplied only to the solver role.
+    control: text
+    valueType: string
+    required: false
+    default: ""
+    constraints:
+      maxLength: 4000
+
+  - key: verifier-user-requirements
+    name: Verifier requirements
+    description: Optional user preferences and constraints supplied only to the verification role.
+    control: text
+    valueType: string
+    required: false
+    default: ""
+    constraints:
+      maxLength: 4000
+
+  - key: reporter-user-requirements
+    name: Reporter requirements
+    description: Optional user preferences and constraints supplied only to the reporting role.
+    control: text
+    valueType: string
+    required: false
+    default: ""
+    constraints:
+      maxLength: 4000

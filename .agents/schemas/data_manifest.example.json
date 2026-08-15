@@ -1,0 +1,95 @@
+{
+  "_comment": "Example data_manifest.json for .optagent/cases/{case_id}/data/data_manifest.json",
+  "version": 1,
+  "case_id": "case_001_base",
+  "data_objects": {
+    "sources": {
+      "role": "parameter_table",
+      "source_type": "csv",
+      "source_path": ".optagent/cases/case_001_base/data/objects/sources.csv",
+      "key_fields": ["source_id"],
+      "value_fields": {
+        "fixed_cost": {
+          "field": "fixed_cost",
+          "type": "number",
+          "unit": "USD"
+        }
+      },
+      "metadata": {
+        "kind": "user_input",
+        "materialized": true
+      },
+      "meaning": "Supply nodes and fixed activation costs",
+      "validation_notes": []
+    },
+    "destinations": {
+      "role": "set",
+      "source_type": "csv",
+      "source_path": ".optagent/cases/case_001_base/data/objects/destinations.csv",
+      "key_fields": ["dest_id"],
+      "value_fields": {},
+      "metadata": {
+        "kind": "user_input",
+        "materialized": true
+      },
+      "meaning": "Demand destination nodes",
+      "validation_notes": []
+    },
+    "products": {
+      "role": "set",
+      "source_type": "csv",
+      "source_path": ".optagent/cases/case_001_base/data/objects/products.csv",
+      "key_fields": ["product_id"],
+      "value_fields": {},
+      "metadata": {
+        "kind": "user_input",
+        "materialized": true
+      },
+      "meaning": "Large product index used by range/count set definitions",
+      "validation_notes": []
+    },
+    "transport_costs": {
+      "role": "parameter_table",
+      "source_type": "csv",
+      "source_path": ".optagent/cases/case_001_base/data/objects/transport_costs.csv",
+      "key_fields": ["source_id", "dest_id"],
+      "value_fields": {
+        "cost_per_unit": {
+          "field": "cost_per_unit",
+          "type": "number",
+          "unit": "USD/unit"
+        }
+      },
+      "metadata": {
+        "kind": "user_input",
+        "materialized": true
+      },
+      "meaning": "Unit transportation cost by source and destination",
+      "validation_notes": []
+    },
+    "distance_matrix": {
+      "role": "dense_parameter",
+      "source_type": "json",
+      "source_path": ".optagent/cases/case_001_base/data/objects/distance_matrix.json",
+      "key_fields": ["source_id", "dest_id"],
+      "value_fields": {
+        "distance_km": {
+          "field": "distance_km",
+          "type": "number",
+          "unit": "km"
+        }
+      },
+      "metadata": {
+        "kind": "derived",
+        "materialized": true,
+        "derived_from": ["sources", "destinations"],
+        "preprocessing": "Haversine formula from lat/lon coordinates"
+      },
+      "meaning": "Distance between source and destination nodes",
+      "validation_notes": []
+    }
+  },
+  "relationships": [],
+  "assumptions": [],
+  "ambiguities": []
+}

@@ -1,0 +1,32 @@
+{
+  "_comment": "Example solution.json — normalized solver output with all 14 required fields",
+  "backend": "gurobipy",
+  "status": "optimal",
+  "raw_status": "2",
+  "termination_condition": "optimal",
+  "objective_value": 5230.0,
+  "best_bound": 5230.0,
+  "solve_time_sec": 1.47,
+  "mip_gap": 0.0,
+  "has_incumbent": true,
+  "solution_count": 1,
+  "solver_available": true,
+  "variables": {
+    "x_s1_d1": 80.0,
+    "x_s1_d2": 20.0,
+    "x_s2_d2": 70.0,
+    "x_s2_d3": 80.0,
+    "x_s3_d3": 30.0,
+    "x_s3_d4": 70.0,
+    "y_s1": 1.0,
+    "y_s2": 1.0,
+    "y_s3": 1.0
+  },
+  "metrics": {
+    "num_variables": 15,
+    "num_constraints": 10,
+    "num_integer_vars": 3,
+    "last_phase": "completed"
+  },
+  "notes": []
+}

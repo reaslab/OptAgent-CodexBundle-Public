@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "case_id": "case_001_base",
+  "approval_mode": "auto_approve",
+  "entries": [
+    {
+      "id": "decision_001",
+      "recorded_at": "2026-07-11T00:00:00Z",
+      "stage": "formulating",
+      "category": "ambiguity_resolution",
+      "status": "active",
+      "actor": "coordinator",
+      "trigger": "The problem did not specify whether stage totals must be conserved.",
+      "decision": "Use independent stage allocations.",
+      "rationale": "This interpretation adds the least unsupported coupling and remains testable.",
+      "alternatives_considered": [
+        "Conserve a common flow across all stages"
+      ],
+      "assumptions": [
+        "Each stage allocation represents independently processed work"
+      ],
+      "impact": {
+        "scope": ["formulation", "solver", "paper"],
+        "risk": "The result is conditional on the independent-allocation interpretation.",
+        "user_visible": true
+      },
+      "evidence_refs": [
+        "formulation/opt_spec.json#/modeling_decisions/0"
+      ],
+      "affected_artifacts": [
+        "formulation/opt_spec.json"
+      ],
+      "reproducibility": null,
+      "supersedes": null
+    },
+    {
+      "id": "decision_002",
+      "recorded_at": "2026-07-11T00:01:00Z",
+      "stage": "formulating",
+      "category": "data_generation",
+      "status": "active",
+      "actor": "coordinator",
+      "trigger": "No demand observations were supplied, but demand is required for execution.",
+      "decision": "Generate a bounded synthetic demand scenario.",
+      "rationale": "A deterministic synthetic scenario completes the requested workflow without pretending that observations exist.",
+      "alternatives_considered": [
+        "Stop without solving",
+        "Assume zero demand"
+      ],
+      "assumptions": [
+        "The generated scenario is illustrative rather than empirical"
+      ],
+      "impact": {
+        "scope": ["data", "solution", "paper"],
+        "risk": "Recommendations are conditional on synthetic demand and are not production estimates.",
+        "user_visible": true
+      },
+      "evidence_refs": [
+        "data/data_manifest.json#/data_objects/demand"
+      ],
+      "affected_artifacts": [
+        "data/data_manifest.json",
+        "data/objects/demand.csv"
+      ],
+      "reproducibility": {
+        "method": "Uniform integer sampling over the documented domain bounds",
+        "randomness_used": true,
+        "seed": 20260711
+      },
+      "supersedes": null
+    },
+    {
+      "id": "decision_003",
+      "recorded_at": "2026-07-11T00:02:00Z",
+      "stage": "verifying",
+      "category": "ambiguity_resolution",
+      "status": "active",
+      "actor": "coordinator",
+      "trigger": "Verification evidence established a conservation relationship between stages.",
+      "decision": "Conserve common flow across all stages.",
+      "rationale": "The later evidence is stronger than the initial least-assumptive interpretation.",
+      "alternatives_considered": [
+        "Retain independent stage allocations"
+      ],
+      "assumptions": [],
+      "impact": {
+        "scope": ["formulation", "solver", "verification", "paper"],
+        "risk": "The formulation and solution require targeted rework.",
+        "user_visible": true
+      },
+      "evidence_refs": [
+        "verification/diagnosis.json#/evidence/0"
+      ],
+      "affected_artifacts": [
+        "formulation/opt_spec.json",
+        "solver/solution.json"
+      ],
+      "reproducibility": null,
+      "supersedes": "decision_001"
+    }
+  ]
+}

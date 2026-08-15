@@ -1,0 +1,190 @@
+{
+  "_comment": "Example opt_spec.json — dual-mode parameters: inline for small data, data_ref for large data",
+  "problem_class": "MILP",
+  "family": "facility_location",
+  "sense": "minimize",
+  "sets": {
+    "I": {
+      "description": "Set of supply nodes (small — inline elements)",
+      "elements": ["s1", "s2", "s3"]
+    },
+    "J": {
+      "description": "Set of demand nodes (small — inline elements)",
+      "elements": ["d1", "d2", "d3", "d4"]
+    },
+    "K": {
+      "description": "Set of product types (large — range notation)",
+      "type": "range",
+      "start": 0,
+      "end": 999,
+      "size": 1000,
+      "source_object": "products",
+      "source_field": "product_id"
+    }
+  },
+  "parameters": {
+    "supply": {
+      "description": "Supply capacity at each source (small — inline value)",
+      "value": {"s1": 100, "s2": 150, "s3": 200},
+      "unit": "units"
+    },
+    "demand": {
+      "description": "Demand at each destination (small — inline value)",
+      "value": {"d1": 80, "d2": 90, "d3": 110, "d4": 70},
+      "unit": "units"
+    },
+    "budget": {
+      "description": "Total budget limit (scalar — inline value)",
+      "value": 50000,
+      "unit": "USD"
+    },
+    "cost": {
+      "description": "Unit transport cost per source-destination pair (large — from raw data via manifest)",
+      "shape": [3, 4],
+      "data_ref": {
+        "object": "transport_costs",
+        "key_fields": ["source_id", "dest_id"],
+        "value_field": "cost_per_unit"
+      },
+      "unit": "USD/unit"
+    },
+    "fixed_cost": {
+      "description": "Fixed cost of activating each source (large — from raw data via manifest)",
+      "shape": [3],
+      "data_ref": {
+        "object": "sources",
+        "key_fields": ["source_id"],
+        "value_field": "fixed_cost"
+      },
+      "unit": "USD"
+    },
+    "distance_matrix": {
+      "description": "Distance between sources and destinations (preprocessed — computed from coordinates)",
+      "shape": [3, 4],
+      "data_ref": {
+        "object": "distance_matrix",
+        "format": "dict_of_dicts",
+        "derived_from": ["sources", "destinations"],
+        "preprocessing": "Haversine formula from lat/lon coordinates"
+      },
+      "unit": "km"
+    }
+  },
+  "decision_variables": [
+    {
+      "name": "x",
+      "description": "Amount shipped from source i to destination j",
+      "type": "continuous",
+      "lb": 0,
+      "ub": null,
+      "indexing": "for each i in I, j in J"
+    },
+    {
+      "name": "y",
+      "description": "Whether source i is used (binary)",
+      "type": "binary",
+      "lb": 0,
+      "ub": 1,
+      "indexing": "for each i in I"
+    }
+  ],
+  "variable_groups": [
+    {
+      "name": "x",
+      "description": "Shipping amounts",
+      "index_sets": ["I", "J"],
+      "type": "continuous",
+      "lb": 0,
+      "ub": null
+    },
+    {
+      "name": "y",
+      "description": "Source activation flags",
+      "index_sets": ["I"],
+      "type": "binary",
+      "lb": 0,
+      "ub": 1
+    }
+  ],
+  "objective": {
+    "name": "total_cost",
+    "description": "Minimize total transportation + fixed costs",
+    "expression": "sum(cost[i][j] * x[i][j] for i in I for j in J) + sum(fixed_cost[i] * y[i] for i in I)",
+    "constant": 0,
+    "linear_terms": [],
+    "indexed_terms": [
+      {
+        "index_sets": ["I", "J"],
+        "index_aliases": ["i", "j"],
+        "variable_template": "x_{i}_{j}",
+        "coefficient": "cost[i][j]"
+      }
+    ],
+    "term_templates": [
+      {
+        "set_refs": ["I"],
+        "indices": ["i"],
+        "variable_template": "y_{i}",
+        "coefficient": "fixed_cost[i]"
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "name": "total_budget",
+      "description": "Total cost must not exceed budget",
+      "expression": "total_cost <= budget",
+      "checker": {
+        "type": "linear",
+        "terms": [{"variable": "total_cost", "coefficient": 1.0}],
+        "sense": "<=",
+        "rhs": 50000
+      }
+    }
+  ],
+  "indexed_constraints": [
+    {
+      "name": "supply_capacity",
+      "description": "Total shipment from source i cannot exceed supply",
+      "index_sets": ["I"],
+      "index_aliases": ["i"],
+      "expression_template": "sum(x[i][j] for j in J) <= supply[i] * y[i]",
+      "checker_template": {
+        "type": "linear",
+        "terms_template": [
+          {"variable_template": "x_{i}_{j}", "coefficient": 1.0, "sum_over": ["J"]},
+          {"variable_template": "y_{i}", "coefficient": "-supply[i]"}
+        ],
+        "sense": "<=",
+        "rhs_template": 0
+      }
+    },
+    {
+      "name": "demand_satisfaction",
+      "description": "Demand at destination j must be met",
+      "index_sets": ["J"],
+      "index_aliases": ["j"],
+      "expression_template": "sum(x[i][j] for i in I) >= demand[j]",
+      "checker_template": {
+        "type": "linear",
+        "terms_template": [
+          {"variable_template": "x_{i}_{j}", "coefficient": 1.0, "sum_over": ["I"]}
+        ],
+        "sense": ">=",
+        "rhs_template": "demand[j]"
+      }
+    }
+  ],
+  "logic_constraints": [],
+  "soft_constraints": [],
+  "assumptions": [
+    "All supply/demand values are non-negative",
+    "Transportation cost is linear in quantity shipped"
+  ],
+  "ambiguities": [],
+  "solver_preferences": {
+    "preferred_backend": "gurobipy",
+    "fallback_backends": ["pulp", "ortools-linear"],
+    "time_limit_sec": 300
+  }
+}
