@@ -31,6 +31,7 @@ From the repository root, use any Python 3.11+ interpreter (including Codex's bu
 
 ```powershell
 python -c "import pathlib,tomllib; [tomllib.loads(p.read_text(encoding='utf-8')) for p in pathlib.Path('.codex').rglob('*.toml')]; print('TOML OK')"
+python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-This bundle is ready for repository-level review and distribution after the local validation command passes.
+The migration is intentionally local-only until its diff is reviewed. No remote repository operation is required to load or inspect these files.
