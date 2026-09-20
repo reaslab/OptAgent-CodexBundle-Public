@@ -1,0 +1,11 @@
+[
+  {"predecessor":"A","successor":"C"},
+  {"predecessor":"A","successor":"D"},
+  {"predecessor":"B","successor":"E"},
+  {"predecessor":"C","successor":"F"},
+  {"predecessor":"D","successor":"F"},
+  {"predecessor":"D","successor":"G"},
+  {"predecessor":"E","successor":"G"},
+  {"predecessor":"F","successor":"H"},
+  {"predecessor":"G","successor":"H"}
+]

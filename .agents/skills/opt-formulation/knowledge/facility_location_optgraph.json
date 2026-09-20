@@ -1,0 +1,156 @@
+{
+  "schema_version": "1.0",
+  "graph_id": "facility-location-optgraph",
+  "graph_version": "2026-09-03.1",
+  "domain": "facility_location",
+  "domain_signals": ["facility", "facilities", "warehouse", "warehouses", "depot", "depots", "plant", "plants", "site", "sites", "location", "locations", "station", "stations", "设施选址", "仓库", "配送中心", "候选点", "站点", "工厂选址"],
+  "feature_catalog": {
+    "fixed_opening_cost": {
+      "positive": ["fixed opening cost", "fixed cost", "activation cost", "open a facility", "opening warehouses", "开设费用", "启用费用", "建设费用"],
+      "negative": ["no fixed opening cost", "without fixed cost", "无开设费用", "不考虑建设费用"]
+    },
+    "capacity": {
+      "positive": ["capacity", "capacitated", "throughput limit", "limited supply", "warehouse limit", "容量", "产能", "仓容", "供应上限"],
+      "negative": ["uncapacitated", "no capacity limit", "unlimited capacity", "无容量限制", "不限容量"]
+    },
+    "single_source": {
+      "positive": ["exactly one facility", "assigned to one", "single source", "cannot split", "indivisible demand", "每个客户只能分配给一个", "不可拆分", "单一供应源"],
+      "negative": ["may split", "splittable demand", "multiple facilities may serve", "允许拆分", "可由多个设施供应"]
+    },
+    "exact_p": {
+      "positive": ["exactly p", "choose p", "open p facilities", "p-median", "p median", "恰好选择p个", "选址p个", "p个设施"],
+      "negative": ["any number of facilities", "number is a decision", "设施数量不限", "开设数量由模型决定"]
+    },
+    "distance_objective": {
+      "positive": ["minimize distance", "travel distance", "weighted distance", "response distance", "最小化距离", "行程距离", "加权距离"],
+      "negative": []
+    }
+  },
+  "nodes": [
+    {"id": "domain.facility_location", "type": "problem_type", "title": "Facility location", "summary": "Choose facilities and connect demand points under cost, distance, capacity, or coverage requirements."},
+    {
+      "id": "variant.uflp", "type": "variant", "title": "Uncapacitated facility location (UFLP)",
+      "summary": "Pay opening costs and serve every customer without binding facility capacity.",
+      "retrieval": {
+        "aliases": ["UFLP", "uncapacitated facility location", "fixed-charge location"],
+        "signals": ["fixed opening cost", "uncapacitated", "serve every customer"],
+        "feature_support": ["fixed_opening_cost", "assignment"],
+        "feature_weights": {"fixed_opening_cost": 3.0, "capacity:false": 4.0, "exact_p:false": 1.0},
+        "feature_conflicts": {"capacity:true": 4.0, "exact_p:true": 4.0, "single_source:true": 0.5}
+      }
+    },
+    {
+      "id": "variant.sscflp", "type": "variant", "title": "Single-source capacitated facility location (SSCFLP)",
+      "summary": "Open capacitated facilities and assign each indivisible customer to exactly one open facility.",
+      "retrieval": {
+        "aliases": ["SSCFLP", "single-source CFLP", "capacitated facility location"],
+        "signals": ["capacity", "exactly one facility", "indivisible demand", "cannot split"],
+        "feature_support": ["fixed_opening_cost", "assignment", "capacity", "single_source"],
+        "feature_weights": {"fixed_opening_cost": 2.0, "capacity:true": 4.0, "single_source:true": 5.0, "exact_p:false": 0.5},
+        "feature_conflicts": {"capacity:false": 4.0, "single_source:false": 3.0, "exact_p:true": 2.0}
+      }
+    },
+    {
+      "id": "variant.pmedian", "type": "variant", "title": "p-median",
+      "summary": "Open exactly p facilities and minimize total demand-weighted assignment distance.",
+      "retrieval": {
+        "aliases": ["p-median", "p median", "median location"],
+        "signals": ["exactly p", "choose p", "minimize distance", "weighted distance"],
+        "feature_support": ["assignment", "exact_p", "distance_objective"],
+        "feature_weights": {"exact_p:true": 6.0, "distance_objective": 3.0, "fixed_opening_cost:false": 1.0},
+        "feature_conflicts": {"fixed_opening_cost:true": 2.0, "capacity:true": 1.5, "exact_p:false": 5.0}
+      }
+    },
+    {
+      "id": "model.uflp.canonical", "type": "math_model", "title": "Canonical UFLP model",
+      "summary": "Use binary open y_i and assignment x_ij; select the x domain from splittable versus indivisible service semantics.",
+      "payload": {
+        "objective": "min sum(i in I, f[i]*y[i]) + sum((i,j) in A, c[i,j]*x[i,j])",
+        "constraints": ["sum(i in I_j, x[i,j]) == 1 for j in J", "x[i,j] <= y[i] for (i,j) in A"],
+        "decision_gate": "Use binary x only for indivisible single-source assignment; continuous [0,1] may represent fractional service."
+      }
+    },
+    {
+      "id": "model.sscflp.canonical", "type": "math_model", "title": "Canonical SSCFLP model",
+      "summary": "Binary open and assignment variables with exact-one assignment, open-linking, and aggregate demand-weighted capacity.",
+      "payload": {
+        "variables": ["y[i] binary: facility i is open", "x[i,j] binary: customer j is assigned to facility i"],
+        "objective": "min sum(i in I, f[i]*y[i]) + sum((i,j) in A, c[i,j]*x[i,j])",
+        "constraints": ["sum(i in I_j, x[i,j]) == 1 for j in J", "x[i,j] <= y[i] for (i,j) in A", "sum(j in J_i, demand[j]*x[i,j]) <= capacity[i]*y[i] for i in I"]
+      }
+    },
+    {
+      "id": "model.pmedian.canonical", "type": "math_model", "title": "Canonical p-median model",
+      "summary": "Open exactly p sites, assign each demand point once, and minimize demand-weighted distance.",
+      "payload": {
+        "objective": "min sum((i,j) in A, demand[j]*distance[i,j]*x[i,j])",
+        "constraints": ["sum(i in I_j, x[i,j]) == 1 for j in J", "x[i,j] <= y[i] for (i,j) in A", "sum(i in I, y[i]) == p"]
+      }
+    },
+    {
+      "id": "case.uflp.fixed_charge_retail", "type": "case", "title": "Retail depots with fixed cost and no capacity",
+      "summary": "Candidate depots have opening and customer-service costs; depot capacity is explicitly unlimited.",
+      "payload": {"status": "expert_curated_synthetic", "mapping": ["depots -> I", "customers -> J", "opening cost -> f[i]", "service cost -> c[i,j]"], "reuse_rule": "Do not invent capacity merely because the entities are warehouses or depots.", "expected_variant": "variant.uflp"}
+    },
+    {
+      "id": "case.sscflp.indivisible_customers", "type": "case", "title": "Capacitated warehouses with indivisible customers",
+      "summary": "Open warehouses with fixed costs and capacity; assign each customer's full demand to exactly one warehouse.",
+      "payload": {"status": "expert_curated_synthetic", "mapping": ["warehouses -> I", "customers -> J", "demand -> demand[j]", "capacity -> capacity[i]"], "reuse_rule": "Indivisibility determines binary x; capacity consumes demand[j], not customer count.", "expected_variant": "variant.sscflp"}
+    },
+    {
+      "id": "case.pmedian.emergency_stations", "type": "case", "title": "Choose exactly p emergency stations",
+      "summary": "Choose exactly p stations and minimize population-weighted travel distance.",
+      "payload": {"status": "expert_curated_synthetic", "mapping": ["stations -> I", "zones -> J", "population -> demand[j]", "distance -> distance[i,j]"], "reuse_rule": "Facility count is a hard equality; do not replace it with fixed opening costs.", "expected_variant": "variant.pmedian"}
+    },
+    {"id": "error.assignment_without_open_link", "type": "typical_error", "title": "Assignment is not linked to opening", "summary": "Customers can be assigned to a closed facility because x[i,j] <= y[i] or an equivalent implication is missing.", "payload": {"severity": "critical", "symptom": "positive assignment to y[i]=0"}},
+    {"id": "error.wrong_assignment_domain", "type": "typical_error", "title": "Assignment domain contradicts semantics", "summary": "Continuous x permits forbidden splitting, or binary x creates an unnecessary MILP when splitting is allowed.", "payload": {"severity": "high", "symptom": "split customers or unnecessary integrality"}},
+    {"id": "error.capacity_omits_demand", "type": "typical_error", "title": "Capacity counts customers instead of demand", "summary": "sum_j x[i,j] <= capacity[i] is dimensionally wrong when customer demands vary.", "payload": {"severity": "critical", "symptom": "capacity row has incompatible units"}},
+    {"id": "error.capacity_not_gated", "type": "typical_error", "title": "Closed facilities retain capacity", "summary": "The capacity right-hand side omits y[i], so a closed facility may still serve demand.", "payload": {"severity": "critical", "symptom": "capacity remains available at y[i]=0"}},
+    {"id": "error.missing_exact_one", "type": "typical_error", "title": "Customers are optional or multiply assigned", "summary": "Using <=1 or >=1 instead of equality changes exact-one service semantics.", "payload": {"severity": "critical", "symptom": "unserved or duplicated customers"}},
+    {"id": "error.variant_confusion_pmedian_uflp", "type": "typical_error", "title": "p-median and fixed-charge location are confused", "summary": "An exact-p rule is replaced with opening costs, or an arbitrary p is invented.", "payload": {"severity": "high", "symptom": "facility count follows the wrong decision rule"}},
+    {"id": "fix.add_open_link", "type": "fix_hint", "title": "Add an opening link", "summary": "Add x[i,j] <= y[i] for every feasible pair unless another proven constraint already gives the implication."},
+    {"id": "fix.match_assignment_domain", "type": "fix_hint", "title": "Choose x from service semantics", "summary": "Use binary x for indivisible exact-one assignment and continuous flow only when splitting is allowed."},
+    {"id": "fix.weight_and_gate_capacity", "type": "fix_hint", "title": "Use demand-weighted, opening-gated capacity", "summary": "Use sum_j demand[j]*x[i,j] <= capacity[i]*y[i] after confirming compatible units."},
+    {"id": "fix.enforce_exact_one", "type": "fix_hint", "title": "Enforce exact-one assignment", "summary": "Use sum_i x[i,j] == 1 for every required customer over feasible arcs."},
+    {"id": "fix.pmedian_count", "type": "fix_hint", "title": "Represent the facility-count rule", "summary": "For p-median use sum_i y[i] == p; for fixed-charge location do not invent that equality."},
+    {"id": "check.closed_site_zero_service", "type": "validation_check", "title": "Closed-site service check", "summary": "For each y[i]=0, recompute total assigned service and require zero."},
+    {"id": "check.customer_assignment", "type": "validation_check", "title": "Customer assignment check", "summary": "Recompute sum_i x[i,j] and require exactly one for each single-source customer."},
+    {"id": "check.capacity_units", "type": "validation_check", "title": "Capacity and units check", "summary": "Recompute demand-weighted load and confirm both sides use the same unit."},
+    {"id": "check.facility_count", "type": "validation_check", "title": "Facility-count check", "summary": "For p-median, recompute sum_i y[i] and require exactly p."}
+  ],
+  "edges": [
+    {"source": "variant.uflp", "relation": "IS_A", "target": "domain.facility_location"},
+    {"source": "variant.sscflp", "relation": "IS_A", "target": "domain.facility_location"},
+    {"source": "variant.pmedian", "relation": "IS_A", "target": "domain.facility_location"},
+    {"source": "variant.uflp", "relation": "HAS_MODEL", "target": "model.uflp.canonical"},
+    {"source": "variant.sscflp", "relation": "HAS_MODEL", "target": "model.sscflp.canonical"},
+    {"source": "variant.pmedian", "relation": "HAS_MODEL", "target": "model.pmedian.canonical"},
+    {"source": "variant.uflp", "relation": "EXEMPLIFIED_BY", "target": "case.uflp.fixed_charge_retail"},
+    {"source": "variant.sscflp", "relation": "EXEMPLIFIED_BY", "target": "case.sscflp.indivisible_customers"},
+    {"source": "variant.pmedian", "relation": "EXEMPLIFIED_BY", "target": "case.pmedian.emergency_stations"},
+    {"source": "variant.uflp", "relation": "PRONE_TO", "target": "error.assignment_without_open_link"},
+    {"source": "variant.uflp", "relation": "PRONE_TO", "target": "error.wrong_assignment_domain"},
+    {"source": "variant.sscflp", "relation": "PRONE_TO", "target": "error.assignment_without_open_link"},
+    {"source": "variant.sscflp", "relation": "PRONE_TO", "target": "error.wrong_assignment_domain"},
+    {"source": "variant.sscflp", "relation": "PRONE_TO", "target": "error.capacity_omits_demand"},
+    {"source": "variant.sscflp", "relation": "PRONE_TO", "target": "error.capacity_not_gated"},
+    {"source": "variant.sscflp", "relation": "PRONE_TO", "target": "error.missing_exact_one"},
+    {"source": "variant.pmedian", "relation": "PRONE_TO", "target": "error.assignment_without_open_link"},
+    {"source": "variant.pmedian", "relation": "PRONE_TO", "target": "error.missing_exact_one"},
+    {"source": "variant.pmedian", "relation": "PRONE_TO", "target": "error.variant_confusion_pmedian_uflp"},
+    {"source": "error.assignment_without_open_link", "relation": "FIXED_BY", "target": "fix.add_open_link"},
+    {"source": "error.wrong_assignment_domain", "relation": "FIXED_BY", "target": "fix.match_assignment_domain"},
+    {"source": "error.capacity_omits_demand", "relation": "FIXED_BY", "target": "fix.weight_and_gate_capacity"},
+    {"source": "error.capacity_not_gated", "relation": "FIXED_BY", "target": "fix.weight_and_gate_capacity"},
+    {"source": "error.missing_exact_one", "relation": "FIXED_BY", "target": "fix.enforce_exact_one"},
+    {"source": "error.variant_confusion_pmedian_uflp", "relation": "FIXED_BY", "target": "fix.pmedian_count"},
+    {"source": "variant.uflp", "relation": "CHECK_WITH", "target": "check.closed_site_zero_service"},
+    {"source": "variant.uflp", "relation": "CHECK_WITH", "target": "check.customer_assignment"},
+    {"source": "variant.sscflp", "relation": "CHECK_WITH", "target": "check.closed_site_zero_service"},
+    {"source": "variant.sscflp", "relation": "CHECK_WITH", "target": "check.customer_assignment"},
+    {"source": "variant.sscflp", "relation": "CHECK_WITH", "target": "check.capacity_units"},
+    {"source": "variant.pmedian", "relation": "CHECK_WITH", "target": "check.closed_site_zero_service"},
+    {"source": "variant.pmedian", "relation": "CHECK_WITH", "target": "check.customer_assignment"},
+    {"source": "variant.pmedian", "relation": "CHECK_WITH", "target": "check.facility_count"}
+  ]
+}

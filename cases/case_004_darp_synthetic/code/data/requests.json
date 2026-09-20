@@ -1,0 +1,6 @@
+[
+  {"request_id":"R1","pickup_node":"P1","delivery_node":"Q1","demand":1,"max_ride_time":80},
+  {"request_id":"R2","pickup_node":"P2","delivery_node":"Q2","demand":1,"max_ride_time":80},
+  {"request_id":"R3","pickup_node":"P3","delivery_node":"Q3","demand":1,"max_ride_time":80},
+  {"request_id":"R4","pickup_node":"P4","delivery_node":"Q4","demand":1,"max_ride_time":80}
+]

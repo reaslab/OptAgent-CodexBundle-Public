@@ -1,0 +1,8 @@
+[
+  {"period":1,"resource":"labor","capacity":7},
+  {"period":1,"resource":"equipment","capacity":7},
+  {"period":2,"resource":"labor","capacity":8},
+  {"period":2,"resource":"equipment","capacity":8},
+  {"period":3,"resource":"labor","capacity":8},
+  {"period":3,"resource":"equipment","capacity":8}
+]

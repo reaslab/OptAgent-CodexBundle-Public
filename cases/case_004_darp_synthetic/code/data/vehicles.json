@@ -1,0 +1,4 @@
+[
+  {"vehicle_id":"V1","capacity":2,"start_depot":"D0","end_depot":"D0"},
+  {"vehicle_id":"V2","capacity":2,"start_depot":"D0","end_depot":"D0"}
+]

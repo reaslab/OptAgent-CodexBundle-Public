@@ -59,6 +59,8 @@ Internal state and evidence:
         revisions/
       formulation/
         opt_spec.json
+      knowledge/
+        retrieval_bundle.json
       solver/
         solution.json
         solver_log.txt
@@ -534,7 +536,7 @@ STATE RECOVERY
 On any new turn:
 1. Read .optagent/registry.json.
 2. Read .optagent/cases/{active_case}/state.json.
-3. Then read only the current stage's authoritative records: Problem.md and decision_log.json while awaiting manual approval; Problem.md plus data_manifest.json/opt_spec.json while formulating; opt_spec.json, solution.json, execution_record.json, and run.py while solving; those records plus diagnosis.json while verifying; diagnosis.json, decision_log.json, README.md, and the selected narrative sources while reporting or completing. Open additional artifacts only when the current record signals a mismatch, failure, or material claim.
+3. Then read only the current stage's authoritative records: Problem.md and decision_log.json while awaiting manual approval; Problem.md plus data_manifest.json/retrieval_bundle.json/opt_spec.json while formulating; opt_spec.json, solution.json, execution_record.json, and run.py while solving; those records plus retrieval_bundle.json and diagnosis.json while verifying; diagnosis.json, decision_log.json, README.md, and the selected narrative sources while reporting or completing. Open additional artifacts only when the current record signals a mismatch, failure, or material claim.
 4. Resume from the correct stage; do not re-ask approval if already approved or auto_approve.
 5. Do not overwrite meaningful artifacts with templates.
 

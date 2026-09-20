@@ -53,9 +53,38 @@ Decision guide:
 
 ### Step 2.5: Pattern Matching
 
-Consult `reference/problem-taxonomy.md` to classify against standard types.
-If matched, read `reference/standard-formulations.md` for the canonical formulation.
-Adapt the canonical formulation rather than inventing from scratch.
+After the data manifest exists, run the local bounded OptGraph retriever:
+
+```powershell
+python .agents/skills/opt-formulation/tools/optgraph_retrieve.py --problem-file cases/{case_id}/Problem.md --output .optagent/cases/{case_id}/knowledge/retrieval_bundle.json
+```
+
+If `retrieval.status` is `sufficient` or `ambiguous`, use only applicable nodes
+as a starting pattern and error checklist. Verify every retrieved assumption
+against `Problem.md` and observed data. The retriever is local-first: when the
+local graph is `insufficient`, it may query the allow-listed official OR-Tools
+source index, cache compact source-backed case nodes beside the bundle, and
+return `sufficient_online`. These nodes always carry `code_url`, retrieval
+time, and `online_source_verified_not_reproduced`; they are leads, not verified
+objective values. If both local and online retrieval are insufficient, consult
+`reference/problem-taxonomy.md` and the family section of
+`reference/standard-formulations.md` instead.
+
+Blueprint fast path:
+
+- When the retrieval bundle is `sufficient` and the selected formulation
+  payload contains `blueprint`, use its `data_contract`, variable list,
+  objective, constraint templates, and validation checks as the first draft.
+- Bind the blueprint to the observed data manifest and expand only the
+  indexed constraints required by the current instance. Do not reconstruct a
+  standard formulation from the full reference Markdown unless the blueprint
+  is missing, contradictory, or the problem introduces an unsupported rule.
+- Preserve the blueprint's `instantiation_rule` and record any deviation in
+  `modeling_decisions`. A blueprint is a reusable starting structure; it does
+  not override Problem.md or observed data.
+
+For every retrieved choice actually used, include stable node IDs in the
+corresponding `modeling_decisions[].knowledge_refs`. Never cite an unused node.
 For variable type decisions, follow `reference/variable-domain-guide.md`.
 
 ### Step 3: Formulation Construction
@@ -107,6 +136,8 @@ Before finishing, verify:
 - [ ] Ambiguities are genuinely blocking (not routine assumptions)
 - [ ] data_manifest.json is consistent with opt_spec.json data_ref object references
 - [ ] opt_spec.json is under 50KB
+- [ ] retrieval_bundle.json exists and every adopted graph assumption was checked against case evidence
+- [ ] used graph patterns and errors have stable `knowledge_refs` in the relevant modeling decision
 
 ### Step 5.5: Modeling Decision Documentation
 

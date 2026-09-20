@@ -1,0 +1,149 @@
+{
+  "schema_version": "1.3",
+  "graph_id": "optimization-optgraph",
+  "graph_version": "2026-09-20.2",
+  "domain": "optimization",
+  "includes": ["legacy_reference_optgraph.json", "core_cases_optgraph.json", "official_cases_optgraph.json", "official_catalog_optgraph.json", "reaslab_template_catalog_optgraph.json", "facility_location_optgraph.json", "production_inventory_optgraph.json", "scheduling_routing_optgraph.json", "transport_network_optgraph.json", "compound_profiles_optgraph.json", "coverage_profiles_optgraph.json", "iteration_profiles_optgraph.json"],
+  "domain_signals": ["optimization", "official", "assignment", "knapsack", "maintenance", "pickup delivery", "resources", "model", "decision", "minimize", "maximize", "优化", "目标函数", "约束", "综合任务"],
+  "feature_catalog": {
+    "capacity": {
+      "positive": ["capacity", "capacitated", "load limit", "vehicle capacity", "truck capacity", "warehouse capacity", "供应上限", "车辆容量", "仓容", "产能"],
+      "negative": ["uncapacitated", "no capacity limit", "no capacity limits", "without capacity limit", "without capacity limits", "unlimited capacity", "无容量限制", "不限容量"]
+    },
+    "time_windows": {
+      "positive": ["time window", "time-window", "appointment window", "earliest arrival", "latest arrival", "时间窗", "预约时段", "最早到达", "最晚到达"],
+      "negative": []
+    },
+    "pickup_delivery": {
+      "positive": ["pickup and delivery", "pickup-delivery", "pickup delivery", "pick-up and drop-off", "pickup and dropoff", "接送服务", "接送请求", "接送点", "接送节点", "取送节点", "取送任务", "上车点", "下车点"],
+      "negative": []
+    },
+    "same_vehicle": {
+      "positive": ["same vehicle", "same truck", "same driver", "same vehicle must", "同一辆车", "统一车辆", "同一车辆", "同一司机"],
+      "negative": []
+    },
+    "ride_time": {
+      "positive": ["ride time", "maximum ride time", "max ride time", "longest ride time", "passenger ride duration", "在途时间", "最长乘车时间", "最大乘车时间"],
+      "negative": []
+    },
+    "service_time": {
+      "positive": ["service time", "loading time", "unloading time", "服务时间", "装卸时间"],
+      "negative": []
+    },
+    "depot_start_end": {
+      "positive": ["start and end at the depot", "return to depot", "depot start", "depot end", "从仓库出发", "返回仓库", "回到基地"],
+      "negative": []
+    },
+    "subtour_elimination": {
+      "positive": ["subtour elimination", "eliminate subtours", "disconnected cycle", "消除子回路", "子回路"],
+      "negative": []
+    },
+    "assignment": {
+      "positive": ["assign", "assignment", "worker-task", "facility assignment", "任务分配", "分配", "指派"],
+      "negative": []
+    },
+    "fixed_opening_cost": {
+      "positive": ["fixed opening cost", "facility opening cost", "facility opening costs", "opening cost", "open facilities", "activation cost", "设施开设成本", "设施启用成本"],
+      "negative": ["no fixed opening cost", "without fixed cost", "无开设费用"]
+    },
+    "inventory": {
+      "positive": ["inventory", "stock", "lot sizing", "safety stock", "库存", "补货", "批量"],
+      "negative": []
+    },
+    "setup_times": {
+      "positive": ["setup time", "sequence-dependent setup", "changeover", "setup cost", "换型时间", "准备时间", "切换成本"],
+      "negative": []
+    },
+    "precedence": {
+      "positive": ["precedence", "precede", "before task", "operation order", "工序顺序", "前置", "先后约束"],
+      "negative": []
+    },
+    "maintenance": {
+      "positive": ["maintenance", "maintenance interval", "检修", "维护窗口"],
+      "negative": []
+    },
+    "stochastic_demand": {
+      "positive": ["stochastic demand", "uncertain demand", "demand scenarios", "scenario-based", "随机需求", "需求不确定", "需求场景"],
+      "negative": ["deterministic demand", "确定性需求"]
+    },
+    "robustness": {
+      "positive": ["robust optimization", "robust counterpart", "worst-case uncertainty", "鲁棒优化", "最坏情况不确定性"],
+      "negative": []
+    },
+    "chance_constraints": {
+      "positive": ["chance constraint", "probabilistic constraint", "service level probability", "机会约束", "概率约束"],
+      "negative": []
+    },
+    "multiobjective": {
+      "positive": ["multi-objective", "multiobjective", "lexicographic objective", "pareto", "多目标", "词典序目标", "帕累托"],
+      "negative": []
+    },
+    "grid_assignment": {
+      "positive": ["grid assignment", "board assignment", "fill every cell", "fill all cells", "棋盘填充", "填满所有格子", "网格赋值"],
+      "negative": []
+    },
+    "line_count_objective": {
+      "positive": ["complete line", "full line", "line count", "monochromatic line", "完整直线", "直线数量", "同色直线", "对角线数量"],
+      "negative": []
+    },
+    "exact_fill": {
+      "positive": ["all cells must be filled", "exactly one symbol per cell", "every cell occupied", "每个格子恰好一个", "所有格子填满"],
+      "negative": []
+    },
+    "battery": {
+      "positive": ["battery", "electric vehicle", "charging station", "state of charge", "电动车", "电池", "充电时间"],
+      "negative": []
+    },
+    "mode_selection": {
+      "positive": ["multi-mode", "multiple modes", "mode-dependent", "mode selection", "多模式", "多种模式", "模式执行", "模式选择"],
+      "negative": []
+    },
+    "renewable_resource": {
+      "positive": ["renewable resource", "可再生资源", "可再生资源约束"],
+      "negative": []
+    },
+    "nonrenewable_resource": {
+      "positive": ["non-renewable resource", "nonrenewable resource", "不可再生资源", "不可再生资源约束"],
+      "negative": []
+    },
+    "split_demand": {
+      "positive": ["split delivery", "split demand", "split deliveries", "可拆分配送", "需求可以由多辆车分割", "需求分割"],
+      "negative": []
+    },
+    "required_arc_service": {
+      "positive": ["required arc", "demand-bearing edge", "required edge", "需求弧", "需求边", "有需求的边", "边服务"],
+      "negative": []
+    },
+    "alternative_machine": {
+      "positive": ["alternative machine", "eligible machine", "machine alternatives", "可选机器", "兼容机器", "机器选择"],
+      "negative": []
+    },
+    "sequence_dependent_setup": {
+      "positive": ["sequence-dependent setup", "sequence dependent setup", "顺序相关设置", "顺序相关换型", "前后工序的设置"],
+      "negative": []
+    },
+    "upper_lower_bounds": {
+      "positive": ["upper and lower bounds", "asset bounds", "individual asset limit", "上下限约束", "单项资产投资比例", "投资比例不能超过"],
+      "negative": []
+    }
+  },
+  "online_sources": [
+    {
+      "source_id": "or_tools",
+      "organization": "Google OR-Tools",
+      "index_url": "https://api.github.com/repos/google/or-tools/git/trees/stable?recursive=1",
+      "documentation_url": "https://developers.google.com/optimization/examples",
+      "license": "Apache-2.0",
+      "status": "allowlisted_source_index"
+    },
+    {
+      "source_id": "gurobi_modeling_examples",
+      "organization": "Gurobi Optimization",
+      "index_url": "https://api.github.com/repos/Gurobi/modeling-examples/git/trees/master?recursive=1",
+      "documentation_url": "https://gurobi.github.io/modeling-examples/",
+      "status": "allowlisted_source_index"
+    }
+  ]
+}
+
+

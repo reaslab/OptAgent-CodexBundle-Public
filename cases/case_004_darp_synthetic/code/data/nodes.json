@@ -1,0 +1,11 @@
+[
+  {"node_id":"D0","role":"depot","request_id":null,"x":0,"y":0,"service_minutes":0,"earliest":0,"latest":240,"load_change":0},
+  {"node_id":"P1","role":"pickup","request_id":"R1","x":2,"y":1,"service_minutes":5,"earliest":0,"latest":40,"load_change":1},
+  {"node_id":"Q1","role":"delivery","request_id":"R1","x":5,"y":2,"service_minutes":5,"earliest":0,"latest":100,"load_change":-1},
+  {"node_id":"P2","role":"pickup","request_id":"R2","x":1,"y":5,"service_minutes":5,"earliest":0,"latest":50,"load_change":1},
+  {"node_id":"Q2","role":"delivery","request_id":"R2","x":2,"y":8,"service_minutes":5,"earliest":0,"latest":120,"load_change":-1},
+  {"node_id":"P3","role":"pickup","request_id":"R3","x":6,"y":1,"service_minutes":5,"earliest":20,"latest":80,"load_change":1},
+  {"node_id":"Q3","role":"delivery","request_id":"R3","x":8,"y":3,"service_minutes":5,"earliest":20,"latest":160,"load_change":-1},
+  {"node_id":"P4","role":"pickup","request_id":"R4","x":5,"y":6,"service_minutes":5,"earliest":30,"latest":90,"load_change":1},
+  {"node_id":"Q4","role":"delivery","request_id":"R4","x":8,"y":8,"service_minutes":5,"earliest":30,"latest":180,"load_change":-1}
+]

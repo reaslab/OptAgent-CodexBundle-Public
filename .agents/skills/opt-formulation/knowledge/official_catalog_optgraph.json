@@ -1,0 +1,4448 @@
+{
+  "schema_version": "1.0",
+  "graph_id": "official-catalog-optgraph",
+  "graph_version": "2026-09-06.1",
+  "domain": "optimization",
+  "domain_signals": [
+    "official catalog",
+    "OR-Tools official",
+    "scheduling",
+    "routing",
+    "assignment",
+    "packing",
+    "TSP",
+    "CP-SAT"
+  ],
+  "nodes": [
+    {
+      "id": "case.official.catalog.simple_routing_program",
+      "type": "case",
+      "title": "Google OR-Tools official simple routing program",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "simple routing program",
+          "OR-Tools official simple routing program"
+        ],
+        "signals": [
+          "official simple routing program"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/simple_routing_program.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python simple_routing_program.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.tsp",
+      "type": "case",
+      "title": "Google OR-Tools official tsp",
+      "summary": "Official tour-planning sample covering Hamiltonian routing, distance costs, or optional-node decisions.",
+      "retrieval": {
+        "aliases": [
+          "tsp",
+          "OR-Tools official tsp"
+        ],
+        "signals": [
+          "official tsp"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/tsp.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "TSP",
+        "related_formulation": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python tsp.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.tsp_cities",
+      "type": "case",
+      "title": "Google OR-Tools official tsp cities",
+      "summary": "Official tour-planning sample covering Hamiltonian routing, distance costs, or optional-node decisions.",
+      "retrieval": {
+        "aliases": [
+          "tsp cities",
+          "OR-Tools official tsp cities"
+        ],
+        "signals": [
+          "official tsp cities"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/tsp_cities.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "TSP",
+        "related_formulation": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python tsp_cities.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.tsp_circuit_board",
+      "type": "case",
+      "title": "Google OR-Tools official tsp circuit board",
+      "summary": "Official tour-planning sample covering Hamiltonian routing, distance costs, or optional-node decisions.",
+      "retrieval": {
+        "aliases": [
+          "tsp circuit board",
+          "OR-Tools official tsp circuit board"
+        ],
+        "signals": [
+          "official tsp circuit board"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/tsp_circuit_board.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "TSP",
+        "related_formulation": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python tsp_circuit_board.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp",
+      "type": "case",
+      "title": "Google OR-Tools official vrp",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp",
+          "OR-Tools official vrp"
+        ],
+        "signals": [
+          "official vrp"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_breaks_from_start",
+      "type": "case",
+      "title": "Google OR-Tools official vrp breaks from start",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp breaks from start",
+          "OR-Tools official vrp breaks from start"
+        ],
+        "signals": [
+          "official vrp breaks from start"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_breaks_from_start.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_breaks_from_start.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_initial_routes",
+      "type": "case",
+      "title": "Google OR-Tools official vrp initial routes",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp initial routes",
+          "OR-Tools official vrp initial routes"
+        ],
+        "signals": [
+          "official vrp initial routes"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_initial_routes.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_initial_routes.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_items_to_deliver",
+      "type": "case",
+      "title": "Google OR-Tools official vrp items to deliver",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp items to deliver",
+          "OR-Tools official vrp items to deliver"
+        ],
+        "signals": [
+          "official vrp items to deliver"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_items_to_deliver.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_items_to_deliver.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_node_max",
+      "type": "case",
+      "title": "Google OR-Tools official vrp node max",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp node max",
+          "OR-Tools official vrp node max"
+        ],
+        "signals": [
+          "official vrp node max"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_node_max.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_node_max.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_nodes_indices",
+      "type": "case",
+      "title": "Google OR-Tools official vrp nodes indices",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp nodes indices",
+          "OR-Tools official vrp nodes indices"
+        ],
+        "signals": [
+          "official vrp nodes indices"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_nodes_indices.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_nodes_indices.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_pickup_delivery_fifo",
+      "type": "case",
+      "title": "Google OR-Tools official vrp pickup delivery fifo",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp pickup delivery fifo",
+          "OR-Tools official vrp pickup delivery fifo"
+        ],
+        "signals": [
+          "official vrp pickup delivery fifo"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_pickup_delivery_fifo.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_pickup_delivery_fifo.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_pickup_delivery_lifo",
+      "type": "case",
+      "title": "Google OR-Tools official vrp pickup delivery lifo",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp pickup delivery lifo",
+          "OR-Tools official vrp pickup delivery lifo"
+        ],
+        "signals": [
+          "official vrp pickup delivery lifo"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_pickup_delivery_lifo.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_pickup_delivery_lifo.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_solution_callback",
+      "type": "case",
+      "title": "Google OR-Tools official vrp solution callback",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp solution callback",
+          "OR-Tools official vrp solution callback"
+        ],
+        "signals": [
+          "official vrp solution callback"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_solution_callback.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_solution_callback.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_time_windows_per_vehicles",
+      "type": "case",
+      "title": "Google OR-Tools official vrp time windows per vehicles",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp time windows per vehicles",
+          "OR-Tools official vrp time windows per vehicles"
+        ],
+        "signals": [
+          "official vrp time windows per vehicles"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_time_windows_per_vehicles.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_time_windows_per_vehicles.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.vrp_tokens",
+      "type": "case",
+      "title": "Google OR-Tools official vrp tokens",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "vrp tokens",
+          "OR-Tools official vrp tokens"
+        ],
+        "signals": [
+          "official vrp tokens"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_tokens.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python vrp_tokens.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.assignment_sat",
+      "type": "case",
+      "title": "Google OR-Tools official assignment sat",
+      "summary": "Official assignment/allocation sample covering worker-task compatibility, grouping, or resource limits.",
+      "retrieval": {
+        "aliases": [
+          "assignment sat",
+          "OR-Tools official assignment sat"
+        ],
+        "signals": [
+          "official assignment sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/assignment_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "assignment",
+        "related_formulation": "reference.model.generalized_assignment_problem_gap",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python assignment_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.bin_packing_sat",
+      "type": "case",
+      "title": "Google OR-Tools official bin packing sat",
+      "summary": "Official packing sample covering item placement, capacity limits, and value or feasibility objectives.",
+      "retrieval": {
+        "aliases": [
+          "bin packing sat",
+          "OR-Tools official bin packing sat"
+        ],
+        "signals": [
+          "official bin packing sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/bin_packing_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "packing",
+        "related_formulation": "reference.model.bin_packing_problem_bpp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python bin_packing_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.binpacking_problem_sat",
+      "type": "case",
+      "title": "Google OR-Tools official binpacking problem sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "binpacking problem sat",
+          "OR-Tools official binpacking problem sat"
+        ],
+        "signals": [
+          "official binpacking problem sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/binpacking_problem_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python binpacking_problem_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.earliness_tardiness_cost_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official earliness tardiness cost sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "earliness tardiness cost sample sat",
+          "OR-Tools official earliness tardiness cost sample sat"
+        ],
+        "signals": [
+          "official earliness tardiness cost sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/earliness_tardiness_cost_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python earliness_tardiness_cost_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.minimal_jobshop_sat",
+      "type": "case",
+      "title": "Google OR-Tools official minimal jobshop sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "minimal jobshop sat",
+          "OR-Tools official minimal jobshop sat"
+        ],
+        "signals": [
+          "official minimal jobshop sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/minimal_jobshop_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python minimal_jobshop_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.no_overlap_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official no overlap sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "no overlap sample sat",
+          "OR-Tools official no overlap sample sat"
+        ],
+        "signals": [
+          "official no overlap sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/no_overlap_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python no_overlap_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.optional_interval_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official optional interval sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "optional interval sample sat",
+          "OR-Tools official optional interval sample sat"
+        ],
+        "signals": [
+          "official optional interval sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/optional_interval_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python optional_interval_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.overlapping_intervals_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official overlapping intervals sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "overlapping intervals sample sat",
+          "OR-Tools official overlapping intervals sample sat"
+        ],
+        "signals": [
+          "official overlapping intervals sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/overlapping_intervals_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python overlapping_intervals_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.schedule_requests_sat",
+      "type": "case",
+      "title": "Google OR-Tools official schedule requests sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "schedule requests sat",
+          "OR-Tools official schedule requests sat"
+        ],
+        "signals": [
+          "official schedule requests sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/schedule_requests_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python schedule_requests_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.scheduling_with_calendar_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official scheduling with calendar sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "scheduling with calendar sample sat",
+          "OR-Tools official scheduling with calendar sample sat"
+        ],
+        "signals": [
+          "official scheduling with calendar sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/scheduling_with_calendar_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python scheduling_with_calendar_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.sequences_in_no_overlap_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official sequences in no overlap sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "sequences in no overlap sample sat",
+          "OR-Tools official sequences in no overlap sample sat"
+        ],
+        "signals": [
+          "official sequences in no overlap sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/sequences_in_no_overlap_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python sequences_in_no_overlap_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.soft_constraints_sat",
+      "type": "case",
+      "title": "Google OR-Tools official soft constraints sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "soft constraints sat",
+          "OR-Tools official soft constraints sat"
+        ],
+        "signals": [
+          "official soft constraints sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/soft_constraints_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python soft_constraints_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.solution_hinting_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official solution hinting sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "solution hinting sample sat",
+          "OR-Tools official solution hinting sample sat"
+        ],
+        "signals": [
+          "official solution hinting sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/solution_hinting_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python solution_hinting_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.solve_with_time_limit_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official solve with time limit sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "solve with time limit sample sat",
+          "OR-Tools official solve with time limit sample sat"
+        ],
+        "signals": [
+          "official solve with time limit sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/solve_with_time_limit_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python solve_with_time_limit_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.step_function_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official step function sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "step function sample sat",
+          "OR-Tools official step function sample sat"
+        ],
+        "signals": [
+          "official step function sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/step_function_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python step_function_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.stop_after_n_solutions_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official stop after n solutions sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "stop after n solutions sample sat",
+          "OR-Tools official stop after n solutions sample sat"
+        ],
+        "signals": [
+          "official stop after n solutions sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/stop_after_n_solutions_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python stop_after_n_solutions_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.transitions_in_no_overlap_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official transitions in no overlap sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "transitions in no overlap sample sat",
+          "OR-Tools official transitions in no overlap sample sat"
+        ],
+        "signals": [
+          "official transitions in no overlap sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/transitions_in_no_overlap_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python transitions_in_no_overlap_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.all_different_except_zero_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official all different except zero sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "all different except zero sample sat",
+          "OR-Tools official all different except zero sample sat"
+        ],
+        "signals": [
+          "official all different except zero sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/all_different_except_zero_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python all_different_except_zero_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.bool_and_int_var_product_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official bool and int var product sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "bool and int var product sample sat",
+          "OR-Tools official bool and int var product sample sat"
+        ],
+        "signals": [
+          "official bool and int var product sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/bool_and_int_var_product_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python bool_and_int_var_product_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.bool_or_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official bool or sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "bool or sample sat",
+          "OR-Tools official bool or sample sat"
+        ],
+        "signals": [
+          "official bool or sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/bool_or_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python bool_or_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.boolean_product_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official boolean product sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "boolean product sample sat",
+          "OR-Tools official boolean product sample sat"
+        ],
+        "signals": [
+          "official boolean product sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/boolean_product_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python boolean_product_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.channeling_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official channeling sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "channeling sample sat",
+          "OR-Tools official channeling sample sat"
+        ],
+        "signals": [
+          "official channeling sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/channeling_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python channeling_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.cumulative_variable_profile_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official cumulative variable profile sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "cumulative variable profile sample sat",
+          "OR-Tools official cumulative variable profile sample sat"
+        ],
+        "signals": [
+          "official cumulative variable profile sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/cumulative_variable_profile_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python cumulative_variable_profile_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.interval_relations_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official interval relations sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "interval relations sample sat",
+          "OR-Tools official interval relations sample sat"
+        ],
+        "signals": [
+          "official interval relations sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/interval_relations_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python interval_relations_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.interval_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official interval sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "interval sample sat",
+          "OR-Tools official interval sample sat"
+        ],
+        "signals": [
+          "official interval sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/interval_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python interval_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.literal_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official literal sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "literal sample sat",
+          "OR-Tools official literal sample sat"
+        ],
+        "signals": [
+          "official literal sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/literal_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python literal_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.ranking_circuit_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official ranking circuit sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "ranking circuit sample sat",
+          "OR-Tools official ranking circuit sample sat"
+        ],
+        "signals": [
+          "official ranking circuit sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/ranking_circuit_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python ranking_circuit_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.ranking_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official ranking sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "ranking sample sat",
+          "OR-Tools official ranking sample sat"
+        ],
+        "signals": [
+          "official ranking sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/ranking_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python ranking_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.reified_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official reified sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "reified sample sat",
+          "OR-Tools official reified sample sat"
+        ],
+        "signals": [
+          "official reified sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/reified_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python reified_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.nqueens_sat",
+      "type": "case",
+      "title": "Google OR-Tools official nqueens sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "nqueens sat",
+          "OR-Tools official nqueens sat"
+        ],
+        "signals": [
+          "official nqueens sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/nqueens_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python nqueens_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.rabbits_and_pheasants_sat",
+      "type": "case",
+      "title": "Google OR-Tools official rabbits and pheasants sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "rabbits and pheasants sat",
+          "OR-Tools official rabbits and pheasants sat"
+        ],
+        "signals": [
+          "official rabbits and pheasants sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/rabbits_and_pheasants_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python rabbits_and_pheasants_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.non_linear_sat",
+      "type": "case",
+      "title": "Google OR-Tools official non linear sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "non linear sat",
+          "OR-Tools official non linear sat"
+        ],
+        "signals": [
+          "official non linear sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/non_linear_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python non_linear_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.assumptions_sample_sat",
+      "type": "case",
+      "title": "Google OR-Tools official assumptions sample sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "assumptions sample sat",
+          "OR-Tools official assumptions sample sat"
+        ],
+        "signals": [
+          "official assumptions sample sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/assumptions_sample_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python assumptions_sample_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.cp_sat_example",
+      "type": "case",
+      "title": "Google OR-Tools official cp sat example",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "cp sat example",
+          "OR-Tools official cp sat example"
+        ],
+        "signals": [
+          "official cp sat example"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/cp_sat_example.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python cp_sat_example.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.simple_sat_program",
+      "type": "case",
+      "title": "Google OR-Tools official simple sat program",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "simple sat program",
+          "OR-Tools official simple sat program"
+        ],
+        "signals": [
+          "official simple sat program"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/simple_sat_program.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python simple_sat_program.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.assignment_with_constraints_sat",
+      "type": "case",
+      "title": "Google OR-Tools official assignment with constraints sat",
+      "summary": "Official assignment/allocation sample covering worker-task compatibility, grouping, or resource limits.",
+      "retrieval": {
+        "aliases": [
+          "assignment with constraints sat",
+          "OR-Tools official assignment with constraints sat"
+        ],
+        "signals": [
+          "official assignment with constraints sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/assignment_with_constraints_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "assignment",
+        "related_formulation": "reference.model.generalized_assignment_problem_gap",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python assignment_with_constraints_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.balance_group_sat",
+      "type": "case",
+      "title": "Google OR-Tools official balance group sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "balance group sat",
+          "OR-Tools official balance group sat"
+        ],
+        "signals": [
+          "official balance group sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/balance_group_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python balance_group_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.bus_driver_scheduling_flow_sat",
+      "type": "case",
+      "title": "Google OR-Tools official bus driver scheduling flow sat",
+      "summary": "Official linear or network optimization sample with structured variables, balance constraints, and solver output.",
+      "retrieval": {
+        "aliases": [
+          "bus driver scheduling flow sat",
+          "OR-Tools official bus driver scheduling flow sat"
+        ],
+        "signals": [
+          "official bus driver scheduling flow sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/bus_driver_scheduling_flow_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "LP/flow",
+        "related_formulation": "reference.model.min_cost_flow",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python bus_driver_scheduling_flow_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.car_sequencing_optimization_sat",
+      "type": "case",
+      "title": "Google OR-Tools official car sequencing optimization sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "car sequencing optimization sat",
+          "OR-Tools official car sequencing optimization sat"
+        ],
+        "signals": [
+          "official car sequencing optimization sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/car_sequencing_optimization_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python car_sequencing_optimization_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.chemical_balance_lp",
+      "type": "case",
+      "title": "Google OR-Tools official chemical balance lp",
+      "summary": "Official linear or network optimization sample with structured variables, balance constraints, and solver output.",
+      "retrieval": {
+        "aliases": [
+          "chemical balance lp",
+          "OR-Tools official chemical balance lp"
+        ],
+        "signals": [
+          "official chemical balance lp"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/chemical_balance_lp.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "LP/flow",
+        "related_formulation": "reference.model.min_cost_flow",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python chemical_balance_lp.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.chemical_balance_sat",
+      "type": "case",
+      "title": "Google OR-Tools official chemical balance sat",
+      "summary": "Official linear or network optimization sample with structured variables, balance constraints, and solver output.",
+      "retrieval": {
+        "aliases": [
+          "chemical balance sat",
+          "OR-Tools official chemical balance sat"
+        ],
+        "signals": [
+          "official chemical balance sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/chemical_balance_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "LP/flow",
+        "related_formulation": "reference.model.min_cost_flow",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python chemical_balance_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.clustering_sat",
+      "type": "case",
+      "title": "Google OR-Tools official clustering sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "clustering sat",
+          "OR-Tools official clustering sat"
+        ],
+        "signals": [
+          "official clustering sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/clustering_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python clustering_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.cover_rectangle_sat",
+      "type": "case",
+      "title": "Google OR-Tools official cover rectangle sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "cover rectangle sat",
+          "OR-Tools official cover rectangle sat"
+        ],
+        "signals": [
+          "official cover rectangle sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/cover_rectangle_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python cover_rectangle_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.cryptarithm_sat",
+      "type": "case",
+      "title": "Google OR-Tools official cryptarithm sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "cryptarithm sat",
+          "OR-Tools official cryptarithm sat"
+        ],
+        "signals": [
+          "official cryptarithm sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/cryptarithm_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python cryptarithm_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.gate_scheduling_sat",
+      "type": "case",
+      "title": "Google OR-Tools official gate scheduling sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "gate scheduling sat",
+          "OR-Tools official gate scheduling sat"
+        ],
+        "signals": [
+          "official gate scheduling sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/gate_scheduling_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python gate_scheduling_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.knapsack_2d_sat",
+      "type": "case",
+      "title": "Google OR-Tools official knapsack 2d sat",
+      "summary": "Official packing sample covering item placement, capacity limits, and value or feasibility objectives.",
+      "retrieval": {
+        "aliases": [
+          "knapsack 2d sat",
+          "OR-Tools official knapsack 2d sat"
+        ],
+        "signals": [
+          "official knapsack 2d sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/knapsack_2d_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "packing",
+        "related_formulation": "reference.model.bin_packing_problem_bpp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python knapsack_2d_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.line_balancing_sat",
+      "type": "case",
+      "title": "Google OR-Tools official line balancing sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "line balancing sat",
+          "OR-Tools official line balancing sat"
+        ],
+        "signals": [
+          "official line balancing sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/line_balancing_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python line_balancing_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.linear_assignment_api",
+      "type": "case",
+      "title": "Google OR-Tools official linear assignment api",
+      "summary": "Official assignment/allocation sample covering worker-task compatibility, grouping, or resource limits.",
+      "retrieval": {
+        "aliases": [
+          "linear assignment api",
+          "OR-Tools official linear assignment api"
+        ],
+        "signals": [
+          "official linear assignment api"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/linear_assignment_api.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "assignment",
+        "related_formulation": "reference.model.generalized_assignment_problem_gap",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python linear_assignment_api.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.linear_programming",
+      "type": "case",
+      "title": "Google OR-Tools official linear programming",
+      "summary": "Official linear or network optimization sample with structured variables, balance constraints, and solver output.",
+      "retrieval": {
+        "aliases": [
+          "linear programming",
+          "OR-Tools official linear programming"
+        ],
+        "signals": [
+          "official linear programming"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/linear_programming.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "LP/flow",
+        "related_formulation": "reference.model.min_cost_flow",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python linear_programming.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.memory_layout_and_infeasibility_sat",
+      "type": "case",
+      "title": "Google OR-Tools official memory layout and infeasibility sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "memory layout and infeasibility sat",
+          "OR-Tools official memory layout and infeasibility sat"
+        ],
+        "signals": [
+          "official memory layout and infeasibility sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/memory_layout_and_infeasibility_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python memory_layout_and_infeasibility_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.maximize_combinations_sat",
+      "type": "case",
+      "title": "Google OR-Tools official maximize combinations sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "maximize combinations sat",
+          "OR-Tools official maximize combinations sat"
+        ],
+        "signals": [
+          "official maximize combinations sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/maximize_combinations_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python maximize_combinations_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.no_wait_baking_scheduling_sat",
+      "type": "case",
+      "title": "Google OR-Tools official no wait baking scheduling sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "no wait baking scheduling sat",
+          "OR-Tools official no wait baking scheduling sat"
+        ],
+        "signals": [
+          "official no wait baking scheduling sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/no_wait_baking_scheduling_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python no_wait_baking_scheduling_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.prize_collecting_tsp",
+      "type": "case",
+      "title": "Google OR-Tools official prize collecting tsp",
+      "summary": "Official tour-planning sample covering Hamiltonian routing, distance costs, or optional-node decisions.",
+      "retrieval": {
+        "aliases": [
+          "prize collecting tsp",
+          "OR-Tools official prize collecting tsp"
+        ],
+        "signals": [
+          "official prize collecting tsp"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/prize_collecting_tsp.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "TSP",
+        "related_formulation": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python prize_collecting_tsp.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.prize_collecting_tsp_sat",
+      "type": "case",
+      "title": "Google OR-Tools official prize collecting tsp sat",
+      "summary": "Official tour-planning sample covering Hamiltonian routing, distance costs, or optional-node decisions.",
+      "retrieval": {
+        "aliases": [
+          "prize collecting tsp sat",
+          "OR-Tools official prize collecting tsp sat"
+        ],
+        "signals": [
+          "official prize collecting tsp sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/prize_collecting_tsp_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "TSP",
+        "related_formulation": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python prize_collecting_tsp_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.prize_collecting_vrp",
+      "type": "case",
+      "title": "Google OR-Tools official prize collecting vrp",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "prize collecting vrp",
+          "OR-Tools official prize collecting vrp"
+        ],
+        "signals": [
+          "official prize collecting vrp"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/prize_collecting_vrp.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python prize_collecting_vrp.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.prize_collecting_vrp_sat",
+      "type": "case",
+      "title": "Google OR-Tools official prize collecting vrp sat",
+      "summary": "Official routing sample covering the routing constraint or search feature named in the source file.",
+      "retrieval": {
+        "aliases": [
+          "prize collecting vrp sat",
+          "OR-Tools official prize collecting vrp sat"
+        ],
+        "signals": [
+          "official prize collecting vrp sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/prize_collecting_vrp_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "VRP",
+        "related_formulation": "reference.model.capacitated_vrp_cvrp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python prize_collecting_vrp_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.rcpsp_sat",
+      "type": "case",
+      "title": "Google OR-Tools official rcpsp sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "rcpsp sat",
+          "OR-Tools official rcpsp sat"
+        ],
+        "signals": [
+          "official rcpsp sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/rcpsp_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python rcpsp_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.reallocate_sat",
+      "type": "case",
+      "title": "Google OR-Tools official reallocate sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "reallocate sat",
+          "OR-Tools official reallocate sat"
+        ],
+        "signals": [
+          "official reallocate sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/reallocate_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python reallocate_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.spread_robots_sat",
+      "type": "case",
+      "title": "Google OR-Tools official spread robots sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "spread robots sat",
+          "OR-Tools official spread robots sat"
+        ],
+        "signals": [
+          "official spread robots sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/spread_robots_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python spread_robots_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    },
+    {
+      "id": "case.official.catalog.steel_mill_slab_sat",
+      "type": "case",
+      "title": "Google OR-Tools official steel mill slab sat",
+      "summary": "Official constraint-programming sample covering scheduling, logical, resource, or feasibility constraints.",
+      "retrieval": {
+        "aliases": [
+          "steel mill slab sat",
+          "OR-Tools official steel mill slab sat"
+        ],
+        "signals": [
+          "official steel mill slab sat"
+        ]
+      },
+      "payload": {
+        "status": "official_example",
+        "source": {
+          "organization": "Google OR-Tools",
+          "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/steel_mill_slab_sat.py",
+          "documentation_url": "https://developers.google.com/optimization/examples",
+          "license": "Apache-2.0"
+        },
+        "model_family": "scheduling/CP",
+        "related_formulation": "reference.model.job_shop_scheduling_jssp",
+        "data_contract": [
+          "source-defined instance data",
+          "decision variables",
+          "hard constraints",
+          "objective or feasibility criterion"
+        ],
+        "solution_recipe": [
+          "Load instance data from the official sample",
+          "Create the source-defined variables and constraints",
+          "Invoke the documented OR-Tools solver interface",
+          "Print the source-defined solution and validation statistics"
+        ],
+        "solver_hint": {
+          "interface": "OR-Tools official sample",
+          "method": "source-defined CP-SAT, RoutingModel, or linear solver"
+        },
+        "known_solution": {
+          "status": "source_verified_not_reproduced_in_catalog"
+        },
+        "validation_checks": [
+          "All source-defined hard constraints are satisfied",
+          "Solver status is reported",
+          "Objective or feasibility output is retained from the official program"
+        ],
+        "reproduction": {
+          "command": "python steel_mill_slab_sat.py",
+          "observed_status": "official source linked; catalog entry not locally re-executed"
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.simple_routing_program"
+    },
+    {
+      "source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.tsp"
+    },
+    {
+      "source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.tsp_cities"
+    },
+    {
+      "source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.tsp_circuit_board"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_breaks_from_start"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_initial_routes"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_items_to_deliver"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_node_max"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_nodes_indices"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_pickup_delivery_fifo"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_pickup_delivery_lifo"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_solution_callback"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_time_windows_per_vehicles"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.vrp_tokens"
+    },
+    {
+      "source": "reference.model.generalized_assignment_problem_gap",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.assignment_sat"
+    },
+    {
+      "source": "reference.model.bin_packing_problem_bpp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.bin_packing_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.binpacking_problem_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.earliness_tardiness_cost_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.minimal_jobshop_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.no_overlap_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.optional_interval_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.overlapping_intervals_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.schedule_requests_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.scheduling_with_calendar_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.sequences_in_no_overlap_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.soft_constraints_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.solution_hinting_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.solve_with_time_limit_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.step_function_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.stop_after_n_solutions_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.transitions_in_no_overlap_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.all_different_except_zero_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.bool_and_int_var_product_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.bool_or_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.boolean_product_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.channeling_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.cumulative_variable_profile_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.interval_relations_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.interval_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.literal_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.ranking_circuit_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.ranking_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.reified_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.nqueens_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.rabbits_and_pheasants_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.non_linear_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.assumptions_sample_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.cp_sat_example"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.simple_sat_program"
+    },
+    {
+      "source": "reference.model.generalized_assignment_problem_gap",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.assignment_with_constraints_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.balance_group_sat"
+    },
+    {
+      "source": "reference.model.min_cost_flow",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.bus_driver_scheduling_flow_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.car_sequencing_optimization_sat"
+    },
+    {
+      "source": "reference.model.min_cost_flow",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.chemical_balance_lp"
+    },
+    {
+      "source": "reference.model.min_cost_flow",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.chemical_balance_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.clustering_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.cover_rectangle_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.cryptarithm_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.gate_scheduling_sat"
+    },
+    {
+      "source": "reference.model.bin_packing_problem_bpp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.knapsack_2d_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.line_balancing_sat"
+    },
+    {
+      "source": "reference.model.generalized_assignment_problem_gap",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.linear_assignment_api"
+    },
+    {
+      "source": "reference.model.min_cost_flow",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.linear_programming"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.memory_layout_and_infeasibility_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.maximize_combinations_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.no_wait_baking_scheduling_sat"
+    },
+    {
+      "source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.prize_collecting_tsp"
+    },
+    {
+      "source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.prize_collecting_tsp_sat"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.prize_collecting_vrp"
+    },
+    {
+      "source": "reference.model.capacitated_vrp_cvrp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.prize_collecting_vrp_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.rcpsp_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.reallocate_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.spread_robots_sat"
+    },
+    {
+      "source": "reference.model.job_shop_scheduling_jssp",
+      "relation": "EXEMPLIFIED_BY",
+      "target": "case.official.catalog.steel_mill_slab_sat"
+    }
+  ],
+  "source_manifest": {
+    "authority": "Google OR-Tools stable official source tree; each catalog case preserves its exact source URL. Entries without local execution are explicitly marked source_verified_not_reproduced_in_catalog."
+  }
+}

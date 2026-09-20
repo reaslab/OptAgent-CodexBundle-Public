@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "case_id": "case_001_cpit_demo",
+  "data_objects": {
+    "periods": {
+      "role": "set",
+      "source_type": "json",
+      "source_path": "code/data/periods.json",
+      "key_fields": ["period"],
+      "value_fields": {"discount_factor": {"field": "discount_factor", "type": "number", "unit": "ratio"}},
+      "metadata": {"kind": "synthetic", "authenticity": "synthetic", "materialized": true, "source_basis": "Illustrative three-year planning horizon", "generation": {"method": "Hand-specified bounded scenario", "randomness_used": true, "seed": 20260908}},
+      "meaning": "Planning periods and discount factors",
+      "validation_notes": []
+    },
+    "blocks": {
+      "role": "parameter_table",
+      "source_type": "json",
+      "source_path": "code/data/blocks.json",
+      "key_fields": ["block_id"],
+      "value_fields": {"labor": {"field": "labor", "type": "number", "unit": "crew-hours"}, "equipment": {"field": "equipment", "type": "number", "unit": "equipment-hours"}, "profit": {"field": "profit", "type": "object", "unit": "currency"}},
+      "metadata": {"kind": "synthetic", "authenticity": "synthetic", "materialized": true, "source_basis": "Illustrative CPIT economics and resource coefficients", "generation": {"method": "Hand-specified bounded scenario", "randomness_used": true, "seed": 20260908}},
+      "meaning": "Block resource consumption and period-specific discounted profit",
+      "validation_notes": []
+    },
+    "resources": {
+      "role": "parameter_table",
+      "source_type": "json",
+      "source_path": "code/data/resources.json",
+      "key_fields": ["period", "resource"],
+      "value_fields": {"capacity": {"field": "capacity", "type": "number", "unit": "resource-units"}},
+      "metadata": {"kind": "synthetic", "authenticity": "synthetic", "materialized": true, "source_basis": "Illustrative per-period resource bounds", "generation": {"method": "Hand-specified bounded scenario", "randomness_used": true, "seed": 20260908}},
+      "meaning": "Per-period labor and equipment capacities",
+      "validation_notes": []
+    },
+    "predecessors": {
+      "role": "sparse_relation",
+      "source_type": "json",
+      "source_path": "code/data/predecessors.json",
+      "key_fields": ["predecessor", "successor"],
+      "value_fields": {},
+      "metadata": {"kind": "synthetic", "authenticity": "synthetic", "materialized": true, "source_basis": "Illustrative pit-wall precedence DAG", "generation": {"method": "Hand-specified acyclic relation", "randomness_used": true, "seed": 20260908}},
+      "meaning": "Direct physical predecessor arcs",
+      "validation_notes": []
+    }
+  },
+  "relationships": [
+    {"from": "predecessors.predecessor", "to": "blocks.block_id", "type": "foreign_key"},
+    {"from": "predecessors.successor", "to": "blocks.block_id", "type": "foreign_key"},
+    {"from": "resources.period", "to": "periods.period", "type": "foreign_key"}
+  ],
+  "assumptions": [
+    "Each block is either mined once in one period or left unmined.",
+    "A direct predecessor must be mined in a strictly earlier period.",
+    "Profit values are already discounted to the planning base date.",
+    "Resource consumption is linear and independent across blocks."
+  ],
+  "ambiguities": []
+}
+

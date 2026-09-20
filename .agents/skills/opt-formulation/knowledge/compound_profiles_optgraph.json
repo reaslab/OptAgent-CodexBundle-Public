@@ -1,0 +1,284 @@
+{
+  "schema_version": "1.0",
+  "graph_id": "compound-profiles-optgraph",
+  "graph_version": "2026-09-19.1",
+  "domain": "optimization",
+  "domain_signals": [
+    "dial-a-ride", "dial a ride", "DARP", "paratransit", "按需响应", "接送路径",
+    "facility location routing", "location routing", "选址路径", "配送选址",
+    "3d tic-tac-toe", "3d tic tac toe", "grid labeling", "棋盘填充", "网格赋值", "三维井字棋", "完整直线", "对角线"
+  ],
+  "feature_catalog": {
+    "dial_a_ride": {
+      "positive": ["dial-a-ride", "dial a ride", "DARP", "paratransit", "按需响应", "接送服务"],
+      "negative": []
+    },
+    "passenger_load": {
+      "positive": ["passenger load", "on-board passengers", "乘客载荷", "在途乘客", "车上乘客"],
+      "negative": []
+    },
+    "grid_line_count": {
+      "positive": ["3d tic-tac-toe", "3d tic tac toe", "complete line", "complete lines", "complete x or o lines", "full line", "full lines", "monochromatic line", "三维井字棋", "完整直线", "同色直线"],
+      "negative": []
+    }
+  },
+  "nodes": [
+    {
+      "id": "family.operations_planning",
+      "type": "problem_family",
+      "title": "Production and inventory planning",
+      "summary": "Plan production, inventory, replenishment, setup, and backlog decisions over time."
+    },
+    {
+      "id": "family.combinatorial_scheduling",
+      "type": "problem_family",
+      "title": "Combinatorial scheduling",
+      "summary": "Schedule jobs, machines, shifts, and other scarce resources with precedence and non-overlap rules."
+    },
+    {
+      "id": "family.service_routing",
+      "type": "problem_family",
+      "title": "Service vehicle routing",
+      "summary": "Construct vehicle routes to serve customers or passengers from one or more depots."
+    },
+    {
+      "id": "family.network_design",
+      "type": "problem_family",
+      "title": "Transport and network design",
+      "summary": "Route flow through transportation or activated network arcs under balance and capacity rules."
+    },
+    {
+      "id": "problem_family.dial_a_ride",
+      "type": "problem_family",
+      "title": "Dial-a-Ride and passenger routing",
+      "summary": "Paired passenger pickup and delivery with vehicle continuity, capacity, time windows, and ride-time limits."
+    },
+    {
+      "id": "formulation.dial_a_ride_tw_ride_time",
+      "type": "formulation",
+      "title": "DARP with time windows and maximum ride time",
+      "summary": "A composite routing formulation for paired pickup and delivery requests with same-vehicle, precedence, passenger-load, time-window, and maximum-ride-time constraints.",
+      "payload": {
+        "feature_signature": ["dial_a_ride", "pickup_delivery", "same_vehicle", "time_windows", "capacity", "ride_time", "passenger_load", "depot_start_end", "precedence", "assignment", "distance_objective"],
+        "composition": ["capacitated vehicle routing", "pickup and delivery", "time-window routing"],
+        "source_basis": ["reference.model.capacitated_vrp_cvrp", "case.official.ortools_vrp_pickup_delivery", "case.official.ortools_pdptw", "case.official.ortools_cvrptw"],
+        "data_contract": ["vehicles", "pickup_delivery_requests", "nodes", "travel_time_or_distance", "vehicle_capacity", "time_windows", "service_time", "maximum_ride_time"],
+        "blueprint": {
+          "variables": ["x[v,i,j] binary: vehicle v traverses arc i->j", "y[r,v] binary: request r uses vehicle v", "t[v,i] continuous: service start time", "load[v,i] continuous: onboard passenger load"],
+          "objective": "minimize sum(v,i,j) travel_time[i,j] * x[v,i,j]",
+          "constraint_templates": ["depot_start_end_and_flow", "each_request_pickup_and_delivery_once", "same_vehicle_pairing", "pickup_precedes_delivery", "capacity_load_propagation", "time_window_bounds", "delivery_time_minus_pickup_time <= maximum_ride_time", "subtour_elimination"],
+          "instantiation_rule": "Bind request pickup/dropoff pairs and vehicle/node data before expanding indexed constraints."
+        },
+        "validation_checks": ["every request has exactly one pickup and delivery", "pickup and delivery use the same vehicle", "pickup precedes delivery", "route load never exceeds capacity", "all service starts satisfy time windows", "ride time limits hold", "routes start and end at a depot"],
+        "use": "Composite retrieval profile; instantiate equations only after checking the supplied request, vehicle, node, and travel-time data."
+      }
+    },
+    {
+      "id": "variant.dial_a_ride_tw_ride_time",
+      "type": "variant",
+      "title": "Dial-a-Ride (DARP): pickup-delivery, time windows, capacity, and ride time",
+      "summary": "Route paired passenger requests while preserving same-vehicle service, pickup-before-delivery order, capacity, time windows, and a maximum ride duration.",
+      "retrieval": {
+        "aliases": ["DARP", "dial-a-ride", "dial a ride", "paratransit routing", "passenger pickup delivery", "paired passenger routing", "按需响应路径", "接送路径"],
+        "signals": ["dial-a-ride", "DARP", "pickup and delivery", "same vehicle", "maximum ride time", "time window"],
+        "feature_support": ["dial_a_ride", "pickup_delivery", "same_vehicle", "time_windows", "capacity", "ride_time", "passenger_load", "depot_start_end", "subtour_elimination", "precedence", "assignment", "distance_objective"],
+        "feature_weights": {"dial_a_ride": 12.0, "pickup_delivery": 7.0, "same_vehicle": 7.0, "time_windows": 5.0, "capacity": 4.0, "ride_time": 7.0, "passenger_load": 4.0, "depot_start_end": 2.0, "precedence": 2.0, "assignment": 1.0, "distance_objective": 1.0}
+      }
+    },
+    {
+      "id": "problem_family.location_routing",
+      "type": "problem_family",
+      "title": "Integrated facility location and routing",
+      "summary": "Jointly choose facilities and construct customer routes under assignment, capacity, and service constraints."
+    },
+    {
+      "id": "formulation.facility_location_routing_tw",
+      "type": "formulation",
+      "title": "Capacitated facility-location routing with time windows",
+      "summary": "A composite model linking facility opening, customer assignment, vehicle routes, capacity, and route time windows.",
+      "payload": {
+        "feature_signature": ["fixed_opening_cost", "assignment", "capacity", "time_windows", "depot_start_end", "subtour_elimination"],
+        "composition": ["facility location", "capacitated vehicle routing", "time-window routing"],
+        "source_basis": ["facility_location_optgraph.json", "reference.model.capacitated_vrp_cvrp", "case.official.gurobi_capacitated_facility_location", "case.official.ortools_cvrptw"],
+        "data_contract": ["candidate_facilities", "customers", "facility_opening_cost", "assignment_or_route_cost", "vehicle_capacities", "travel_times", "customer_time_windows"],
+        "blueprint": {
+          "variables": ["open[f] binary", "assign[f,c] binary or route-entry indicator", "x[v,i,j] binary route arc"],
+          "objective": "minimize facility opening cost plus assignment and route travel cost",
+          "constraint_templates": ["each_customer_assigned_once", "assignment_only_to_open_facility", "route_starts_at_selected_facility", "vehicle_capacity", "time_window_propagation", "subtour_elimination"],
+          "instantiation_rule": "Choose a joint route formulation only when facility and route decisions are simultaneous; otherwise preserve the stated two-stage semantics."
+        },
+        "validation_checks": ["every customer is assigned once", "no assignment uses a closed facility", "route capacity and time windows hold", "all selected routes connect to an opened facility"],
+        "use": "Composite retrieval profile; confirm whether facilities and routes are jointly or sequentially decided."
+      }
+    },
+    {
+      "id": "variant.facility_location_routing_tw",
+      "type": "variant",
+      "title": "Integrated capacitated facility location and routing with time windows",
+      "summary": "Open facilities, assign customers, and route vehicles from selected facilities while enforcing capacity and time windows.",
+      "retrieval": {
+        "aliases": ["facility location routing", "location routing problem", "integrated location and routing", "capacitated location routing", "选址路径问题", "配送中心选址与路径"],
+        "signals": ["facility location routing", "location routing", "open facilities and route", "time windows"],
+        "feature_support": ["fixed_opening_cost", "assignment", "capacity", "time_windows", "depot_start_end", "subtour_elimination"],
+        "feature_weights": {"fixed_opening_cost": 7.0, "assignment": 4.0, "capacity": 4.0, "time_windows": 5.0, "depot_start_end": 2.0, "subtour_elimination": 2.0}
+      }
+    },
+    {
+      "id": "problem_family.stochastic_robust_planning",
+      "type": "problem_family",
+      "title": "Stochastic and robust planning",
+      "summary": "Plan under uncertain demand or parameters using scenarios, recourse, robust protection, or chance constraints."
+    },
+    {
+      "id": "formulation.stochastic_robust_production_scheduling",
+      "type": "formulation",
+      "title": "Scenario-based production scheduling with robust or chance constraints",
+      "summary": "A composite planning formulation with first-stage decisions, scenario recourse, uncertainty protection, and optional service probability constraints.",
+      "payload": {
+        "feature_signature": ["stochastic_demand", "robustness", "chance_constraints", "capacity", "multiobjective"],
+        "composition": ["production planning", "scenario recourse", "robust or chance constraints"],
+        "source_basis": ["family.reference.two_stage_stochastic_scenario_based", "family.reference.robust_optimization", "family.reference.chance_constrained"],
+        "data_contract": ["scenarios", "scenario probabilities", "first-stage parameters", "recourse parameters", "capacity", "demand distributions or uncertainty sets"],
+        "blueprint": {
+          "variables": ["x first-stage production or capacity decisions", "y[s] scenario recourse decisions", "u[s] violation or shortage variables when permitted"],
+          "objective": "minimize first-stage cost plus expected or worst-case recourse cost",
+          "constraint_templates": ["nonanticipativity_of_first_stage", "scenario_demand_balance", "capacity_under_scenario", "uncertainty_set_protection_or_worst_case", "chance_service_level", "recourse_feasibility"],
+          "instantiation_rule": "Choose expected-value, worst-case, or chance-constrained semantics from the statement; do not silently replace one with another."
+        },
+        "validation_checks": ["scenario data and probabilities sum correctly", "first-stage decisions are scenario-independent", "each scenario satisfies capacity and demand rules", "chance or robust guarantees are recomputed from the reported solution"]
+      }
+    },
+    {
+      "id": "variant.stochastic_robust_production_scheduling",
+      "type": "variant",
+      "title": "Stochastic or robust production scheduling with recourse",
+      "summary": "Schedule production under uncertain demand using scenarios, recourse, robust protection, or chance constraints.",
+      "retrieval": {
+        "aliases": ["two-stage stochastic production", "scenario-based production scheduling", "robust production planning", "chance-constrained scheduling", "随机生产计划", "鲁棒排程"],
+        "signals": ["stochastic demand", "uncertain demand", "scenarios", "robust optimization", "chance constraint"],
+        "feature_support": ["stochastic_demand", "robustness", "chance_constraints", "capacity", "multiobjective", "inventory"],
+        "feature_weights": {"stochastic_demand": 9.0, "robustness": 8.0, "chance_constraints": 8.0, "capacity": 3.0, "inventory": 2.0}
+      }
+    },
+    {
+      "id": "problem_family.grid_line_labeling",
+      "type": "problem_family",
+      "title": "Grid labeling with line-count objective",
+      "summary": "Assign discrete symbols to a fixed grid and count complete or monochromatic lines induced by the assignment."
+    },
+    {
+      "id": "formulation.grid_line_count_minimization",
+      "type": "formulation",
+      "title": "Binary grid labeling with complete-line minimization",
+      "summary": "Use binary cell-label variables and line indicator variables to minimize the number of complete lines while filling every cell.",
+      "payload": {
+        "feature_signature": ["grid_assignment", "grid_line_count", "line_count_objective", "exact_fill", "multiobjective"],
+        "composition": ["binary assignment", "line indicator linearization", "symmetry handling"],
+        "source_basis": ["internal pattern extracted from the 4x4x4 cooperative tic-tac-toe formulation case"],
+        "data_contract": ["grid dimensions", "cell index set", "symbol set", "candidate line list", "symbol-count or turn rules"],
+        "blueprint": {
+          "variables": ["z[cell,symbol] binary: cell receives symbol", "h[line,symbol] binary: line is complete in symbol"],
+          "objective": "minimize sum(line,symbol) h[line,symbol]",
+          "constraint_templates": ["each_cell_gets_exactly_one_symbol", "h[line,symbol] <= z[cell,symbol] for every cell on line", "h[line,symbol] >= sum(z[cell,symbol] on line) - line_length + 1", "optional_symbol_balance_or_turn_constraints"],
+          "instantiation_rule": "Generate the candidate line list from the board geometry; do not assume only axis-aligned lines."
+        },
+        "validation_checks": ["every cell receives exactly one symbol", "each line indicator matches all cells on that line", "the objective recounts all complete lines", "turn or symbol-count rules are respected"],
+        "use": "Retrieval profile for grid-labeling problems; line definitions and symmetry choices remain instance-specific."
+      }
+    },
+    {
+      "id": "variant.grid_line_count_minimization",
+      "type": "variant",
+      "title": "3D grid symbol assignment minimizing complete lines",
+      "summary": "Fill a three-dimensional board with symbols and minimize complete same-symbol rows, columns, layers, or diagonals.",
+      "retrieval": {
+        "aliases": ["3D tic-tac-toe", "3D tic tac toe", "cooperative tic-tac-toe", "grid labeling", "board symbol assignment", "complete-line minimization", "三维井字棋", "棋盘符号分配"],
+        "signals": ["3D tic-tac-toe", "complete line", "fill every cell", "minimize the number of lines"],
+        "feature_support": ["grid_assignment", "grid_line_count", "line_count_objective", "exact_fill", "multiobjective"],
+        "feature_weights": {"grid_assignment": 10.0, "grid_line_count": 10.0, "line_count_objective": 8.0, "exact_fill": 5.0}
+      }
+    },
+    {
+      "id": "formulation_pattern.same_vehicle_pairing",
+      "type": "formulation_pattern",
+      "title": "Same-vehicle pickup-delivery pairing",
+      "summary": "Link the pickup and delivery decisions for one request to the same vehicle and require both stops when the request is served.",
+      "payload": {"source_basis": "composite DARP profile"}
+    },
+    {
+      "id": "formulation_pattern.ride_time_limit",
+      "type": "formulation_pattern",
+      "title": "Maximum passenger ride-time constraint",
+      "summary": "Bound delivery time minus pickup time, including service-time conventions, for every served passenger request.",
+      "payload": {"source_basis": "composite DARP profile"}
+    },
+    {
+      "id": "formulation.capacitated_vrptw",
+      "type": "formulation",
+      "title": "Capacitated vehicle routing with time windows",
+      "summary": "A routing formulation with vehicle capacity, customer time-window propagation, depot continuity, and subtour control.",
+      "payload": {
+        "feature_signature": ["capacity", "time_windows", "vehicle_capacity", "depot_start_end", "subtour_elimination"],
+        "composition": ["capacitated vehicle routing", "time-window routing"],
+        "source_basis": ["reference.model.capacitated_vrp_cvrp", "case.official.ortools_cvrptw", "case.official.ortools_cvrptw_break"],
+        "data_contract": ["distance_or_time_matrix", "customer_demands", "vehicle_capacities", "customer_time_windows", "depot"],
+        "blueprint": {
+          "variables": ["x[v,i,j] binary route arc", "t[v,i] continuous arrival/service time", "load[v,i] continuous cumulative load"],
+          "objective": "minimize total route distance or travel time",
+          "constraint_templates": ["each_customer_visited_once", "depot_start_end", "vehicle_capacity_propagation", "time_window_propagation", "subtour_elimination"],
+          "instantiation_rule": "Use the supplied matrix units and time-window horizon to derive valid propagation bounds."
+        },
+        "validation_checks": ["each customer is visited once", "capacity never exceeds vehicle limit", "arrival times lie in windows", "each route starts and ends at its depot"]
+      }
+    },
+    {
+      "id": "variant.capacitated_vrptw",
+      "type": "variant",
+      "title": "Capacitated VRP with time windows (CVRPTW)",
+      "summary": "Visit each customer once with capacity-limited vehicles while respecting customer time windows and depot route continuity.",
+      "retrieval": {
+        "aliases": ["CVRPTW", "capacitated vehicle routing with time windows", "time-window vehicle routing", "capacity routing with appointments", "带时间窗的容量车辆路径"],
+        "signals": ["CVRPTW", "vehicle routing with time windows", "time-window vehicle routing"],
+        "feature_support": ["capacity", "time_windows", "vehicle_capacity", "depot_start_end", "depot_return", "subtour_elimination"],
+        "feature_weights": {"capacity": 5.0, "time_windows": 8.0, "vehicle_capacity": 4.0, "depot_start_end": 2.0, "depot_return": 2.0, "subtour_elimination": 2.0},
+        "feature_conflicts": {"time_windows:false": 25.0}
+      }
+    },
+    {
+      "id": "formulation_pattern.complete_line_indicator",
+      "type": "formulation_pattern",
+      "title": "Complete-line indicator",
+      "summary": "Introduce an indicator for each candidate line and activate it only when every cell on that line carries the same symbol.",
+      "payload": {"source_basis": "internal grid-line formulation pattern"}
+    }
+  ],
+  "edges": [
+    {"source": "variant.dial_a_ride_tw_ride_time", "relation": "HAS_MODEL", "target": "formulation.dial_a_ride_tw_ride_time"},
+    {"source": "formulation.dial_a_ride_tw_ride_time", "relation": "BELONGS_TO", "target": "problem_family.dial_a_ride"},
+    {"source": "formulation.dial_a_ride_tw_ride_time", "relation": "COMPOSES", "target": "reference.model.capacitated_vrp_cvrp"},
+    {"source": "formulation.dial_a_ride_tw_ride_time", "relation": "USES_PATTERN", "target": "formulation_pattern.same_vehicle_pairing"},
+    {"source": "formulation.dial_a_ride_tw_ride_time", "relation": "USES_PATTERN", "target": "formulation_pattern.ride_time_limit"},
+    {"source": "formulation.dial_a_ride_tw_ride_time", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_pickup_delivery"},
+    {"source": "formulation.dial_a_ride_tw_ride_time", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_pdptw"},
+    {"source": "formulation.dial_a_ride_tw_ride_time", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrptw"},
+    {"source": "variant.capacitated_vrptw", "relation": "HAS_MODEL", "target": "formulation.capacitated_vrptw"},
+    {"source": "formulation.capacitated_vrptw", "relation": "BELONGS_TO", "target": "family.service_routing"},
+    {"source": "formulation.capacitated_vrptw", "relation": "COMPOSES", "target": "reference.model.capacitated_vrp_cvrp"},
+    {"source": "formulation.capacitated_vrptw", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrptw"},
+    {"source": "formulation.capacitated_vrptw", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrptw_break"},
+    {"source": "variant.facility_location_routing_tw", "relation": "HAS_MODEL", "target": "formulation.facility_location_routing_tw"},
+    {"source": "formulation.facility_location_routing_tw", "relation": "BELONGS_TO", "target": "problem_family.location_routing"},
+    {"source": "formulation.facility_location_routing_tw", "relation": "COMPOSES", "target": "reference.model.uncapacitated_facility_location_uflp"},
+    {"source": "formulation.facility_location_routing_tw", "relation": "COMPOSES", "target": "reference.model.capacitated_vrp_cvrp"},
+    {"source": "formulation.facility_location_routing_tw", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_capacitated_facility_location"},
+    {"source": "formulation.facility_location_routing_tw", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrptw"},
+    {"source": "variant.stochastic_robust_production_scheduling", "relation": "HAS_MODEL", "target": "formulation.stochastic_robust_production_scheduling"},
+    {"source": "formulation.stochastic_robust_production_scheduling", "relation": "BELONGS_TO", "target": "problem_family.stochastic_robust_planning"},
+    {"source": "formulation.stochastic_robust_production_scheduling", "relation": "BELONGS_TO", "target": "family.reference.two_stage_stochastic_scenario_based"},
+    {"source": "formulation.stochastic_robust_production_scheduling", "relation": "BELONGS_TO", "target": "family.reference.robust_optimization"},
+    {"source": "formulation.stochastic_robust_production_scheduling", "relation": "BELONGS_TO", "target": "family.reference.chance_constrained"},
+    {"source": "variant.grid_line_count_minimization", "relation": "HAS_MODEL", "target": "formulation.grid_line_count_minimization"},
+    {"source": "formulation.grid_line_count_minimization", "relation": "BELONGS_TO", "target": "problem_family.grid_line_labeling"},
+    {"source": "formulation.grid_line_count_minimization", "relation": "USES_PATTERN", "target": "formulation_pattern.complete_line_indicator"}
+  ]
+}

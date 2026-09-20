@@ -1,0 +1,394 @@
+{
+  "schema_version": "1.0",
+  "graph_id": "official-cases-optgraph",
+  "graph_version": "2026-09-05.6",
+  "domain": "optimization",
+  "domain_signals": ["official example", "OR-Tools", "Gurobi", "assignment", "knapsack", "maintenance", "pickup delivery", "resources", "综合任务"],
+  "nodes": [
+    {
+      "id": "case.official.ortools_cvrp_capacity",
+      "type": "case",
+      "title": "OR-Tools official capacity VRP example",
+      "summary": "The official OR-Tools CVRP sample routes 60 units with four vehicles and vehicle capacity 15.",
+      "retrieval": {"aliases": ["OR-Tools CVRP example", "official capacity vehicle routing", "four vehicle capacity routing"], "signals": ["official CVRP", "vehicle capacity 15"]},
+      "payload": {
+        "status": "official_example",
+        "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_capacity.py", "documentation_url": "https://developers.google.com/optimization/routing/cvrp", "license": "Apache-2.0"},
+        "instance_size": {"nodes": 17, "vehicles": 4},
+        "data_contract": ["distance_matrix", "demands", "vehicle_capacities", "depot"],
+        "solution_recipe": ["Create RoutingIndexManager and RoutingModel", "Register a distance callback and minimize arc cost", "Register demand callback and add vehicle capacity dimension", "Solve with PATH_CHEAPEST_ARC plus GUIDED_LOCAL_SEARCH", "Print each route distance/load and aggregate totals"],
+        "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "first solution plus guided local search"},
+        "known_solution": {"objective": 6208, "total_distance": 6208, "total_load": 60, "vehicle_route_distance": [1552, 1552, 1552, 1552]},
+        "validation_checks": ["Every non-depot node is visited once", "Each route load is at most 15", "Total load is 60", "Printed route distances sum to 6208"],
+        "reproduction": {"command": "python vrp_capacity.py", "observed_status": "feasible solution printed; official sample uses a one-second search limit"}
+      }
+    },
+    {
+      "id": "case.official.ortools_cvrptw",
+      "type": "case",
+      "title": "OR-Tools official VRP with time windows example",
+      "summary": "The official OR-Tools time-window routing sample reports four vehicle routes and total route time 82.",
+      "retrieval": {"aliases": ["OR-Tools time window VRP", "official CVRPTW example", "routing time windows"], "signals": ["official time window VRP", "total route time 82"]},
+      "payload": {
+        "status": "official_example",
+        "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_time_windows.py", "documentation_url": "https://developers.google.com/optimization/routing/vrptw", "license": "Apache-2.0"},
+        "instance_size": {"nodes": 17, "vehicles": 4},
+        "data_contract": ["time_matrix", "time_windows", "num_vehicles", "depot"],
+        "solution_recipe": ["Create the routing manager and model", "Register transit time callback", "Add a Time dimension with waiting slack and route horizon", "Apply node time-window bounds", "Solve and print arrival intervals and total route time"],
+        "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "time dimension plus guided local search"},
+        "known_solution": {"objective": 71, "total_route_time": 82, "vehicle_route_time": [18, 24, 20, 20]},
+        "validation_checks": ["Every customer is visited once", "Each arrival lies within its time window", "Route times sum to 82", "The printed objective remains 71 for the official search configuration"],
+        "reproduction": {"command": "python vrp_time_windows.py", "observed_status": "feasible solution printed; objective and route-time totals are recorded separately because the sample prints both"}
+      }
+    },
+    {
+      "id": "case.official.ortools_jobshop_ft06",
+      "type": "case",
+      "title": "OR-Tools official FT06 job-shop example",
+      "summary": "The official OR-Tools FT06 CP-SAT sample schedules six jobs on six machines with optimal makespan 55.",
+      "retrieval": {"aliases": ["OR-Tools FT06", "official job shop example", "six job six machine scheduling"], "signals": ["official FT06 job shop", "optimal makespan 55"]},
+      "payload": {
+        "status": "official_example",
+        "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/jobshop_ft06_sat.py", "documentation_url": "https://developers.google.com/optimization/scheduling/job_shop", "license": "Apache-2.0"},
+        "instance_size": {"jobs": 6, "machines": 6},
+        "data_contract": ["machine sequence per job", "processing duration per operation"],
+        "solution_recipe": ["Create one interval variable per job operation", "Add no-overlap constraints for each machine", "Add precedence constraints within each job", "Define makespan as the maximum final operation end", "Minimize makespan with CP-SAT and print the optimal value"],
+        "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "interval variables plus no-overlap"},
+        "known_solution": {"objective": 55, "makespan": 55},
+        "validation_checks": ["Operations within each job respect their order", "No two operations overlap on a machine", "Makespan is at least every job completion time", "Solver status is OPTIMAL"],
+        "reproduction": {"command": "python jobshop_ft06_sat.py", "observed_status": "OPTIMAL; objective 55"}
+      }
+    },
+    {
+      "id": "case.official.gurobi_facility_location",
+      "type": "case",
+      "title": "Gurobi official facility-location example",
+      "summary": "Gurobi's official facility example builds a plant-to-warehouse mixed-integer model with fixed plant costs and transportation costs.",
+      "retrieval": {"aliases": ["Gurobi facility example", "official facility location", "plant warehouse MIP"], "signals": ["official Gurobi facility", "plant warehouse model"]},
+      "payload": {
+        "status": "official_example",
+        "source": {"organization": "Gurobi Optimization", "code_url": "https://docs.gurobi.com/projects/examples/en/current/examples/python/facility.html", "overview_url": "https://docs.gurobi.com/projects/examples/en/current/overview.html", "license": "Gurobi example source terms"},
+        "data_contract": ["plants", "warehouses", "fixed plant costs", "transportation costs", "warehouse demand", "plant capacity"],
+        "solution_recipe": ["Read model data separately from formulation code", "Create binary plant-open variables", "Create continuous shipment variables", "Add plant capacity and warehouse demand constraints", "Minimize fixed opening plus transportation cost", "Inspect the MIP solution and model attributes"],
+        "solver_hint": {"interface": "Gurobi Python API", "method": "mixed-integer programming"},
+        "known_solution": {"objective": "official example output is solver-instance dependent; retrieve and solve the source example to obtain the run-specific value"},
+        "validation_checks": ["Every warehouse demand is met", "Shipment does not exceed open-plant capacity", "No shipment leaves a closed plant", "Objective includes fixed and variable cost"],
+        "reproduction": {"command": "run the official facility.py example with a licensed Gurobi installation", "observed_status": "source and modeling workflow verified; local licensed solver execution not available in this workspace"}
+      }
+    },
+    {
+      "id": "case.official.ortools_assignment_task_sizes",
+      "type": "case",
+      "title": "OR-Tools official assignment with task sizes",
+      "summary": "Assign tasks to workers while enforcing worker capacity through task-size limits and minimizing assignment cost.",
+      "retrieval": {"aliases": ["OR-Tools task sizes assignment", "capacity-constrained assignment", "worker task size CP-SAT"], "signals": ["official task sizes assignment", "assignment task sizes total cost 326"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/assignment_task_sizes_sat.py", "documentation_url": "https://developers.google.com/optimization/assignment", "license": "Apache-2.0"}, "data_contract": ["worker-task cost matrix", "task sizes", "worker capacities"], "solution_recipe": ["Create Boolean worker-task assignment variables", "Constrain each task to one worker", "Bound each worker's total assigned task size", "Minimize total assignment cost", "Print assignments and cost"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "Boolean assignment with capacity constraints"}, "known_solution": {"objective": 326, "total_cost": 326}, "validation_checks": ["Every task is assigned exactly once", "No worker exceeds task-size capacity", "Printed costs sum to 326"], "reproduction": {"command": "python assignment_task_sizes_sat.py", "observed_status": "feasible solution printed; total cost 326"}}
+    },
+    {
+      "id": "case.official.ortools_assignment_teams",
+      "type": "case",
+      "title": "OR-Tools official assignment with team constraints",
+      "summary": "Assign tasks to workers while respecting team-level assignment rules and minimizing total cost.",
+      "retrieval": {"aliases": ["OR-Tools team assignment", "assignment groups CP-SAT", "team constrained worker assignment"], "signals": ["official team assignment", "assignment teams total cost 250"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/assignment_teams_sat.py", "documentation_url": "https://developers.google.com/optimization/assignment", "license": "Apache-2.0"}, "data_contract": ["worker-task cost matrix", "worker team membership", "team assignment limits"], "solution_recipe": ["Create Boolean assignment variables", "Constrain every task to one worker", "Add team-specific assignment and group constraints", "Minimize total cost", "Print selected worker-task pairs"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "Boolean assignment with team constraints"}, "known_solution": {"objective": 250, "total_cost": 250}, "validation_checks": ["Every task is assigned once", "Team constraints hold", "Printed costs sum to 250"], "reproduction": {"command": "python assignment_teams_sat.py", "observed_status": "feasible solution printed; total cost 250"}}
+    },
+    {
+      "id": "case.official.ortools_multiple_knapsack",
+      "type": "case",
+      "title": "OR-Tools official multiple-knapsack example",
+      "summary": "Select and place items in several capacity-limited bins to maximize total packed value.",
+      "retrieval": {"aliases": ["OR-Tools multiple knapsack", "multi-bin packing value", "multiple capacity knapsack CP-SAT"], "signals": ["official multiple knapsack", "total packed value 395"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/multiple_knapsack_sat.py", "documentation_url": "https://developers.google.com/optimization/pack/multiple_knapsack", "license": "Apache-2.0"}, "data_contract": ["item weights", "item values", "bin capacities"], "solution_recipe": ["Create item-bin assignment Booleans", "Allow each item in at most one bin", "Enforce bin capacity sums", "Maximize packed item value", "Print per-bin contents and totals"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "multiple knapsack with exactly-one placement"}, "known_solution": {"objective": 395, "total_packed_value": 395, "total_packed_weight": 438}, "validation_checks": ["Each item is packed at most once", "Every bin respects capacity", "Packed value is 395", "Packed weight is 438"], "reproduction": {"command": "python multiple_knapsack_sat.py", "observed_status": "OPTIMAL; total packed value 395"}}
+    },
+    {
+      "id": "case.official.ortools_jobshop_maintenance",
+      "type": "case",
+      "title": "OR-Tools official job shop with maintenance",
+      "summary": "Schedule jobs on machines while blocking a maintenance interval and minimizing makespan.",
+      "retrieval": {"aliases": ["OR-Tools job shop maintenance", "machine maintenance scheduling", "maintenance-aware job shop"], "signals": ["official job shop maintenance", "maintenance makespan 15"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/jobshop_with_maintenance_sat.py", "documentation_url": "https://developers.google.com/optimization/scheduling/job_shop", "license": "Apache-2.0"}, "data_contract": ["job operation machine sequences", "processing durations", "machine maintenance interval"], "solution_recipe": ["Create interval variables for operations", "Add job precedence and machine no-overlap constraints", "Add a fixed maintenance interval as a machine blocker", "Minimize makespan with CP-SAT", "Validate the printed schedule"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "interval scheduling plus maintenance no-overlap"}, "known_solution": {"objective": 15, "makespan": 15}, "validation_checks": ["No operation overlaps maintenance", "No machine has overlapping operations", "Job precedences hold", "Solver status is OPTIMAL and makespan is 15"], "reproduction": {"command": "python jobshop_with_maintenance_sat.py", "observed_status": "OPTIMAL; objective 15"}}
+    },
+    {
+      "id": "case.official.ortools_vrp_pickup_delivery",
+      "type": "case",
+      "title": "OR-Tools official pickup-and-delivery VRP",
+      "summary": "Route paired pickup and delivery requests so each pickup precedes its delivery while minimizing total route cost.",
+      "retrieval": {"aliases": ["OR-Tools pickup delivery", "paired pickup and delivery routing", "PDP vehicle routing"], "signals": ["official pickup delivery VRP", "pickup delivery total distance 6916"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_pickup_delivery.py", "documentation_url": "https://developers.google.com/optimization/routing/pickup_delivery", "license": "Apache-2.0"}, "instance_size": {"nodes": 17, "vehicles": 4, "pickup_delivery_pairs": 8}, "data_contract": ["distance matrix", "pickup-delivery pairs", "vehicle starts and ends", "depot"], "solution_recipe": ["Create the routing model", "Force each pickup and delivery pair onto the same vehicle", "Enforce pickup-before-delivery precedence", "Minimize arc distance", "Print each route and aggregate distance"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "same-vehicle and precedence constraints"}, "known_solution": {"objective": 226116, "total_distance": 6916}, "validation_checks": ["Each pair is visited exactly once", "Pickup precedes delivery", "Pair endpoints use the same vehicle", "Total route distance is 6916"], "reproduction": {"command": "python vrp_pickup_delivery.py", "observed_status": "feasible solution printed; total distance 6916"}}
+    },
+    {
+      "id": "case.official.ortools_vrp_resources",
+      "type": "case",
+      "title": "OR-Tools official VRP with resources",
+      "summary": "Route customers with time windows and resource-dependent service intervals, minimizing total route time.",
+      "retrieval": {"aliases": ["OR-Tools VRP resources", "resource constrained time window routing", "vehicle resource intervals"], "signals": ["official VRP resources", "total route time 98"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_resources.py", "documentation_url": "https://developers.google.com/optimization/examples", "license": "Apache-2.0"}, "instance_size": {"nodes": 17, "vehicles": 4}, "data_contract": ["time matrix", "customer time windows", "resource intervals", "vehicle starts and ends"], "solution_recipe": ["Create RoutingIndexManager and RoutingModel", "Add time dimension and customer windows", "Add resource constraints for route intervals", "Minimize route time", "Print arrival intervals and route totals"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "time dimension plus resource constraints"}, "known_solution": {"objective": 71, "total_route_time": 98, "vehicle_route_time": [25, 20, 24, 29]}, "validation_checks": ["Every customer is visited once", "Time windows are respected", "Resource intervals do not overlap", "Route times sum to 98"], "reproduction": {"command": "python vrp_resources.py", "observed_status": "feasible solution printed; total route time 98"}}
+    },
+    {
+      "id": "case.official.ortools_flexible_jobshop",
+      "type": "case",
+      "title": "OR-Tools official flexible job shop",
+      "summary": "Schedule operations that may choose among alternative machines, minimizing the overall makespan.",
+      "retrieval": {"aliases": ["OR-Tools flexible job shop", "alternative machine scheduling", "flexible JSSP CP-SAT"], "signals": ["official flexible job shop", "flexible job shop makespan 6"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/flexible_job_shop_sat.py", "documentation_url": "https://developers.google.com/optimization/scheduling/job_shop", "license": "Apache-2.0"}, "data_contract": ["jobs", "operation alternatives", "eligible machines", "alternative durations"], "solution_recipe": ["Create optional interval per machine alternative", "Choose exactly one alternative per operation", "Add job precedence and machine no-overlap", "Minimize makespan with CP-SAT", "Print selected machine alternatives"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "optional intervals and exactly-one alternatives"}, "known_solution": {"objective": 6, "makespan": 6}, "validation_checks": ["Exactly one machine alternative is selected per operation", "Machine intervals do not overlap", "Job precedences hold", "Makespan is 6"], "reproduction": {"command": "python flexible_job_shop_sat.py", "observed_status": "OPTIMAL; objective 6"}}
+    },
+    {
+      "id": "case.official.ortools_shift_scheduling",
+      "type": "case",
+      "title": "OR-Tools official shift scheduling",
+      "summary": "Assign employee shifts over multiple weeks while balancing coverage, preferences, and soft constraint penalties.",
+      "retrieval": {"aliases": ["OR-Tools shift scheduling", "employee rostering", "weekly shift assignment CP-SAT"], "signals": ["official shift scheduling", "shift scheduling objective 38"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/shift_scheduling_sat.py", "documentation_url": "https://developers.google.com/optimization/scheduling", "license": "Apache-2.0"}, "data_contract": ["employees", "weeks and days", "shift types", "coverage requirements", "preference penalties"], "solution_recipe": ["Create Boolean employee-shift-day variables", "Enforce coverage and at-most-one shift rules", "Add weekly bounds and preference penalties", "Minimize total violation penalty", "Print schedules and violated soft constraints"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "Boolean rostering with soft penalties"}, "known_solution": {"objective": 38}, "validation_checks": ["Coverage constraints are enforced", "No employee works two shifts per day", "Penalty terms reconcile to 38", "All assignments are binary"], "reproduction": {"command": "python shift_scheduling_sat.py", "observed_status": "OPTIMAL; objective 38"}}
+    },
+    {
+      "id": "case.official.ortools_single_machine_setup",
+      "type": "case",
+      "title": "OR-Tools official single-machine setup scheduling",
+      "summary": "Order jobs on one machine with sequence-dependent setup times, release dates, due dates, and precedence constraints.",
+      "retrieval": {"aliases": ["OR-Tools setup release due dates", "sequence dependent setup scheduling", "single machine scheduling CP-SAT"], "signals": ["official setup release due dates", "single machine makespan 112605"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/single_machine_scheduling_with_setup_release_due_dates_sat.py", "documentation_url": "https://developers.google.com/optimization/scheduling", "license": "Apache-2.0"}, "data_contract": ["jobs", "processing durations", "release dates", "due dates", "sequence-dependent setup matrix", "precedence pairs"], "solution_recipe": ["Create one interval per job", "Use a circuit to select job order", "Link order arcs to setup-dependent precedences", "Add release, due-date, and precedence constraints", "Minimize makespan"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "circuit sequencing with reified setup precedences"}, "known_solution": {"objective": 112605, "makespan": 112605}, "validation_checks": ["Each job has one predecessor and successor in the circuit", "Release dates and precedences hold", "Setup times are included", "Makespan is 112605"], "reproduction": {"command": "python single_machine_scheduling_with_setup_release_due_dates_sat.py", "observed_status": "feasible solution printed; final makespan 112605"}}
+    },
+    {
+      "id": "case.official.ortools_cvrp_reload",
+      "type": "case",
+      "title": "OR-Tools official CVRP with reload stations",
+      "summary": "Route capacitated vehicles that may reload at optional stations while respecting time windows and reporting dropped nodes.",
+      "retrieval": {"aliases": ["OR-Tools CVRP reload", "vehicle routing replenishment", "reload station routing"], "signals": ["official CVRP reload", "reload total distance 7464"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/cvrp_reload.py", "documentation_url": "https://developers.google.com/optimization/routing/cvrp", "license": "Apache-2.0"}, "data_contract": ["distance matrix", "customer demands", "reload station nodes", "vehicle capacities", "time windows"], "solution_recipe": ["Create capacity and time dimensions", "Allow optional reload-station visits", "Reset vehicle load at reload stations", "Allow and report dropped orders or stations", "Minimize route distance and print load/time totals"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "capacity dimension with reload resets"}, "known_solution": {"objective": 295064, "total_distance": 7464, "total_load": 72, "total_time": 700}, "validation_checks": ["Reload resets are applied only at stations", "Vehicle loads stay feasible between reloads", "Dropped nodes are reported", "Total distance is 7464"], "reproduction": {"command": "python cvrp_reload.py", "observed_status": "feasible solution printed; total distance 7464"}}
+    },
+    {
+      "id": "case.official.ortools_cvrptw_break",
+      "type": "case",
+      "title": "OR-Tools official VRPTW with driver breaks",
+      "summary": "Route vehicles with capacity and time windows while inserting mandatory driver break intervals.",
+      "retrieval": {"aliases": ["OR-Tools VRP breaks", "driver break routing", "time window VRP mandatory break"], "signals": ["official VRPTW driver breaks", "break total distance 6596"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/cvrptw_break.py", "documentation_url": "https://developers.google.com/optimization/routing/vrptw", "license": "Apache-2.0"}, "data_contract": ["distance matrix", "service times", "time windows", "vehicle capacities", "break intervals"], "solution_recipe": ["Create capacity and time dimensions", "Add customer time-window constraints", "Add mandatory break intervals for each vehicle", "Solve and print break placement and route slack", "Validate route load/time totals"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "time windows plus break intervals"}, "known_solution": {"objective": 6596, "total_distance": 6596, "total_load": 60, "total_time": 387}, "validation_checks": ["Every break is scheduled", "Breaks do not overlap service", "Vehicle loads respect capacity", "Total distance is 6596"], "reproduction": {"command": "python cvrptw_break.py", "observed_status": "feasible solution printed; total distance 6596"}}
+    },
+    {
+      "id": "case.official.ortools_vrp_drop_nodes",
+      "type": "case",
+      "title": "OR-Tools official VRP with optional dropped nodes",
+      "summary": "Choose which customers to serve under route limits, applying penalties to dropped nodes and minimizing penalized travel cost.",
+      "retrieval": {"aliases": ["OR-Tools drop nodes VRP", "prize or penalty routing", "optional customer routing"], "signals": ["official VRP drop nodes", "dropped nodes 15 16"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_drop_nodes.py", "documentation_url": "https://developers.google.com/optimization/routing/penalties", "license": "Apache-2.0"}, "data_contract": ["distance matrix", "customer demands", "vehicle capacities", "drop penalties", "depot"], "solution_recipe": ["Create capacity and distance dimensions", "Add disjunction penalties for optional customers", "Solve the penalized routing objective", "Print dropped nodes and served routes", "Validate served loads and penalty accounting"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "disjunction penalties with capacity routing"}, "known_solution": {"objective": 7548, "total_distance": 5548, "total_load": 54, "dropped_nodes": [15, 16]}, "validation_checks": ["Dropped nodes are explicitly reported", "Served customers are visited once", "Vehicle loads respect capacity", "Dropped penalties are included in the objective"], "reproduction": {"command": "python vrp_drop_nodes.py", "observed_status": "feasible solution printed; dropped nodes 15 and 16; total distance 5548"}}
+    },
+    {
+      "id": "case.official.ortools_assignment_groups",
+      "type": "case",
+      "title": "OR-Tools official grouped assignment",
+      "summary": "Assign workers to tasks while enforcing grouped task and worker eligibility constraints.",
+      "retrieval": {"aliases": ["OR-Tools assignment groups", "grouped worker assignment", "assignment group constraints"], "signals": ["official grouped assignment", "assignment groups total cost 239"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/assignment_groups_sat.py", "documentation_url": "https://developers.google.com/optimization/assignment", "license": "Apache-2.0"}, "data_contract": ["worker-task cost matrix", "worker groups", "task groups", "eligibility rules"], "solution_recipe": ["Create Boolean assignment variables", "Enforce one worker per task", "Add group-level assignment constraints", "Minimize total cost", "Print selected worker-task pairs"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "group-constrained assignment"}, "known_solution": {"objective": 239, "total_cost": 239}, "validation_checks": ["Every task is assigned once", "Group rules hold", "Printed costs sum to 239"], "reproduction": {"command": "python assignment_groups_sat.py", "observed_status": "feasible solution printed; total cost 239"}}
+    },
+    {
+      "id": "case.official.ortools_tasks_workers_assignment",
+      "type": "case",
+      "title": "OR-Tools official tasks-and-workers assignment",
+      "summary": "Assign workers and tasks into groups while balancing average group costs.",
+      "retrieval": {"aliases": ["OR-Tools tasks workers assignment", "balanced group assignment", "worker task group CP-SAT"], "signals": ["official tasks workers assignment", "balanced assignment group cost 40"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/tasks_and_workers_assignment_sat.py", "documentation_url": "https://developers.google.com/optimization/assignment", "license": "Apache-2.0"}, "data_contract": ["workers", "tasks", "worker groups", "task groups", "assignment costs"], "solution_recipe": ["Create group membership variables", "Assign each worker and task to a group", "Constrain group compatibility", "Balance group average costs", "Print group assignments"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "group assignment with balancing"}, "known_solution": {"objective": 40, "group_average_cost": 40}, "validation_checks": ["All workers and tasks are grouped", "Worker-task compatibility holds", "Group averages reconcile to 40"], "reproduction": {"command": "python tasks_and_workers_assignment_sat.py", "observed_status": "feasible solution printed; group average cost 40"}}
+    },
+    {
+      "id": "case.official.ortools_nurse_scheduling",
+      "type": "case",
+      "title": "OR-Tools official nurse scheduling",
+      "summary": "Generate nurse rosters across days and shifts with coverage, one-shift-per-day, and fairness constraints.",
+      "retrieval": {"aliases": ["OR-Tools nurse scheduling", "employee rostering", "nurse shift CP-SAT"], "signals": ["official nurse scheduling", "nurse scheduling five solutions"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/sat/samples/nurses_sat.py", "documentation_url": "https://developers.google.com/optimization/scheduling/employee_scheduling", "license": "Apache-2.0"}, "data_contract": ["nurses", "days", "shifts", "coverage requirements", "workload bounds"], "solution_recipe": ["Create nurse-day-shift Boolean variables", "Enforce shift coverage", "Limit each nurse to at most one shift per day", "Add workload and fairness constraints", "Enumerate or print feasible rosters"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "Boolean roster with coverage and fairness"}, "known_solution": {"solutions_reported": 5}, "validation_checks": ["Coverage is met each day and shift", "No nurse works two shifts in one day", "Workload constraints hold", "Five solutions can be enumerated"], "reproduction": {"command": "python nurses_sat.py", "observed_status": "five solutions reported; sample is a feasibility/enumeration case"}}
+    },
+    {
+      "id": "case.official.ortools_bus_driver_scheduling",
+      "type": "case",
+      "title": "OR-Tools official bus-driver scheduling",
+      "summary": "Cover bus trips with driver shifts while enforcing breaks, driving time, and working-time limits.",
+      "retrieval": {"aliases": ["OR-Tools bus driver scheduling", "driver shift rostering", "bus duty scheduling"], "signals": ["official bus driver scheduling", "bus driver working time"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/python/bus_driver_scheduling_sat.py", "documentation_url": "https://developers.google.com/optimization/scheduling", "license": "Apache-2.0"}, "data_contract": ["bus trips", "candidate driver shifts", "break rules", "driving durations", "working-time limits"], "solution_recipe": ["Create shift selection variables", "Cover every trip exactly once", "Enforce driver break and shift compatibility", "Limit driving and working time", "Print each driver's selected shifts"], "solver_hint": {"interface": "OR-Tools CP-SAT", "method": "set-partitioning style duty scheduling"}, "known_solution": {"status": "feasible roster printed", "drivers_reported": 6}, "validation_checks": ["Every trip is covered", "Break requirements hold", "Driver working time is within limits", "No incompatible shifts overlap"], "reproduction": {"command": "python bus_driver_scheduling_sat.py", "observed_status": "feasible roster printed; six driver schedules reported"}}
+    },
+    {
+      "id": "case.official.ortools_vrp_global_span",
+      "type": "case",
+      "title": "OR-Tools official VRP global-span balancing",
+      "summary": "Route all customers while penalizing the maximum route length to balance work across vehicles.",
+      "retrieval": {"aliases": ["OR-Tools global span VRP", "balanced vehicle routes", "route length fairness"], "signals": ["official global span VRP", "maximum route distance 1712"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_global_span.py", "documentation_url": "https://developers.google.com/optimization/routing/routing_tasks", "license": "Apache-2.0"}, "data_contract": ["distance matrix", "customers", "vehicles", "depot", "global span coefficient"], "solution_recipe": ["Create the routing model", "Set arc distance costs", "Add a distance dimension", "Penalize the global span between longest and shortest routes", "Print route distances and maximum span"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "distance dimension with global span coefficient"}, "known_solution": {"objective": 177500, "maximum_route_distance": 1712}, "validation_checks": ["Every customer is visited once", "Global span penalty is active", "Maximum route distance is 1712", "Vehicle routes start and end correctly"], "reproduction": {"command": "python vrp_global_span.py", "observed_status": "feasible solution printed; maximum route distance 1712"}}
+    },
+    {
+      "id": "case.official.ortools_vrp_starts_ends",
+      "type": "case",
+      "title": "OR-Tools official VRP with individual starts and ends",
+      "summary": "Route vehicles with different start locations and a common depot end while minimizing route distance.",
+      "retrieval": {"aliases": ["OR-Tools starts ends VRP", "heterogeneous vehicle starts", "vehicle-specific start end routing"], "signals": ["official individual starts ends VRP", "maximum route distance 1118"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_starts_ends.py", "documentation_url": "https://developers.google.com/optimization/routing/routing_tasks", "license": "Apache-2.0"}, "data_contract": ["distance matrix", "vehicle-specific starts", "vehicle-specific ends", "customers"], "solution_recipe": ["Create RoutingIndexManager with start/end arrays", "Register distance callback", "Set arc costs", "Solve with routing search", "Print each route from its individual start to end"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "vehicle-specific starts and ends"}, "known_solution": {"objective": 115794, "maximum_route_distance": 1118}, "validation_checks": ["Each vehicle uses its configured start", "Each vehicle reaches its configured end", "Customers are visited once", "Maximum route distance is 1118"], "reproduction": {"command": "python vrp_starts_ends.py", "observed_status": "feasible solution printed; maximum route distance 1118"}}
+    },
+    {
+      "id": "case.official.ortools_vrp_breaks",
+      "type": "case",
+      "title": "OR-Tools official VRP mandatory breaks",
+      "summary": "Insert mandatory driver breaks into multi-vehicle routes and report the resulting route times.",
+      "retrieval": {"aliases": ["OR-Tools VRP mandatory breaks", "driver break intervals routing", "vehicle route break scheduling"], "signals": ["official mandatory breaks VRP", "total route time 578"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_breaks.py", "documentation_url": "https://developers.google.com/optimization/routing/routing_tasks", "license": "Apache-2.0"}, "data_contract": ["travel times", "service times", "vehicle break windows", "break durations", "depot"], "solution_recipe": ["Create a time dimension", "Add service and travel times", "Add mandatory break intervals per vehicle", "Solve route order and break placement", "Print break starts and route times"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "time dimension with break intervals"}, "known_solution": {"total_route_time": 578, "vehicle_route_time": [144, 144, 145, 145]}, "validation_checks": ["Every vehicle has its required break", "Break duration is 10 minutes", "Breaks do not overlap service", "Route times sum to 578"], "reproduction": {"command": "python vrp_breaks.py", "observed_status": "feasible solution printed; total route time 578"}}
+    },
+    {
+      "id": "case.official.ortools_vrp_time_limit",
+      "type": "case",
+      "title": "OR-Tools official VRP with a time limit",
+      "summary": "Solve a larger routing instance under an explicit time limit and report the bounded-search solution.",
+      "retrieval": {"aliases": ["OR-Tools VRP time limit", "bounded routing search", "routing time-limited heuristic"], "signals": ["official VRP time limit", "time limit objective 524"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_with_time_limit.py", "documentation_url": "https://developers.google.com/optimization/routing/routing_tasks", "license": "Apache-2.0"}, "data_contract": ["distance matrix", "customers", "vehicles", "time limit", "depot"], "solution_recipe": ["Create the routing model", "Set first-solution and local-search strategies", "Apply an explicit time limit", "Solve and capture the best incumbent", "Report route distances and search bound"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "guided local search with time limit"}, "known_solution": {"objective": 524, "maximum_route_distance": 5}, "validation_checks": ["Solver respects the time limit", "Every served node is visited once", "Routes obey start/end rules", "Best reported objective is 524"], "reproduction": {"command": "python vrp_with_time_limit.py", "observed_status": "bounded-search solution printed; objective 524"}}
+    },
+    {
+      "id": "case.official.ortools_tsp_distance_matrix",
+      "type": "case",
+      "title": "OR-Tools official TSP distance-matrix example",
+      "summary": "Find a Hamiltonian tour over a full distance matrix and report the optimal route distance.",
+      "retrieval": {"aliases": ["OR-Tools TSP distance matrix", "Hamiltonian tour matrix", "distance matrix TSP"], "signals": ["official TSP distance matrix", "TSP objective 4384"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/tsp_distance_matrix.py", "documentation_url": "https://developers.google.com/optimization/routing/tsp", "license": "Apache-2.0"}, "data_contract": ["complete distance matrix", "single vehicle", "depot"], "solution_recipe": ["Create a routing manager and one-vehicle model", "Register matrix lookup callback", "Minimize arc distance", "Solve with routing search", "Print the Hamiltonian tour and distance"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "single-vehicle TSP over distance matrix"}, "known_solution": {"objective": 4384, "total_distance": 4384}, "validation_checks": ["Every node is visited once", "Tour returns to depot", "Distance sums to 4384", "No node is duplicated"], "reproduction": {"command": "python tsp_distance_matrix.py", "observed_status": "feasible solution printed; distance 4384"}}
+    },
+    {
+      "id": "case.official.gurobi_capacitated_facility_location",
+      "type": "case",
+      "title": "Gurobi capacitated facility-location model",
+      "summary": "A fixed-charge facility-location model with plant capacities, customer demand, assignment, and shipment variables.",
+      "retrieval": {"aliases": ["capacitated facility location", "Capacitated Facility Location Problem (CFLP)", "capacitated plant warehouse model", "facility location capacity"], "signals": ["capacitated facility location", "fixed charge capacity"]},
+      "payload": {"status": "official_example", "source": {"organization": "Gurobi Optimization", "code_url": "https://github.com/Gurobi/modeling-examples/tree/master/facility_location", "documentation_url": "https://gurobi.github.io/modeling-examples/facility_location/facility_location.html", "license": "Gurobi example source terms"}, "model_family": "capacitated_facility_location", "data_contract": ["candidate facilities", "customer demand", "facility capacity", "fixed opening cost", "unit shipping cost"], "decision_variables": ["open facility binary y_j", "shipment quantity x_ij"], "objective_pattern": "minimize fixed opening cost plus demand-weighted shipment cost", "constraint_patterns": ["each customer demand is met", "shipments into a customer can be assigned to opened facilities", "outbound shipment cannot exceed opened facility capacity"], "solution_recipe": ["load plant and warehouse data", "create binary open variables and continuous shipment variables", "link shipment to open facilities", "add capacity and demand balance constraints", "solve the mixed-integer model and inspect open facilities and flows"], "solver_hint": {"interface": "Gurobi Python API", "method": "MILP"}, "validation_checks": ["all customer demand is met", "facility capacity is respected", "closed facilities ship zero", "objective contains fixed and variable costs"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.gurobi_lot_sizing_inventory",
+      "type": "case",
+      "title": "Gurobi multi-period lot-sizing and inventory planning",
+      "summary": "Multi-period production planning with setup decisions, production capacity, inventory carry-over, and demand satisfaction.",
+      "retrieval": {"aliases": ["capacitated lot-sizing", "Capacitated Lot-Sizing Problem (CLSP)", "lot sizing inventory", "multi-period production planning"], "signals": ["lot sizing", "inventory carry-over", "production setup"]},
+      "payload": {"status": "official_example", "source": {"organization": "Gurobi Optimization", "code_url": "https://github.com/Gurobi/modeling-examples/tree/master/production", "documentation_url": "https://docs.gurobi.com/projects/examples/en/current/overview.html", "license": "Gurobi example source terms"}, "model_family": "capacitated_lot_sizing", "data_contract": ["periods", "demand by period", "production capacity", "unit production cost", "setup cost", "holding cost"], "decision_variables": ["production quantity x_t", "setup binary y_t", "end inventory I_t"], "objective_pattern": "minimize production, setup, and inventory holding cost", "constraint_patterns": ["inventory balance I_(t-1)+x_t=d_t+I_t", "production capacity x_t<=capacity_t*y_t", "initial and terminal inventory conditions"], "solution_recipe": ["construct indexed period variables", "add inventory balance", "link production to setup binaries", "minimize total operating cost", "validate period demand and capacity"], "solver_hint": {"interface": "Gurobi Python API", "method": "MILP"}, "validation_checks": ["every period demand is satisfied", "inventory never violates bounds", "production occurs only when setup is active", "cost components reconcile"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.gurobi_lot_sizing_backlogging",
+      "type": "case",
+      "title": "Gurobi uncapacitated lot-sizing with backlogging",
+      "summary": "Dynamic lot-sizing model that allows positive inventory or unmet demand carried as backlog with explicit penalties.",
+      "retrieval": {"aliases": ["uncapacitated lot sizing", "Uncapacitated Lot Sizing", "lot sizing with backlogging", "Uncapacitated Lot Sizing Problem with Backlogging"], "signals": ["backlogging", "inventory backlog", "lot sizing"]},
+      "payload": {"status": "official_example", "source": {"organization": "Gurobi Optimization", "code_url": "https://github.com/Gurobi/modeling-examples/tree/master/production", "documentation_url": "https://docs.gurobi.com/projects/examples/en/current/overview.html", "license": "Gurobi example source terms"}, "model_family": "lot_sizing_backlogging", "data_contract": ["period demand", "setup cost", "production cost", "holding cost", "backlog penalty"], "decision_variables": ["production x_t", "setup y_t", "inventory I_t", "backlog B_t"], "objective_pattern": "minimize production, setup, holding, and backlog penalty costs", "constraint_patterns": ["inventory minus backlog flow balance", "setup activation", "nonnegative inventory and backlog", "terminal backlog requirement"], "solution_recipe": ["split net stock into inventory and backlog variables", "write period balance equations", "price backlog explicitly", "solve and inspect production/setup timing"], "solver_hint": {"interface": "Gurobi Python API", "method": "MILP"}, "validation_checks": ["net demand balance holds each period", "backlog is penalized", "setup and production linkage holds", "terminal conditions are met"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.ortools_permutation_flow_shop",
+      "type": "case",
+      "title": "OR-Tools permutation flow-shop scheduling",
+      "summary": "Schedule a common job permutation through multiple machines while minimizing the final completion time.",
+      "retrieval": {"aliases": ["Flow Shop Problem", "permutation flow shop", "flow shop scheduling", "job permutation makespan"], "signals": ["official permutation flow shop", "flow shop makespan"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/examples/contrib/permutation_flow_shop.py", "documentation_url": "https://developers.google.com/optimization/scheduling", "license": "Apache-2.0"}, "model_family": "permutation_flow_shop", "data_contract": ["jobs", "machines", "processing time matrix"], "decision_variables": ["job order permutation", "operation start/end times", "makespan"], "objective_pattern": "minimize makespan", "constraint_patterns": ["each machine processes jobs in the same permutation", "operation precedence across machines", "no overlap on each machine"], "solution_recipe": ["choose one job permutation", "propagate completion times through machines", "evaluate makespan", "search permutations or use CP-SAT interval variables"], "solver_hint": {"interface": "OR-Tools CP/constraint programming", "method": "permutation search"}, "validation_checks": ["each job appears once in the permutation", "machine operations do not overlap", "precedence holds", "makespan equals final machine completion"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.ortools_multidepot_vrptw",
+      "type": "case",
+      "title": "OR-Tools multi-depot vehicle routing with time windows",
+      "summary": "Route vehicles starting and ending at depot-specific locations while respecting customer time windows.",
+      "retrieval": {"aliases": ["Multi-Depot Vehicle Routing Problem with Time Windows", "multi depot VRPTW", "multiple depots time windows", "MDVRPTW"], "signals": ["official multi-depot routing", "vehicle time windows"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_time_windows_per_vehicles.py", "documentation_url": "https://developers.google.com/optimization/routing/vrptw", "license": "Apache-2.0"}, "model_family": "multi_depot_vrptw", "data_contract": ["distance/time matrix", "vehicle starts and ends", "customer time windows", "service times", "vehicle count"], "decision_variables": ["routing arc successor variables", "vehicle assignment", "arrival cumul variables"], "objective_pattern": "minimize travel time or distance with feasible time-window routes", "constraint_patterns": ["vehicle-specific start/end", "each customer visited once", "time-window cumul bounds", "route continuity and capacity extensions"], "solution_recipe": ["create routing manager with per-vehicle starts/ends", "register transit callback", "add time dimension", "apply customer windows", "solve with first solution plus local search"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "time dimension and local search"}, "validation_checks": ["all served customers are visited once", "each route uses the right depot", "arrival times satisfy windows", "route duration is finite"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.ortools_pdptw",
+      "type": "case",
+      "title": "OR-Tools pickup-and-delivery with time windows",
+      "summary": "Couple pickup and delivery nodes with precedence, same-vehicle, capacity, and time-window constraints.",
+      "retrieval": {"aliases": ["Pickup and Delivery Problem with Time Windows (PDPTW)", "pickup delivery time windows", "PDPTW", "pickup delivery precedence"], "signals": ["official pickup delivery", "precedence and time windows"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/vrp_pickup_delivery.py", "documentation_url": "https://developers.google.com/optimization/routing/pickup_delivery", "license": "Apache-2.0"}, "model_family": "pickup_delivery_time_windows", "data_contract": ["pickup-delivery pairs", "travel matrix", "demands", "vehicle capacity", "time windows"], "decision_variables": ["successor arcs", "vehicle assignment", "load cumul", "time cumul"], "objective_pattern": "minimize route distance/time", "constraint_patterns": ["pickup and delivery on same vehicle", "pickup precedes delivery", "capacity dimension", "time-window bounds"], "solution_recipe": ["add pickup-delivery pair constraints", "register capacity and time dimensions", "apply precedence and vehicle equality", "solve and validate every pair"], "solver_hint": {"interface": "OR-Tools RoutingModel", "method": "pickup-delivery constraints plus dimensions"}, "validation_checks": ["every pair is served", "pickup precedes delivery", "same vehicle serves both nodes", "capacity and windows hold"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.gurobi_revenue_management",
+      "type": "case",
+      "title": "Gurobi revenue-management capacity allocation",
+      "summary": "Allocate limited inventory or seats across fare classes and demand scenarios to maximize expected revenue.",
+      "retrieval": {"aliases": ["revenue management", "Revenue Management Problem", "Airline Revenue Management Problem", "Hotel Revenue Management", "revenue_management"], "signals": ["capacity allocation", "fare classes", "expected revenue"]},
+      "payload": {"status": "official_example", "source": {"organization": "Gurobi Optimization", "code_url": "https://github.com/Gurobi/modeling-examples/tree/master/optimization101", "documentation_url": "https://docs.gurobi.com/projects/examples/en/current/overview.html", "license": "Gurobi example source terms"}, "model_family": "revenue_management", "data_contract": ["resource capacity", "fare classes", "demand forecasts", "scenario probabilities", "booking limits"], "decision_variables": ["accepted bookings by class/scenario", "protection levels or booking limits"], "objective_pattern": "maximize expected revenue or contribution margin", "constraint_patterns": ["total accepted bookings do not exceed capacity", "accepted bookings do not exceed demand", "nested protection or class-order constraints"], "solution_recipe": ["load class fares and demand forecasts", "create allocation/booking-limit variables", "enforce capacity and demand bounds", "maximize expected revenue", "compare policy with unconstrained demand"], "solver_hint": {"interface": "Gurobi Python API", "method": "LP/MILP"}, "validation_checks": ["capacity is not exceeded", "bookings are within demand", "revenue reconciles by class", "scenario weighting sums to one"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.gurobi_cutting_stock_patterns",
+      "type": "case",
+      "title": "Gurobi fixed-pattern cutting-stock model",
+      "summary": "Choose cutting patterns to satisfy item demand while minimizing the number of stock rolls or sheets used.",
+      "retrieval": {"aliases": ["Cutting Stock Problem (Fixed Patterns)", "cutting stock", "fixed cutting patterns", "pattern-based cutting stock"], "signals": ["official cutting stock", "column generation patterns"]},
+      "payload": {"status": "official_example", "source": {"organization": "Gurobi Optimization", "code_url": "https://github.com/Gurobi/modeling-examples/tree/master/colgen-cutting_stock", "documentation_url": "https://gurobi.github.io/modeling-examples/colgen-cutting_stock/colgen-cutting_stock.html", "license": "Gurobi example source terms"}, "model_family": "cutting_stock_pattern", "data_contract": ["stock width", "item widths", "item demand", "feasible cutting patterns"], "decision_variables": ["number of times each pattern is used"], "objective_pattern": "minimize total stock pieces used", "constraint_patterns": ["pattern production covers each item demand", "integer or nonnegative pattern counts"], "solution_recipe": ["enumerate or generate feasible patterns", "build pattern incidence matrix", "solve master covering problem", "optionally price new patterns with a knapsack subproblem"], "solver_hint": {"interface": "Gurobi Python API", "method": "integer master plus column generation"}, "validation_checks": ["all item demands are covered", "each pattern fits stock width", "stock count equals sum of pattern variables"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.ortools_min_cost_network_flow",
+      "type": "case",
+      "title": "OR-Tools minimum-cost network flow",
+      "summary": "Send required supply through a capacitated directed network at minimum arc cost.",
+      "retrieval": {"aliases": ["Minimum Cost Network Flow", "minimum cost flow", "min-cost network flow", "network flow with complex capacity constraints"], "signals": ["official minimum cost flow", "flow conservation and arc capacity"]},
+      "payload": {"status": "official_example", "source": {"organization": "Google OR-Tools", "code_url": "https://github.com/google/or-tools/blob/stable/ortools/graph/samples/simple_min_cost_flow_program.py", "documentation_url": "https://developers.google.com/optimization/flow/mincostflow", "license": "Apache-2.0"}, "model_family": "minimum_cost_flow", "data_contract": ["directed arcs", "arc capacities", "arc costs", "node supplies/demands"], "decision_variables": ["flow on each arc"], "objective_pattern": "minimize sum of arc unit cost times flow", "constraint_patterns": ["flow conservation at each node", "lower/upper arc capacities", "total supply equals total demand"], "solution_recipe": ["add arcs with capacities and unit costs", "set node supplies", "solve with SimpleMinCostFlow", "read arc flows and total cost"], "solver_hint": {"interface": "OR-Tools SimpleMinCostFlow", "method": "network simplex/min-cost flow"}, "validation_checks": ["node balances hold", "arc capacities hold", "total cost matches arc flow report"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.gurobi_multicommodity_network_design",
+      "type": "case",
+      "title": "Gurobi multi-commodity network design with capacities",
+      "summary": "Select network arcs and route multiple commodities under shared capacity and fixed activation costs.",
+      "retrieval": {"aliases": ["Multi-Commodity Network Flow Facility Location Problem", "multi-commodity network flow", "Multi-Commodity Network Flow with Complex Capacity Constraints", "multi-commodity network design"], "signals": ["shared arc capacity", "commodity flow", "network design fixed cost"]},
+      "payload": {"status": "official_example", "source": {"organization": "Gurobi Optimization", "code_url": "https://github.com/Gurobi/modeling-examples/tree/master/supply_network_design", "documentation_url": "https://gurobi.github.io/modeling-examples/supply_network_design/supply_network_design_1.html", "license": "Gurobi example source terms"}, "model_family": "multi_commodity_network_design", "data_contract": ["nodes and arcs", "commodity origins/destinations", "commodity demand", "arc capacity", "fixed and variable costs"], "decision_variables": ["arc-open binary y_a", "commodity flow x_k_a"], "objective_pattern": "minimize fixed arc activation plus commodity flow cost", "constraint_patterns": ["flow conservation per commodity", "shared capacity across commodities", "flow only on activated arcs"], "solution_recipe": ["construct commodity-arc flow variables", "add per-commodity balances", "link all flows to shared arc capacity", "solve MILP and inspect selected network"], "solver_hint": {"interface": "Gurobi Python API", "method": "MILP"}, "validation_checks": ["each commodity reaches its destination", "shared arc capacity is respected", "closed arcs carry no flow", "fixed and variable costs reconcile"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    },
+    {
+      "id": "case.official.gurobi_resource_allocation",
+      "type": "case",
+      "title": "Gurobi resource and task allocation",
+      "summary": "Assign tasks to heterogeneous resources with skill, capacity, cost, and workload constraints.",
+      "retrieval": {"aliases": ["Resource Allocation", "Task Allocation", "Server Cluster Resource Allocation", "Scooter Location and Allocation Problem", "Contract Allocation Problem"], "signals": ["resource allocation", "task assignment", "heterogeneous capacity"]},
+      "payload": {"status": "official_example", "source": {"organization": "Gurobi Optimization", "code_url": "https://github.com/Gurobi/modeling-examples/tree/master/customer_assignment", "documentation_url": "https://gurobi.github.io/modeling-examples/", "license": "Gurobi example source terms"}, "model_family": "generalized_assignment_resource_allocation", "data_contract": ["tasks", "resources", "resource capacity", "task resource consumption", "assignment cost", "eligibility/skill matrix"], "decision_variables": ["binary assignment x_ir", "optional resource activation y_r"], "objective_pattern": "minimize assignment and activation cost or maximize covered task value", "constraint_patterns": ["each task assigned at most/once", "resource capacity", "eligibility restrictions", "activation linking"], "solution_recipe": ["build task-resource incidence and cost matrices", "add assignment and capacity constraints", "include activation or coverage penalties", "solve and audit resource loads"], "solver_hint": {"interface": "Gurobi Python API", "method": "MILP"}, "validation_checks": ["assignment cardinality holds", "resource loads do not exceed capacity", "ineligible assignments are zero", "objective reconciles by assignment"], "reproduction": {"status": "source_verified_not_reproduced"}}
+    }
+  ],
+  "edges": [
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrp_capacity"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrptw"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_jobshop_ft06"},
+    {"source": "reference.model.uncapacitated_facility_location_uflp", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_facility_location"},
+    {"source": "reference.model.linear_assignment_problem_lap", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_assignment_task_sizes"},
+    {"source": "reference.model.linear_assignment_problem_lap", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_assignment_teams"},
+    {"source": "reference.model.bin_packing_problem_bpp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_multiple_knapsack"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_jobshop_maintenance"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_pickup_delivery"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_resources"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_flexible_jobshop"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_shift_scheduling"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_single_machine_setup"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrp_reload"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_cvrptw_break"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_drop_nodes"},
+    {"source": "reference.model.linear_assignment_problem_lap", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_assignment_groups"},
+    {"source": "reference.model.generalized_assignment_problem_gap", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_tasks_workers_assignment"},
+    {"source": "reference.model.set_partitioning_problem_spp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_nurse_scheduling"},
+    {"source": "reference.model.set_partitioning_problem_spp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_bus_driver_scheduling"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_global_span"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_starts_ends"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_breaks"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_vrp_time_limit"},
+    {"source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_tsp_distance_matrix"},
+    {"source": "reference.model.uncapacitated_facility_location_uflp", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_capacitated_facility_location"},
+    {"source": "family.reference.single_item_uncapacitated_lot_sizing", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_lot_sizing_inventory"},
+    {"source": "family.reference.single_item_uncapacitated_lot_sizing", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_lot_sizing_backlogging"},
+    {"source": "reference.model.flow_shop_scheduling_fssp_permutation", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_permutation_flow_shop"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_multidepot_vrptw"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_pdptw"},
+    {"source": "family.reference.production_planning", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_revenue_management"},
+    {"source": "family.reference.bin_packing_cutting_stock", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_cutting_stock_patterns"},
+    {"source": "reference.model.min_cost_flow", "relation": "EXEMPLIFIED_BY", "target": "case.official.ortools_min_cost_network_flow"},
+    {"source": "family.reference.network_design", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_multicommodity_network_design"},
+    {"source": "reference.model.generalized_assignment_problem_gap", "relation": "EXEMPLIFIED_BY", "target": "case.official.gurobi_resource_allocation"}
+  ],
+  "source_manifest": {
+    "authority": "Official Google OR-Tools and Gurobi example documentation/code; every case in this slice is linked to an official source and workflow templates were removed.",
+    "graph_design_research": [
+      {
+        "organization": "Neo4j",
+        "url": "https://neo4j.com/blog/genai/what-is-graphrag/",
+        "adopted_principles": ["typed entity relationships", "multi-hop retrieval", "relationship-aware filtering and ranking", "source provenance"]
+      },
+      {
+        "organization": "Google OR-Tools",
+        "url": "https://developers.google.com/optimization/examples",
+        "adopted_principles": ["organize examples by problem type and solver interface", "retain complete source-code links"]
+      },
+      {
+        "organization": "Gurobi",
+        "url": "https://docs.gurobi.com/projects/examples/en/current/overview.html",
+        "adopted_principles": ["separate model data from formulation", "record infeasibility diagnosis and repair workflows"]
+      }
+    ]
+  }
+}

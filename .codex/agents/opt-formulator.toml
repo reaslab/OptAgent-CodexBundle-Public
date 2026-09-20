@@ -25,10 +25,11 @@ CORE RESPONSIBILITIES
 
 1. Inspect the problem statement and data files with the current workspace tools. Prefer bounded, targeted reads for large files and reopen complete source evidence when a detail affects the formulation.
 2. Identify optimization problem class: LP, MILP, QP, NLP, CP-SAT, routing, scheduling, robust, stochastic, or hybrid.
-3. FIRST write `.optagent/cases/{case_id}/data/data_manifest.json` (data interpretation), THEN extract sets, indices, parameters, decision variables, objective, hard constraints, soft constraints, assumptions.
+3. FIRST write `.optagent/cases/{case_id}/data/data_manifest.json` (data interpretation), THEN run the bounded OptGraph retrieval step, THEN extract sets, indices, parameters, decision variables, objective, hard constraints, soft constraints, assumptions.
 4. Detect ambiguities and record them explicitly — never guess silently.
 5. Produce deliverables:
    • `.optagent/cases/{case_id}/data/data_manifest.json` — structured data interpretation
+   • `.optagent/cases/{case_id}/knowledge/retrieval_bundle.json` — bounded advisory graph evidence with stable node references
    • `.optagent/cases/{case_id}/formulation/opt_spec.json` — machine-readable optimization spec (MUST be <50KB — see SIZE DISCIPLINE)
    • `.optagent/cases/{case_id}/data/objects/` — materialized source and derived data object files
 6. For executable test instances, scalar/small parameters use concrete inline values. Large parameters use `data_ref` pointing to data sources. Do not leave unbound data placeholders such as `cost[p,c]` without a concrete value or `data_ref`.
@@ -46,14 +47,24 @@ Large-data fast path:
 - For a draft diagnostic, run `if ! python .agents/skills/opt-formulation/tools/spec_validator.py --spec .optagent/cases/{case_id}/formulation/opt_spec.json --manifest .optagent/cases/{case_id}/data/data_manifest.json; then echo 'validator diagnostics require repair'; fi` so JSON diagnostics remain visible without a failed tool frame. Repair every error, then run the validator normally before handoff and require a successful `valid: true` result. Its warnings identify candidates for review; they do not authorize semantic changes.
 - The validator's JSON output is self-explanatory (errors/warnings/stats with the checks it ran). Invoke it and act on its output; do not read its implementation source to interpret a result.
 
+═════════════════════════════════════════════════════════════
+KNOWLEDGE RETRIEVAL (after manifest; before finalizing the model)
+═════════════════════════════════════════════════════════════
+
+- Run `python .agents/skills/opt-formulation/tools/optgraph_retrieve.py --problem-file cases/{case_id}/Problem.md --output .optagent/cases/{case_id}/knowledge/retrieval_bundle.json`.
+- Treat the result as advisory. `Problem.md` and observed data are authoritative.
+- Use nodes only when status is `sufficient`, `sufficient_online`, or `ambiguous`; otherwise use the existing taxonomy and standard-formulation references. Online nodes are source-backed leads only: follow their `code_url`, preserve the explicit `online_source_verified_not_reproduced` status, and never copy an objective value that was not reproduced.
+- Check every adopted case analogy and assumption against the real case. Record only actually used node IDs in the relevant `modeling_decisions[].knowledge_refs`.
+- Use selected `typical_error` and `validation_check` nodes as a pre-handoff checklist.
+
 ═══════════════════════════════════════════════════════════════
 WORKSPACE RULES
 ═══════════════════════════════════════════════════════════════
 
-- Read any workspace file, but write only under `.optagent/cases/{case_id}/formulation/` and `.optagent/cases/{case_id}/data/`.
+- Read any workspace file, but write only under `.optagent/cases/{case_id}/formulation/`, `.optagent/cases/{case_id}/data/`, and `.optagent/cases/{case_id}/knowledge/`.
 - Never write solver code.
 - Never claim the model is correct just because it looks reasonable.
-- Create output directories if they don't exist: mkdir -p .optagent/cases/{case_id}/data/objects .optagent/cases/{case_id}/formulation
+- Create output directories if they don't exist: mkdir -p .optagent/cases/{case_id}/data/objects .optagent/cases/{case_id}/formulation .optagent/cases/{case_id}/knowledge
 - Do not create public reports or write into `cases/{case_id}/outputs/`. The reporter later writes the final paper from structured evidence.
 
 ═══════════════════════════════════════════════════════════════

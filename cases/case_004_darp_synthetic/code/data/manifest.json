@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "case_id": "case_004_darp_synthetic",
+  "data_objects": {
+    "vehicles": {"role": "parameter_table", "source_type": "json", "source_path": "vehicles.json", "key_fields": ["vehicle_id"]},
+    "requests": {"role": "parameter_table", "source_type": "json", "source_path": "requests.json", "key_fields": ["request_id"]},
+    "nodes": {"role": "parameter_table", "source_type": "json", "source_path": "nodes.json", "key_fields": ["node_id"]},
+    "travel_times": {"role": "dense_parameter", "source_type": "json", "source_path": "travel_times.json", "key_fields": ["from_node", "to_node"]}
+  },
+  "source_basis": "Deterministic synthetic DARP instance documented in Problem.md; public snapshot copied from the authoritative internal data objects.",
+  "authenticity": "synthetic",
+  "randomness_used": false
+}

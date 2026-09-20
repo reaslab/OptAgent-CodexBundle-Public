@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "case_id": "case_003_4x4x4_standard_lines",
+  "data_objects": {
+    "line_rules": {
+      "role": "parameter_table",
+      "source_type": "json",
+      "source_path": "line_rules.json",
+      "key_fields": ["line_id"],
+      "value_fields": {
+        "line_cells": {"field": "cells", "type": "integer_array", "unit": "cell_ids"},
+        "line_kind": {"field": "kind", "type": "string", "unit": "category"}
+      },
+      "meaning": "The standard 76 length-4 winning lines."
+    }
+  },
+  "relationships": [],
+  "assumptions": [
+    "Cell ids use id = 16*x + 4*y + z.",
+    "Alternating play is represented by exactly 32 X cells."
+  ],
+  "ambiguities": []
+}

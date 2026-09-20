@@ -45,6 +45,7 @@ INTERNAL_DIRECTORIES = (
     "data/objects",
     "data/revisions",
     "formulation",
+    "knowledge",
     "solver/temp",
     "verification",
     "reporting",

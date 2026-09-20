@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0", "graph_id": "transport-network-optgraph", "graph_version": "2026-09-04.1", "domain": "network_design",
+  "domain_signals": ["transport", "transportation", "network", "flow", "arc", "shipment", "supply", "demand", "运输", "网络", "流量", "供给", "需求"],
+  "feature_catalog": {
+    "flow_balance": {"positive": ["flow balance", "conservation", "supply and demand", "流量平衡", "守恒"], "negative": []},
+    "fixed_arc_cost": {"positive": ["fixed arc cost", "activate link", "开弧成本", "启用线路"], "negative": []},
+    "transshipment": {"positive": ["transshipment", "intermediate node", "中转", "中间节点"], "negative": []}
+  },
+  "nodes": [
+    {"id": "variant.transportation", "type": "variant", "title": "Transportation problem", "summary": "Ship flow from supply nodes to demand nodes at minimum variable cost.", "retrieval": {"aliases": ["transportation", "transport model"], "signals": ["supply", "demand", "shipment"], "feature_weights": {"flow_balance": 4.0}, "feature_conflicts": {"transshipment": 4.0}}},
+    {"id": "variant.transshipment", "type": "variant", "title": "Transshipment network", "summary": "Route conserved flow through intermediate nodes and capacity-limited arcs.", "retrieval": {"aliases": ["transshipment", "network flow"], "signals": ["flow", "intermediate node"], "feature_weights": {"flow_balance": 3.0, "transshipment": 8.0}}},
+    {"id": "variant.network_design", "type": "variant", "title": "Fixed-charge network design", "summary": "Open links or facilities and route flow through activated capacity-limited arcs while preserving flow balance.", "retrieval": {"aliases": ["network design", "fixed-charge network"], "signals": ["fixed arc cost", "activate link"], "feature_support": ["fixed_arc_cost", "fixed_opening_cost", "flow_balance", "capacity"], "feature_weights": {"fixed_arc_cost": 5.0, "fixed_opening_cost": 3.0, "flow_balance": 3.0, "capacity": 2.0}}},
+    {"id": "model.transportation.canonical", "type": "math_model", "title": "Canonical transportation model", "summary": "Continuous shipment variables with supply upper bounds and demand balance.", "payload": {"objective": "min sum(c[i,j]*x[i,j])", "constraints": ["sum_j x[i,j] <= supply[i]", "sum_i x[i,j] >= demand[j]"]}},
+    {"id": "model.network_design.canonical", "type": "math_model", "title": "Canonical fixed-charge network model", "summary": "Binary arc activation and flow capacity linking.", "payload": {"objective": "min sum(f[a]*y[a]) + sum(c[a]*x[a])", "constraints": ["flow balance", "x[a] <= capacity[a]*y[a]"]}},
+    {"id": "error.flow_balance_wrong_sign", "type": "typical_error", "title": "Flow balance sign or direction error", "summary": "Incoming and outgoing flow are combined with an incorrect sign or node orientation.", "payload": {"severity": "critical"}},
+    {"id": "error.flow_on_closed_arc", "type": "typical_error", "title": "Flow uses a closed arc", "summary": "Flow is not linked to binary arc activation or capacity.", "payload": {"severity": "critical"}},
+    {"id": "fix.enforce_flow_balance", "type": "fix_hint", "title": "Enforce node flow balance", "summary": "Write one conservation equation per node with explicit source, sink, and transshipment signs."},
+    {"id": "fix.link_flow_activation", "type": "fix_hint", "title": "Link flow to activation", "summary": "Use x[a] <= capacity[a]*y[a] and verify units."},
+    {"id": "check.flow_conservation", "type": "validation_check", "title": "Flow conservation check", "summary": "Recompute net inflow, outflow, supply, and demand at every node."}
+  ],
+  "edges": [
+    {"source": "variant.transportation", "relation": "IS_A", "target": "family.network_design"},
+    {"source": "variant.transshipment", "relation": "IS_A", "target": "family.network_design"},
+    {"source": "variant.network_design", "relation": "IS_A", "target": "family.network_design"},
+    {"source": "variant.transportation", "relation": "HAS_MODEL", "target": "model.transportation.canonical"},
+    {"source": "variant.network_design", "relation": "HAS_MODEL", "target": "model.network_design.canonical"},
+    {"source": "variant.transshipment", "relation": "PRONE_TO", "target": "error.flow_balance_wrong_sign"},
+    {"source": "variant.network_design", "relation": "PRONE_TO", "target": "error.flow_on_closed_arc"},
+    {"source": "error.flow_balance_wrong_sign", "relation": "FIXED_BY", "target": "fix.enforce_flow_balance"},
+    {"source": "error.flow_on_closed_arc", "relation": "FIXED_BY", "target": "fix.link_flow_activation"},
+    {"source": "variant.transshipment", "relation": "CHECK_WITH", "target": "check.flow_conservation"}
+  ]
+}

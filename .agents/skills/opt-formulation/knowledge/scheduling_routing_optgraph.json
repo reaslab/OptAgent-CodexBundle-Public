@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0", "graph_id": "scheduling-routing-optgraph", "graph_version": "2026-09-04.1", "domain": "combinatorial_planning",
+  "domain_signals": ["schedule", "scheduling", "job", "machine", "shift", "route", "vehicle", "visit", "排程", "调度", "作业", "机器", "班次", "路径", "车辆"],
+  "feature_catalog": {
+    "time_window": {"positive": ["time window", "release time", "deadline", "时间窗", "截止时间", "释放时间"], "negative": []},
+    "precedence": {"positive": ["precedence", "precede", "before task", "先后", "前置", "工序顺序"], "negative": []},
+    "vehicle_capacity": {"positive": ["vehicle capacity", "truck capacity", "vehicle routing", "车辆容量", "车辆路径"], "negative": []},
+    "depot_return": {"positive": ["return to depot", "depot", "回到仓库", "返回基地"], "negative": []}
+  },
+  "nodes": [
+    {"id": "variant.job_shop", "type": "variant", "title": "Resource-constrained scheduling", "summary": "Sequence jobs on limited resources with processing times, release dates, and precedence.", "retrieval": {"aliases": ["job shop", "machine scheduling"], "signals": ["job", "machine", "schedule"], "feature_weights": {"precedence": 4.0}}},
+    {"id": "variant.workforce_roster", "type": "variant", "title": "Workforce rostering", "summary": "Assign people to shifts while covering demand and respecting rest or skill rules.", "retrieval": {"aliases": ["rostering", "shift scheduling", "nurse scheduling"], "signals": ["shift", "rest", "cover"], "feature_weights": {"time_window": 1.0}}},
+    {"id": "variant.vehicle_routing", "type": "variant", "title": "Capacitated vehicle routing", "summary": "Construct depot-based routes that visit customers and respect vehicle capacity.", "retrieval": {"aliases": ["vehicle routing", "CVRP", "delivery route"], "signals": ["vehicle", "route", "depot"], "feature_weights": {"vehicle_capacity": 5.0, "depot_return": 2.0}}},
+    {"id": "model.scheduling.canonical", "type": "math_model", "title": "Canonical disjunctive scheduling model", "summary": "Use start times and pairwise ordering binaries to prevent overlap and enforce precedence.", "payload": {"constraints": ["start_successor >= finish_predecessor", "either i before j or j before i"], "objective": "minimize makespan or weighted lateness"}},
+    {"id": "model.cvrp.canonical", "type": "math_model", "title": "Canonical capacitated routing model", "summary": "Use arc binaries, visit degree constraints, flow/load propagation, and subtour elimination.", "payload": {"constraints": ["one visit per customer", "vehicle load <= capacity", "eliminate subtours"]}},
+    {"id": "error.overlapping_tasks", "type": "typical_error", "title": "Tasks overlap on one resource", "summary": "A schedule lacks a disjunctive non-overlap relation for jobs using the same machine or worker.", "payload": {"severity": "critical"}},
+    {"id": "error.routing_subtour", "type": "typical_error", "title": "Route contains a subtour", "summary": "Degree constraints create disconnected cycles that do not return to the depot.", "payload": {"severity": "critical"}},
+    {"id": "error.capacity_not_propagated_route", "type": "typical_error", "title": "Route load is not propagated", "summary": "Vehicle capacity is checked globally or omitted rather than propagated along selected arcs.", "payload": {"severity": "high"}},
+    {"id": "fix.add_disjunctive_order", "type": "fix_hint", "title": "Add resource disjunction", "summary": "For every conflicting pair, enforce one ordering with a tight time-window bound."},
+    {"id": "fix.eliminate_subtours", "type": "fix_hint", "title": "Eliminate disconnected subtours", "summary": "Use MTZ, single-commodity flow, lazy cuts, or another stated subtour method."},
+    {"id": "fix.propagate_route_load", "type": "fix_hint", "title": "Propagate route load", "summary": "Use cumulative load variables or a valid flow formulation with vehicle capacity bounds."},
+    {"id": "check.precedence_and_overlap", "type": "validation_check", "title": "Precedence and overlap check", "summary": "Recompute every predecessor relation and resource timeline for overlap."},
+    {"id": "check.route_connectivity", "type": "validation_check", "title": "Route connectivity check", "summary": "Verify each customer is visited once and every selected route connects to the depot without subtours."}
+  ],
+  "edges": [
+    {"source": "variant.job_shop", "relation": "IS_A", "target": "family.combinatorial_scheduling"},
+    {"source": "variant.workforce_roster", "relation": "IS_A", "target": "family.combinatorial_scheduling"},
+    {"source": "variant.vehicle_routing", "relation": "IS_A", "target": "family.service_routing"},
+    {"source": "variant.job_shop", "relation": "HAS_MODEL", "target": "model.scheduling.canonical"},
+    {"source": "variant.vehicle_routing", "relation": "HAS_MODEL", "target": "model.cvrp.canonical"},
+    {"source": "variant.job_shop", "relation": "PRONE_TO", "target": "error.overlapping_tasks"},
+    {"source": "variant.vehicle_routing", "relation": "PRONE_TO", "target": "error.routing_subtour"},
+    {"source": "variant.vehicle_routing", "relation": "PRONE_TO", "target": "error.capacity_not_propagated_route"},
+    {"source": "error.overlapping_tasks", "relation": "FIXED_BY", "target": "fix.add_disjunctive_order"},
+    {"source": "error.routing_subtour", "relation": "FIXED_BY", "target": "fix.eliminate_subtours"},
+    {"source": "error.capacity_not_propagated_route", "relation": "FIXED_BY", "target": "fix.propagate_route_load"},
+    {"source": "variant.job_shop", "relation": "CHECK_WITH", "target": "check.precedence_and_overlap"},
+    {"source": "variant.vehicle_routing", "relation": "CHECK_WITH", "target": "check.route_connectivity"}
+  ]
+}

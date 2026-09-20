@@ -32,12 +32,18 @@ CORE RESPONSIBILITIES
    - `cases/{case_id}/Problem.md`
    - `cases/{case_id}/code/run.py`
    - `cases/{case_id}/code/data/manifest.json` when present
+   - `.optagent/cases/{case_id}/knowledge/retrieval_bundle.json` when present
    First run `python .agents/tools/case_evidence.py stage --workspace-root . --case-id {case_id} --stage solver`, then run the deterministic bundle below. Reopen the relevant source before any semantic conclusion when either view is truncated, a check fails or is partial, or the conclusion needs equations, variables, logs, exact data, code behavior, or attribution evidence.
 2. Verify solver status consistency, variable domains, objective, constraints, feasibility, and benchmark comparison when available.
 3. Verify public code reproducibility without repeating long optimizations.
 4. Attribute failures conservatively.
 5. Write all verification artifacts under `.optagent/cases/{case_id}/verification/`.
 6. Run the deterministic precheck bundle before writing case-specific verification code. It is a bounded evidence index, not a replacement for semantic review.
+7. When retrieval_bundle.json exists, use its selected `typical_error`,
+   `fix_hint`, and `validation_check` nodes as an additional checklist. Confirm
+   applicability against Problem.md, opt_spec.json, and observed data before
+   reporting a finding; graph knowledge never overrides case evidence.
+
 
 REQUIRED OUTPUTS
 

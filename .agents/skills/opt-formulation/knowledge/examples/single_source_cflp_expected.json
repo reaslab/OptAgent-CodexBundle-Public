@@ -1,0 +1,23 @@
+{
+  "fixture": "single_source_cflp_test.md",
+  "retrieval_oracle": {
+    "status": "sufficient",
+    "top_variant": "variant.sscflp",
+    "required_knowledge_refs": [
+      "model.sscflp.canonical",
+      "case.sscflp.indivisible_customers",
+      "error.capacity_omits_demand",
+      "error.assignment_without_open_link",
+      "fix.weight_and_gate_capacity",
+      "check.capacity_units"
+    ]
+  },
+  "solution_oracle": {
+    "verification_method": "complete enumeration of 3^4 customer assignments",
+    "objective": 194,
+    "open_facilities": ["B", "C"],
+    "customer_assignment": {"1": "C", "2": "B", "3": "B", "4": "B"},
+    "facility_load": {"A": 0, "B": 7, "C": 3},
+    "cost_breakdown": {"fixed": 175, "assignment": 19}
+  }
+}

@@ -1,0 +1,795 @@
+{
+  "schema_version": "1.0",
+  "graph_id": "core-cases-optgraph",
+  "graph_version": "2026-09-05.2",
+  "domain": "optimization",
+  "domain_signals": ["case", "example", "instance", "案例", "例题"],
+  "nodes": [
+    {
+      "id": "case.uflp.micro_retail",
+      "type": "case",
+      "title": "Two-depot retail UFLP micro-instance",
+      "summary": "Choose depots with fixed opening cost and assign three customers without capacity limits.",
+      "retrieval": {"aliases": ["retail depot", "fixed-charge location example"], "signals": ["fixed opening cost", "no capacity limit"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"facilities": 2, "customers": 3},
+        "data": {"fixed_cost": {"A": 8, "B": 7}, "service_cost": {"A": [2, 5, 4], "B": [4, 1, 3]}},
+        "known_solution": {"objective": 15, "open_facilities": ["B"], "assignment": {"C1": "B", "C2": "B", "C3": "B"}},
+        "expected_variant": "variant.reference.uncapacitated_facility_location_uflp",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.scp.micro_coverage",
+      "type": "case",
+      "title": "Four-element set covering micro-instance",
+      "summary": "Select minimum-cost binary sets so four elements are covered at least once.",
+      "retrieval": {"aliases": ["set cover example", "coverage micro instance"], "signals": ["cover every element", "at least one set"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"elements": 4, "sets": 4},
+        "data": {"cost": {"S1": 4, "S2": 3, "S3": 2, "S4": 5}, "covers": {"S1": ["E1", "E2"], "S2": ["E2", "E3"], "S3": ["E3", "E4"], "S4": ["E1", "E4"]}},
+        "known_solution": {"objective": 6, "selected_sets": ["S1", "S3"]},
+        "expected_variant": "variant.reference.set_covering_problem_scp",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.transportation.micro_supply_demand",
+      "type": "case",
+      "title": "Two-supplier three-customer transportation micro-instance",
+      "summary": "Ship from two supply nodes to three demand nodes at minimum unit transport cost.",
+      "retrieval": {"aliases": ["transportation example", "supply demand shipping"], "signals": ["ship from supply nodes", "meet demand nodes"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"suppliers": 2, "customers": 3},
+        "data": {"supply": {"A": 5, "B": 4}, "demand": {"X": 3, "Y": 2, "Z": 4}, "unit_cost": {"A": [2, 4, 5], "B": [3, 1, 2]}},
+        "known_solution": {"objective": 22, "shipments": {"A->X": 3, "A->Z": 2, "B->Y": 2, "B->Z": 2}},
+        "expected_variant": "variant.reference.transportation_problem",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.tsp.micro_four_city",
+      "type": "case",
+      "title": "Four-city TSP micro-instance",
+      "summary": "Visit each of four cities exactly once and return to the starting city.",
+      "retrieval": {"aliases": ["four city TSP", "tour example"], "signals": ["visit every city once", "single tour"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"cities": 4},
+        "data": {"distance": {"A-B": 10, "A-C": 15, "A-D": 20, "B-C": 35, "B-D": 25, "C-D": 30}},
+        "known_solution": {"objective": 80, "tour": ["A", "B", "D", "C", "A"]},
+        "expected_variant": "variant.reference.traveling_salesman_problem_tsp_dfj_formulation",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.jssp.micro_two_job",
+      "type": "case",
+      "title": "Two-job two-machine job-shop micro-instance",
+      "summary": "Sequence two jobs with conflicting machine orders and minimize makespan.",
+      "retrieval": {"aliases": ["two job shop example", "machine sequencing example"], "signals": ["operation precedence", "makespan"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"jobs": 2, "machines": 2},
+        "data": {"operations": {"J1": [{"machine": "M1", "processing": 3}, {"machine": "M2", "processing": 2}], "J2": [{"machine": "M2", "processing": 2}, {"machine": "M1", "processing": 1}]}},
+        "known_solution": {"objective": 5, "makespan": 5},
+        "expected_variant": "variant.reference.job_shop_scheduling_jssp",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.spp.micro_exact_cover",
+      "type": "case",
+      "title": "Three-element set partitioning micro-instance",
+      "summary": "Select minimum-cost sets so each element is covered exactly once.",
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"elements": 3, "sets": 4},
+        "data": {"cost": {"S1": 3, "S2": 3, "S3": 1, "S4": 1}, "covers": {"S1": ["E1", "E2"], "S2": ["E2", "E3"], "S3": ["E1"], "S4": ["E3"]}},
+        "known_solution": {"objective": 4, "selected_sets": ["S1", "S4"]},
+        "expected_variant": "variant.reference.set_partitioning_problem_spp",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.bpp.micro_four_items",
+      "type": "case",
+      "title": "Four-item bin packing micro-instance",
+      "summary": "Pack four items into the minimum number of capacity-six bins.",
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"items": 4, "candidate_bins": 4},
+        "data": {"capacity": 6, "weight": {"I1": 4, "I2": 3, "I3": 3, "I4": 2}},
+        "known_solution": {"objective": 2, "bins": [["I1", "I4"], ["I2", "I3"]]},
+        "expected_variant": "variant.reference.bin_packing_problem_bpp",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.knapsack.micro_four_items",
+      "type": "case",
+      "title": "Four-item binary knapsack micro-instance",
+      "summary": "Select items with maximum total value under capacity seven.",
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"items": 4},
+        "data": {"capacity": 7, "items": {"A": {"weight": 4, "value": 8}, "B": {"weight": 3, "value": 6}, "C": {"weight": 2, "value": 5}, "D": {"weight": 2, "value": 4}}},
+        "known_solution": {"objective": 15, "selected_items": ["B", "C", "D"], "total_weight": 7},
+        "expected_variant": "variant.reference.0_1_knapsack_problem",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.lap.micro_three_by_three",
+      "type": "case",
+      "title": "Three-by-three linear assignment micro-instance",
+      "summary": "Assign each agent to one task and each task to one agent at minimum cost.",
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"agents": 3, "tasks": 3},
+        "data": {"cost": {"A": [9, 2, 7], "B": [6, 4, 3], "C": [5, 8, 1]}, "task_order": ["X", "Y", "Z"]},
+        "known_solution": {"objective": 9, "assignment": {"A": "Y", "B": "X", "C": "Z"}},
+        "expected_variant": "variant.reference.linear_assignment_problem_lap",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.gap.micro_two_agents",
+      "type": "case",
+      "title": "Two-agent generalized assignment micro-instance",
+      "summary": "Assign three tasks to capacitated agents at minimum cost.",
+      "retrieval": {"aliases": ["GAP", "generalized assignment", "two-agent assignment"], "signals": ["assign tasks to capacitated agents"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"agents": 2, "tasks": 3},
+        "data": {"capacity": {"A": 5, "B": 5}, "cost": {"A": [4, 2, 7], "B": [5, 6, 3]}, "resource": {"A": [3, 2, 4], "B": [2, 3, 2]}},
+        "known_solution": {"objective": 9, "assignment": {"T1": "A", "T2": "A", "T3": "B"}},
+        "expected_variant": "variant.reference.generalized_assignment_problem_gap",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.cvrp.micro_three_customers",
+      "type": "case",
+      "title": "Three-customer capacitated VRP micro-instance",
+      "summary": "Route capacity-four vehicles from one depot to serve three customers with demand two.",
+      "retrieval": {"aliases": ["CVRP", "capacitated vehicle routing", "three-customer route"], "signals": ["vehicle capacity four depot routes"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"depot": 1, "customers": 3, "vehicles": 2},
+        "data": {"vehicle_capacity": 4, "demand": {"A": 2, "B": 2, "C": 2}, "distance": {"O-A": 2, "O-B": 2, "O-C": 3, "A-B": 2, "A-C": 4, "B-C": 2}},
+        "known_solution": {"objective": 11, "routes": [["O", "A", "O"], ["O", "B", "C", "O"]]},
+        "expected_variant": "variant.reference.capacitated_vrp_cvrp",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.fssp.micro_three_jobs",
+      "type": "case",
+      "title": "Three-job two-machine flow-shop micro-instance",
+      "summary": "Choose one job permutation for two machines and minimize makespan.",
+      "retrieval": {"aliases": ["FSSP", "flow shop", "three-job permutation"], "signals": ["permutation flow shop makespan"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"jobs": 3, "machines": 2},
+        "data": {"processing": {"J1": [2, 3], "J2": [1, 2], "J3": [3, 1]}, "machine_order": ["M1", "M2"]},
+        "known_solution": {"objective": 7, "permutation": ["J2", "J1", "J3"]},
+        "expected_variant": "variant.reference.flow_shop_scheduling_fssp_permutation",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.max_flow.micro_four_nodes",
+      "type": "case",
+      "title": "Four-node maximum-flow micro-instance",
+      "summary": "Maximize source-to-sink flow through five capacitated arcs.",
+      "retrieval": {"aliases": ["max flow", "maximum flow", "four-node flow"], "signals": ["maximize source to sink flow"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"nodes": 4, "arcs": 5},
+        "data": {"source": "S", "sink": "T", "capacity": {"S-A": 3, "S-B": 2, "A-B": 1, "A-T": 2, "B-T": 3}},
+        "known_solution": {"objective": 5, "flow": {"S-A": 3, "S-B": 2, "A-B": 1, "A-T": 2, "B-T": 3}},
+        "expected_variant": "variant.reference.max_flow",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.min_cost_flow.micro_transshipment",
+      "type": "case",
+      "title": "Three-node min-cost-flow micro-instance",
+      "summary": "Send four units from source to sink through the minimum-cost route.",
+      "retrieval": {"aliases": ["min-cost flow", "minimum cost flow", "transshipment"], "signals": ["minimum cost flow with supply demand balance"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"nodes": 3, "arcs": 3},
+        "data": {"balance": {"S": 4, "A": 0, "T": -4}, "arc": {"S-A": {"capacity": 4, "cost": 1}, "A-T": {"capacity": 4, "cost": 2}, "S-T": {"capacity": 4, "cost": 5}}},
+        "known_solution": {"objective": 12, "flow": {"S-A": 4, "A-T": 4, "S-T": 0}},
+        "expected_variant": "variant.reference.min_cost_flow",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.blending.micro_two_ingredients",
+      "type": "case",
+      "title": "Two-ingredient blending micro-instance",
+      "summary": "Minimize ingredient cost while meeting two nutrient lower bounds.",
+      "retrieval": {"aliases": ["blending", "diet problem", "two ingredients"], "signals": ["blend ingredients with nutrient bounds"]},
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"ingredients": 2, "nutrients": 2},
+        "data": {"cost": {"A": 2, "B": 3}, "nutrient": {"N1": {"A": 3, "B": 1, "minimum": 6}, "N2": {"A": 1, "B": 2, "minimum": 4}}},
+        "known_solution": {"objective": 6.8, "quantity": {"A": 1.6, "B": 1.2}},
+        "expected_variant": "variant.reference.blending_diet_problem",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.shortest_path.micro_four_nodes",
+      "type": "case",
+      "title": "Four-node shortest-path micro-instance",
+      "summary": "Find the minimum-cost directed path from source S to destination T.",
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"nodes": 4, "arcs": 5},
+        "data": {"source": "S", "destination": "T", "cost": {"S-A": 2, "S-B": 5, "A-B": 1, "A-T": 5, "B-T": 2}},
+        "known_solution": {"objective": 5, "path": ["S", "A", "B", "T"]},
+        "expected_variant": "variant.reference.shortest_path_as_lp",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.portfolio.micro_two_assets",
+      "type": "case",
+      "title": "Two-asset mean-variance portfolio micro-instance",
+      "summary": "Minimize diagonal portfolio variance while achieving an eight-percent target return.",
+      "payload": {
+        "status": "expert_curated_synthetic",
+        "instance_size": {"assets": 2},
+        "data": {"expected_return": {"A": 0.05, "B": 0.10}, "variance": {"A": 0.04, "B": 0.09}, "covariance": 0.0, "target_return": 0.08},
+        "known_solution": {"objective": 0.0388, "weight": {"A": 0.4, "B": 0.6}},
+        "expected_variant": "variant.reference.portfolio_optimization_markowitz_mean_variance",
+        "source": "compact synthetic teaching instance"
+      }
+    },
+    {
+      "id": "case.uflp.micro_tradeoff",
+      "type": "case",
+      "title": "Two-depot UFLP cost tradeoff micro-instance",
+      "summary": "Compare opening one depot against paying two fixed costs for cheaper service.",
+      "retrieval": {"aliases": ["UFLP", "facility location", "fixed cost tradeoff", "open one depot"], "signals": ["fixed cost tradeoff", "open one depot"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"facilities": 2, "customers": 2}, "data": {"fixed_cost": {"A": 5, "B": 6}, "service_cost": {"A": [2, 4], "B": [4, 1]}}, "known_solution": {"objective": 11, "open_facilities": ["A"], "assignment": {"C1": "A", "C2": "A"}}, "expected_variant": "variant.reference.uncapacitated_facility_location_uflp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.uflp.micro_capacity_extension",
+      "type": "case",
+      "title": "Capacity extension on a facility-location micro-instance",
+      "summary": "Use demand-weighted capacities while retaining fixed opening and assignment costs.",
+      "retrieval": {"aliases": ["UFLP", "facility location", "capacity extension", "demand weighted capacity"], "signals": ["capacity extension", "demand weighted capacity"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"facilities": 2, "customers": 3}, "data": {"fixed_cost": {"A": 2, "B": 3}, "capacity": {"A": 3, "B": 4}, "demand": {"C1": 2, "C2": 2, "C3": 1}, "service_cost": {"A": [1, 3, 2], "B": [3, 1, 2]}}, "known_solution": {"objective": 9, "assignment": {"C1": "A", "C2": "B", "C3": "B"}}, "expected_variant": "variant.reference.uncapacitated_facility_location_uflp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.scp.micro_redundant_cover",
+      "type": "case",
+      "title": "Redundant set-covering micro-instance",
+      "summary": "Choose a cheaper pair of overlapping sets instead of one expensive universal set.",
+      "retrieval": {"aliases": ["SCP", "set covering", "overlapping sets", "redundant cover"], "signals": ["overlapping sets", "redundant cover"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"elements": 3, "sets": 3}, "data": {"cost": {"S1": 5, "S2": 3, "S3": 1}, "covers": {"S1": ["E1", "E2", "E3"], "S2": ["E1", "E2"], "S3": ["E3"]}}, "known_solution": {"objective": 4, "selected_sets": ["S2", "S3"]}, "expected_variant": "variant.reference.set_covering_problem_scp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.spp.micro_crew_partition",
+      "type": "case",
+      "title": "Crew-roster set-partitioning micro-instance",
+      "summary": "Choose duty patterns so each of three shifts is covered exactly once.",
+      "retrieval": {"aliases": ["SPP", "set partitioning", "crew duty patterns", "cover shifts exactly once"], "signals": ["crew duty patterns", "cover shifts exactly once"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"shifts": 3, "patterns": 4}, "data": {"cost": {"R1": 4, "R2": 1, "R3": 1, "R4": 4}, "covers": {"R1": ["A", "B"], "R2": ["C"], "R3": ["A"], "R4": ["B", "C"]}}, "known_solution": {"objective": 5, "selected_patterns": ["R1", "R2"]}, "expected_variant": "variant.reference.set_partitioning_problem_spp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.bpp.micro_tight_bins",
+      "type": "case",
+      "title": "Tight-capacity bin-packing micro-instance",
+      "summary": "Pack four items of total weight fourteen into capacity-seven bins.",
+      "retrieval": {"aliases": ["BPP", "bin packing", "capacity seven bins", "tight capacity"], "signals": ["capacity seven bins", "tight capacity"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"items": 4}, "data": {"capacity": 7, "weight": {"I1": 5, "I2": 4, "I3": 3, "I4": 2}}, "known_solution": {"objective": 2, "bins": [["I1", "I4"], ["I2", "I3"]]}, "expected_variant": "variant.reference.bin_packing_problem_bpp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.knapsack.micro_budget_selection",
+      "type": "case",
+      "title": "Budget-constrained binary knapsack micro-instance",
+      "summary": "Select a maximum-value subset under a weight budget of eight.",
+      "retrieval": {"aliases": ["0-1 knapsack", "knapsack", "maximum value subset", "budget eight"], "signals": ["maximum value subset", "budget eight"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"items": 4}, "data": {"capacity": 8, "items": {"A": {"weight": 5, "value": 10}, "B": {"weight": 4, "value": 8}, "C": {"weight": 3, "value": 7}, "D": {"weight": 2, "value": 4}}}, "known_solution": {"objective": 17, "selected_items": ["A", "C"], "total_weight": 8}, "expected_variant": "variant.reference.0_1_knapsack_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.lap.micro_forbidden_pair",
+      "type": "case",
+      "title": "Assignment with a forbidden pair micro-instance",
+      "summary": "Find a one-to-one assignment while excluding one infeasible agent-task pair.",
+      "retrieval": {"aliases": ["LAP", "linear assignment", "forbidden pair", "one-to-one assignment"], "signals": ["forbidden pair", "one-to-one assignment"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"agents": 3, "tasks": 3}, "data": {"task_order": ["X", "Y", "Z"], "cost": {"A": [1, 100, null], "B": [2, 4, 1], "C": [3, 2, 5]}, "forbidden": ["A-Z"]}, "known_solution": {"objective": 4, "assignment": {"A": "X", "B": "Z", "C": "Y"}}, "expected_variant": "variant.reference.linear_assignment_problem_lap", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.gap.micro_resource_tradeoff",
+      "type": "case",
+      "title": "Resource-tradeoff generalized-assignment micro-instance",
+      "summary": "Assign tasks to two agents with heterogeneous resource consumption and capacities.",
+      "retrieval": {"aliases": ["GAP", "generalized assignment", "resource tradeoff", "heterogeneous resource consumption"], "signals": ["resource tradeoff", "heterogeneous resource consumption"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"agents": 2, "tasks": 3}, "data": {"capacity": {"A": 4, "B": 5}, "cost": {"A": [2, 5, 4], "B": [4, 3, 1]}, "resource": {"A": [2, 3, 2], "B": [3, 2, 4]}}, "known_solution": {"objective": 9, "assignment": {"T1": "A", "T2": "B", "T3": "A"}}, "expected_variant": "variant.reference.generalized_assignment_problem_gap", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.cvrp.micro_capacity_boundary",
+      "type": "case",
+      "title": "Capacity-boundary CVRP micro-instance",
+      "summary": "Use capacity-four vehicles to serve demands three, one, and two from one depot.",
+      "retrieval": {"aliases": ["CVRP", "capacitated vehicle routing", "capacity four vehicles", "vehicle demands"], "signals": ["capacity four vehicles", "vehicle demands"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"customers": 3, "vehicles": 2}, "data": {"vehicle_capacity": 4, "demand": {"A": 3, "B": 1, "C": 2}, "distance": {"O-A": 2, "O-B": 3, "O-C": 4, "A-B": 2, "A-C": 3, "B-C": 2}}, "known_solution": {"objective": 13, "routes": [["O", "A", "O"], ["O", "B", "C", "O"]]}, "expected_variant": "variant.reference.capacitated_vrp_cvrp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.tsp.micro_asymmetric_cost",
+      "type": "case",
+      "title": "Asymmetric four-city TSP micro-instance",
+      "summary": "Find a directed Hamiltonian tour when reverse arc costs differ.",
+      "retrieval": {"aliases": ["TSP", "traveling salesman", "directed Hamiltonian tour", "asymmetric costs"], "signals": ["directed Hamiltonian tour", "asymmetric costs"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"cities": 4}, "data": {"directed_cost": {"A-B": 2, "A-C": 9, "A-D": 8, "B-A": 6, "B-C": 3, "B-D": 7, "C-A": 4, "C-B": 5, "C-D": 1, "D-A": 3, "D-B": 6, "D-C": 2}}, "known_solution": {"objective": 9, "tour": ["A", "B", "C", "D", "A"]}, "expected_variant": "variant.reference.traveling_salesman_problem_tsp_dfj_formulation", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.jssp.micro_three_jobs",
+      "type": "case",
+      "title": "Three-job job-shop micro-instance",
+      "summary": "Schedule three jobs on two machines with conflicting operation orders.",
+      "retrieval": {"aliases": ["JSSP", "job shop", "three jobs", "conflicting machine orders"], "signals": ["three jobs", "conflicting machine orders"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"jobs": 3, "machines": 2}, "data": {"operations": {"J1": [{"machine": "M1", "processing": 2}, {"machine": "M2", "processing": 1}], "J2": [{"machine": "M2", "processing": 3}, {"machine": "M1", "processing": 2}], "J3": [{"machine": "M1", "processing": 1}, {"machine": "M2", "processing": 2}]}}, "known_solution": {"objective": 6, "makespan": 6}, "expected_variant": "variant.reference.job_shop_scheduling_jssp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.fssp.micro_alternate_order",
+      "type": "case",
+      "title": "Alternate flow-shop permutation micro-instance",
+      "summary": "Choose a permutation for three jobs flowing through two machines.",
+      "retrieval": {"aliases": ["FSSP", "flow shop", "job permutation", "alternate order"], "signals": ["job permutation", "alternate order"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"jobs": 3, "machines": 2}, "data": {"processing": {"J1": [3, 1], "J2": [2, 2], "J3": [1, 3]}, "machine_order": ["M1", "M2"]}, "known_solution": {"objective": 7, "permutation": ["J3", "J1", "J2"]}, "expected_variant": "variant.reference.flow_shop_scheduling_fssp_permutation", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.max_flow.micro_bottleneck",
+      "type": "case",
+      "title": "Bottlenecked maximum-flow micro-instance",
+      "summary": "A sink-side bottleneck limits the maximum flow below total source capacity.",
+      "retrieval": {"aliases": ["max flow", "maximum flow", "sink bottleneck", "source to sink"], "signals": ["sink bottleneck", "maximum flow"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 4, "arcs": 5}, "data": {"source": "S", "sink": "T", "capacity": {"S-A": 4, "S-B": 3, "A-B": 1, "A-T": 2, "B-T": 2}}, "known_solution": {"objective": 4, "flow_value": 4}, "expected_variant": "variant.reference.max_flow", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.min_cost_flow.micro_route_choice",
+      "type": "case",
+      "title": "Two-route min-cost-flow micro-instance",
+      "summary": "Send three balanced units through a cheap intermediate route instead of a direct arc.",
+      "retrieval": {"aliases": ["min-cost flow", "minimum cost flow", "cheap intermediate route", "route choice"], "signals": ["cheap intermediate route", "route choice"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 3, "arcs": 3}, "data": {"balance": {"S": 3, "A": 0, "T": -3}, "arc": {"S-A": {"capacity": 3, "cost": 1}, "A-T": {"capacity": 3, "cost": 4}, "S-T": {"capacity": 3, "cost": 6}}}, "known_solution": {"objective": 15, "flow": {"S-A": 3, "A-T": 3, "S-T": 0}}, "expected_variant": "variant.reference.min_cost_flow", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.transportation.micro_unbalanced_supply",
+      "type": "case",
+      "title": "Unbalanced transportation micro-instance",
+      "summary": "Meet demand with excess supply left unused at minimum shipping cost.",
+      "retrieval": {"aliases": ["transportation problem", "unbalanced supply", "excess supply left unused", "shipping cost"], "signals": ["unbalanced supply", "excess supply left unused"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"suppliers": 2, "customers": 2}, "data": {"supply": {"A": 5, "B": 3}, "demand": {"X": 2, "Y": 3}, "unit_cost": {"A": [1, 4], "B": [2, 1]}}, "known_solution": {"objective": 5, "shipments": {"A->X": 2, "B->Y": 3}, "unused_supply": {"A": 3}}, "expected_variant": "variant.reference.transportation_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.blending.micro_upper_bound",
+      "type": "case",
+      "title": "Blending with nutrient upper-bound micro-instance",
+      "summary": "Minimize ingredient cost with a lower bound and a safety upper bound on nutrients.",
+      "retrieval": {"aliases": ["blending", "diet problem", "nutrient upper bound", "safety upper bound"], "signals": ["nutrient upper bound", "safety upper bound"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"ingredients": 2, "nutrients": 2}, "data": {"cost": {"A": 1, "B": 2}, "nutrient": {"N1": {"A": 2, "B": 1, "minimum": 4}, "N2": {"A": 1, "B": 2, "maximum": 5}}}, "known_solution": {"objective": 2, "quantity": {"A": 2, "B": 0}}, "expected_variant": "variant.reference.blending_diet_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.shortest_path.micro_forbidden_arc",
+      "type": "case",
+      "title": "Shortest path with a forbidden arc micro-instance",
+      "summary": "Find the least-cost source-to-destination path while excluding one arc.",
+      "retrieval": {"aliases": ["shortest path", "forbidden arc", "least-cost path", "source to destination"], "signals": ["forbidden arc", "least-cost path"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 4, "arcs": 5}, "data": {"source": "S", "destination": "T", "cost": {"S-A": 1, "A-T": 10, "S-B": 4, "B-T": 2, "A-B": null}, "forbidden": ["A-B"]}, "known_solution": {"objective": 6, "path": ["S", "B", "T"]}, "expected_variant": "variant.reference.shortest_path_as_lp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.portfolio.micro_target_shift",
+      "type": "case",
+      "title": "Target-return shift in a two-asset portfolio",
+      "summary": "Increase the target return and observe the minimum-variance portfolio weights change.",
+      "retrieval": {"aliases": ["portfolio optimization", "Markowitz", "target return shift", "minimum variance"], "signals": ["target return shift", "minimum variance"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"assets": 2}, "data": {"expected_return": {"A": 0.04, "B": 0.12}, "variance": {"A": 0.02, "B": 0.12}, "covariance": 0.0, "target_return": 0.09}, "known_solution": {"objective": 0.0496875, "weight": {"A": 0.375, "B": 0.625}}, "expected_variant": "variant.reference.portfolio_optimization_markowitz_mean_variance", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.tsp.micro_subtour_guard",
+      "type": "case",
+      "title": "Subtour-guard TSP micro-instance",
+      "summary": "A four-city cycle has unit perimeter edges and expensive diagonals.",
+      "retrieval": {"aliases": ["TSP", "traveling salesman", "subtour elimination", "perimeter cycle"], "signals": ["subtour elimination", "perimeter cycle"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"cities": 4}, "data": {"distance": {"A-B": 1, "B-C": 1, "C-D": 1, "D-A": 1, "A-C": 3, "B-D": 3}}, "known_solution": {"objective": 4, "tour": ["A", "B", "C", "D", "A"]}, "expected_variant": "variant.reference.traveling_salesman_problem_tsp_dfj_formulation", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.jssp.micro_machine_conflict",
+      "type": "case",
+      "title": "Machine-conflict job-shop micro-instance",
+      "summary": "Two jobs require opposite machine orders, forcing a disjunctive sequence.",
+      "retrieval": {"aliases": ["JSSP", "job shop", "machine conflict", "opposite machine orders"], "signals": ["machine conflict", "opposite machine orders"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"jobs": 2, "machines": 2}, "data": {"operations": {"J1": [{"machine": "M1", "processing": 2}, {"machine": "M2", "processing": 2}], "J2": [{"machine": "M2", "processing": 1}, {"machine": "M1", "processing": 3}]}}, "known_solution": {"objective": 5, "makespan": 5}, "expected_variant": "variant.reference.job_shop_scheduling_jssp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.uflp.micro_opening_budget",
+      "type": "case",
+      "title": "Opening-budget facility-location micro-instance",
+      "summary": "Choose facilities under a hard opening budget while serving all customers.",
+      "retrieval": {"aliases": ["UFLP", "facility location", "opening budget"], "signals": ["opening budget"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"facilities": 3, "customers": 2}, "data": {"budget": 7, "fixed_cost": {"A": 3, "B": 4, "C": 6}, "service_cost": {"A": [4, 4], "B": [2, 3], "C": [1, 5]}}, "known_solution": {"objective": 9, "open_facilities": ["B"], "assignment": {"C1": "B", "C2": "B"}}, "expected_variant": "variant.reference.uncapacitated_facility_location_uflp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.uflp.micro_mixed_service",
+      "type": "case",
+      "title": "Mixed service-cost facility-location micro-instance",
+      "summary": "Trade fixed opening cost against strongly uneven customer service costs.",
+      "retrieval": {"aliases": ["UFLP", "facility location", "mixed service cost"], "signals": ["mixed service cost"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"facilities": 2, "customers": 3}, "data": {"fixed_cost": {"A": 7, "B": 2}, "service_cost": {"A": [1, 1, 8], "B": [3, 3, 2]}}, "known_solution": {"objective": 10, "open_facilities": ["B"], "assignment": {"C1": "B", "C2": "B", "C3": "B"}}, "expected_variant": "variant.reference.uncapacitated_facility_location_uflp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.scp.micro_weighted_cover",
+      "type": "case",
+      "title": "Weighted set-covering micro-instance",
+      "summary": "Cover four elements with weighted sets and minimum total cost.",
+      "retrieval": {"aliases": ["SCP", "set covering", "weighted cover"], "signals": ["weighted cover"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"elements": 4, "sets": 4}, "data": {"cost": {"S1": 2, "S2": 2, "S3": 3, "S4": 1}, "covers": {"S1": ["E1", "E2"], "S2": ["E3"], "S3": ["E2", "E4"], "S4": ["E4"]}}, "known_solution": {"objective": 5, "selected_sets": ["S1", "S2", "S4"]}, "expected_variant": "variant.reference.set_covering_problem_scp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.scp.micro_budget_cover",
+      "type": "case",
+      "title": "Budget-limited set-covering micro-instance",
+      "summary": "Find a feasible cover while respecting a maximum number of selected sets.",
+      "retrieval": {"aliases": ["SCP", "set covering", "cover budget"], "signals": ["cover budget"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"elements": 3, "sets": 3}, "data": {"max_sets": 2, "cost": {"S1": 1, "S2": 2, "S3": 2}, "covers": {"S1": ["E1", "E2"], "S2": ["E2", "E3"], "S3": ["E3"]}}, "known_solution": {"objective": 3, "selected_sets": ["S1", "S2"]}, "expected_variant": "variant.reference.set_covering_problem_scp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.transportation.micro_shortage_penalty",
+      "type": "case",
+      "title": "Transportation with shortage penalty micro-instance",
+      "summary": "Ship scarce supply and pay a shortage penalty for unmet demand.",
+      "retrieval": {"aliases": ["transportation problem", "shortage penalty", "unmet demand"], "signals": ["shortage penalty"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"suppliers": 2, "customers": 2}, "data": {"supply": {"A": 2, "B": 1}, "demand": {"X": 2, "Y": 2}, "unit_cost": {"A": [1, 5], "B": [4, 1]}, "shortage_penalty": {"X": 9, "Y": 6}}, "known_solution": {"objective": 9, "shipments": {"A->X": 2, "B->Y": 1}, "shortage": {"Y": 1}}, "expected_variant": "variant.reference.transportation_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.transportation.micro_forbidden_lane",
+      "type": "case",
+      "title": "Transportation with a forbidden lane micro-instance",
+      "summary": "Meet balanced supply and demand while one supplier-customer lane is unavailable.",
+      "retrieval": {"aliases": ["transportation problem", "forbidden lane", "blocked shipping route"], "signals": ["forbidden lane"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"suppliers": 2, "customers": 2}, "data": {"supply": {"A": 2, "B": 3}, "demand": {"X": 2, "Y": 3}, "unit_cost": {"A": [1, null], "B": [3, 2]}, "forbidden": ["A-Y"]}, "known_solution": {"objective": 8, "shipments": {"A->X": 2, "B->X": 0, "B->Y": 3}}, "expected_variant": "variant.reference.transportation_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.tsp.micro_fixed_start",
+      "type": "case",
+      "title": "Fixed-start TSP micro-instance",
+      "summary": "Find a minimum tour with the depot fixed as the first city.",
+      "retrieval": {"aliases": ["TSP", "traveling salesman", "fixed start depot"], "signals": ["fixed start depot"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"cities": 4}, "data": {"start": "A", "distance": {"A-B": 2, "A-C": 6, "A-D": 3, "B-C": 2, "B-D": 5, "C-D": 1}}, "known_solution": {"objective": 8, "tour": ["A", "B", "C", "D", "A"]}, "expected_variant": "variant.reference.traveling_salesman_problem_tsp_dfj_formulation", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.tsp.micro_time_window",
+      "type": "case",
+      "title": "Time-window TSP micro-instance",
+      "summary": "Visit four locations while respecting a simple latest-arrival window.",
+      "retrieval": {"aliases": ["TSP", "traveling salesman", "time window tour"], "signals": ["time window tour"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"cities": 4}, "data": {"distance": {"A-B": 2, "A-C": 4, "A-D": 3, "B-C": 2, "B-D": 5, "C-D": 1}, "latest_arrival": {"B": 4, "C": 8, "D": 8}}, "known_solution": {"objective": 8, "tour": ["A", "B", "C", "D", "A"]}, "expected_variant": "variant.reference.traveling_salesman_problem_tsp_dfj_formulation", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.jssp.micro_release_dates",
+      "type": "case",
+      "title": "Release-date job-shop micro-instance",
+      "summary": "Schedule jobs with machine conflicts and nonzero release times.",
+      "retrieval": {"aliases": ["JSSP", "job shop", "release dates"], "signals": ["release dates"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"jobs": 2, "machines": 2}, "data": {"release": {"J1": 0, "J2": 2}, "operations": {"J1": [{"machine": "M1", "processing": 2}, {"machine": "M2", "processing": 1}], "J2": [{"machine": "M2", "processing": 2}, {"machine": "M1", "processing": 1}]}}, "known_solution": {"objective": 5, "makespan": 5}, "expected_variant": "variant.reference.job_shop_scheduling_jssp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.jssp.micro_no_wait",
+      "type": "case",
+      "title": "No-wait job-shop micro-instance",
+      "summary": "Sequence two jobs when each job must move immediately between machines.",
+      "retrieval": {"aliases": ["JSSP", "job shop", "no-wait scheduling"], "signals": ["no-wait scheduling"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"jobs": 2, "machines": 2}, "data": {"operations": {"J1": [{"machine": "M1", "processing": 2}, {"machine": "M2", "processing": 2}], "J2": [{"machine": "M1", "processing": 1}, {"machine": "M2", "processing": 3}]}, "no_wait": true}, "known_solution": {"objective": 6, "makespan": 6, "order": ["J2", "J1"]}, "expected_variant": "variant.reference.job_shop_scheduling_jssp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.spp.micro_pattern_limit",
+      "type": "case",
+      "title": "Pattern-limited set-partitioning micro-instance",
+      "summary": "Cover shifts exactly once while limiting the number of selected duty patterns.",
+      "retrieval": {"aliases": ["SPP", "set partitioning", "pattern limit"], "signals": ["pattern limit"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"shifts": 3, "patterns": 3}, "data": {"max_patterns": 2, "cost": {"R1": 2, "R2": 3, "R3": 4}, "covers": {"R1": ["A", "B"], "R2": ["C"], "R3": ["A", "C"]}}, "known_solution": {"objective": 5, "selected_patterns": ["R1", "R2"]}, "expected_variant": "variant.reference.set_partitioning_problem_spp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.bpp.micro_identical_bins",
+      "type": "case",
+      "title": "Identical-bin packing micro-instance",
+      "summary": "Pack items into interchangeable bins while avoiding symmetry in the model.",
+      "retrieval": {"aliases": ["BPP", "bin packing", "identical bins"], "signals": ["identical bins"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"items": 5}, "data": {"capacity": 6, "weight": {"I1": 4, "I2": 3, "I3": 3, "I4": 2, "I5": 2}}, "known_solution": {"objective": 3, "bins": [["I1", "I4"], ["I2", "I3"], ["I5"]]}, "expected_variant": "variant.reference.bin_packing_problem_bpp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.knapsack.micro_cardinality",
+      "type": "case",
+      "title": "Cardinality-constrained knapsack micro-instance",
+      "summary": "Maximize value under capacity while selecting at most two items.",
+      "retrieval": {"aliases": ["0-1 knapsack", "knapsack", "cardinality constraint"], "signals": ["cardinality constraint"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"items": 4}, "data": {"capacity": 8, "max_items": 2, "items": {"A": {"weight": 5, "value": 10}, "B": {"weight": 4, "value": 8}, "C": {"weight": 3, "value": 7}, "D": {"weight": 2, "value": 4}}}, "known_solution": {"objective": 17, "selected_items": ["A", "C"]}, "expected_variant": "variant.reference.0_1_knapsack_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.knapsack.micro_two_constraint",
+      "type": "case",
+      "title": "Two-resource knapsack micro-instance",
+      "summary": "Select projects under simultaneous weight and risk budgets.",
+      "retrieval": {"aliases": ["0-1 knapsack", "knapsack", "two resource budgets"], "signals": ["two resource budgets"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"items": 3}, "data": {"weight_limit": 6, "risk_limit": 5, "items": {"A": {"weight": 4, "risk": 2, "value": 9}, "B": {"weight": 3, "risk": 3, "value": 8}, "C": {"weight": 2, "risk": 1, "value": 5}}}, "known_solution": {"objective": 14, "selected_items": ["A", "C"]}, "expected_variant": "variant.reference.0_1_knapsack_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.lap.micro_balance_penalty",
+      "type": "case",
+      "title": "Assignment with balance penalty micro-instance",
+      "summary": "Assign workers one-to-one while penalizing a designated expensive pairing.",
+      "retrieval": {"aliases": ["LAP", "linear assignment", "balance penalty"], "signals": ["balance penalty"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"agents": 3, "tasks": 3}, "data": {"cost": {"A": [2, 5, 4], "B": [3, 1, 6], "C": [4, 3, 2]}, "penalty": {"A-Z": 2}}, "known_solution": {"objective": 5, "assignment": {"A": "X", "B": "Y", "C": "Z"}}, "expected_variant": "variant.reference.linear_assignment_problem_lap", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.gap.micro_activation_cost",
+      "type": "case",
+      "title": "Generalized assignment with activation cost micro-instance",
+      "summary": "Assign tasks to capacitated agents and pay once when an agent is activated.",
+      "retrieval": {"aliases": ["GAP", "generalized assignment", "activation cost"], "signals": ["activation cost"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"agents": 2, "tasks": 3}, "data": {"capacity": {"A": 4, "B": 4}, "activation_cost": {"A": 3, "B": 1}, "resource": {"A": [2, 2, 1], "B": [1, 3, 2]}, "cost": {"A": [1, 2, 4], "B": [3, 1, 2]}}, "known_solution": {"objective": 9, "assignment": {"T1": "A", "T2": "A", "T3": "B"}}, "expected_variant": "variant.reference.generalized_assignment_problem_gap", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.cvrp.micro_time_windows",
+      "type": "case",
+      "title": "Time-window CVRP micro-instance",
+      "summary": "Route capacity-limited vehicles while meeting customer time windows.",
+      "retrieval": {"aliases": ["CVRP", "capacitated vehicle routing", "time windows"], "signals": ["CVRP time windows"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"customers": 3, "vehicles": 1}, "data": {"vehicle_capacity": 5, "demand": {"A": 2, "B": 1, "C": 2}, "distance": {"O-A": 2, "O-B": 3, "O-C": 4, "A-B": 2, "A-C": 3, "B-C": 2}, "window": {"A": [0, 4], "B": [1, 7], "C": [2, 8]}}, "known_solution": {"objective": 10, "routes": [["O", "A", "B", "C", "O"]]}, "expected_variant": "variant.reference.capacitated_vrp_cvrp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.cvrp.micro_multi_depot",
+      "type": "case",
+      "title": "Multi-depot CVRP micro-instance",
+      "summary": "Serve customers from the nearer of two depots under vehicle capacities.",
+      "retrieval": {"aliases": ["CVRP", "capacitated vehicle routing", "multi depot"], "signals": ["multi depot"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"depots": 2, "customers": 3}, "data": {"vehicle_capacity": 3, "demand": {"A": 2, "B": 1, "C": 2}, "distance": {"D1-A": 2, "D1-B": 3, "D1-C": 8, "D2-A": 7, "D2-B": 2, "D2-C": 2, "B-C": 3}}, "known_solution": {"objective": 11, "routes": [["D1", "A", "D1"], ["D2", "B", "C", "D2"]]}, "expected_variant": "variant.reference.capacitated_vrp_cvrp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.fssp.micro_setup_times",
+      "type": "case",
+      "title": "Flow-shop setup-time micro-instance",
+      "summary": "Choose a job permutation while accounting for sequence-dependent setup time.",
+      "retrieval": {"aliases": ["FSSP", "flow shop", "setup times"], "signals": ["setup times"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"jobs": 3, "machines": 2}, "data": {"processing": {"J1": [2, 1], "J2": [1, 3], "J3": [2, 2]}, "setup_on_M1": {"J1-J2": 1, "J2-J3": 2, "J1-J3": 0}}, "known_solution": {"objective": 9, "permutation": ["J1", "J3", "J2"]}, "expected_variant": "variant.reference.flow_shop_scheduling_fssp_permutation", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.max_flow.micro_multi_source",
+      "type": "case",
+      "title": "Multi-source maximum-flow micro-instance",
+      "summary": "Aggregate flow from two source nodes into one sink through a shared bottleneck.",
+      "retrieval": {"aliases": ["max flow", "maximum flow", "multi source flow"], "signals": ["multi-source flow"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 5, "arcs": 6}, "data": {"sources": ["S1", "S2"], "sink": "T", "capacity": {"S1-A": 3, "S2-A": 2, "A-B": 4, "A-T": 1, "B-T": 3, "S1-B": 1}}, "known_solution": {"objective": 4, "flow_value": 4}, "expected_variant": "variant.reference.max_flow", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.min_cost_flow.micro_lower_bound",
+      "type": "case",
+      "title": "Lower-bounded min-cost-flow micro-instance",
+      "summary": "Send required flow through arcs with one mandatory lower-bound shipment.",
+      "retrieval": {"aliases": ["min-cost flow", "minimum cost flow", "lower bound flow"], "signals": ["lower-bound flow"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 3, "arcs": 3}, "data": {"balance": {"S": 2, "A": 0, "T": -2}, "arc": {"S-A": {"lower": 1, "capacity": 2, "cost": 1}, "A-T": {"capacity": 2, "cost": 3}, "S-T": {"capacity": 2, "cost": 5}}}, "known_solution": {"objective": 8, "flow": {"S-A": 2, "A-T": 2, "S-T": 0}}, "expected_variant": "variant.reference.min_cost_flow", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.blending.micro_ratio",
+      "type": "case",
+      "title": "Blending with ratio requirement micro-instance",
+      "summary": "Meet nutrient bounds while keeping the ratio of two ingredients within a band.",
+      "retrieval": {"aliases": ["blending", "diet problem", "ingredient ratio"], "signals": ["ingredient ratio"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"ingredients": 2, "nutrients": 1}, "data": {"cost": {"A": 2, "B": 1}, "nutrient": {"N1": {"A": 2, "B": 1, "minimum": 6}}, "ratio": {"A_to_B": [1, 2]}}, "known_solution": {"objective": 6, "quantity": {"A": 2, "B": 2}}, "expected_variant": "variant.reference.blending_diet_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.shortest_path.micro_resource_limit",
+      "type": "case",
+      "title": "Resource-limited shortest-path micro-instance",
+      "summary": "Find the cheapest path subject to a maximum travel-risk budget.",
+      "retrieval": {"aliases": ["shortest path", "resource constrained path", "risk budget"], "signals": ["resource constrained path"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 4, "arcs": 5}, "data": {"source": "S", "destination": "T", "cost": {"S-A": 1, "A-T": 2, "S-B": 2, "B-T": 3, "A-B": 1}, "risk": {"S-A": 4, "A-T": 4, "S-B": 1, "B-T": 1, "A-B": 2}, "risk_limit": 3}, "known_solution": {"objective": 5, "path": ["S", "B", "T"]}, "expected_variant": "variant.reference.shortest_path_as_lp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.portfolio.micro_cardinality",
+      "type": "case",
+      "title": "Cardinality-limited portfolio micro-instance",
+      "summary": "Minimize variance while investing in at most two assets.",
+      "retrieval": {"aliases": ["portfolio optimization", "Markowitz", "cardinality portfolio"], "signals": ["cardinality portfolio"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"assets": 3}, "data": {"expected_return": {"A": 0.04, "B": 0.08, "C": 0.12}, "variance": {"A": 0.02, "B": 0.05, "C": 0.11}, "covariance": 0.0, "target_return": 0.08, "max_assets": 2}, "known_solution": {"objective": 0.0325, "weight": {"A": 0.5, "C": 0.5}}, "expected_variant": "variant.reference.portfolio_optimization_markowitz_mean_variance", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.tsp.micro_forbidden_arc",
+      "type": "case",
+      "title": "Forbidden-arc TSP micro-instance",
+      "summary": "Find a Hamiltonian tour while excluding one directed arc.",
+      "retrieval": {"aliases": ["TSP", "traveling salesman", "forbidden arc tour"], "signals": ["forbidden arc tour"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"cities": 4}, "data": {"forbidden": ["B-C"], "distance": {"A-B": 2, "A-C": 4, "A-D": 3, "B-A": 2, "B-C": null, "B-D": 5, "C-A": 4, "C-B": 2, "C-D": 1, "D-A": 3, "D-B": 5, "D-C": 1}}, "known_solution": {"objective": 8, "tour": ["A", "D", "C", "B", "A"]}, "expected_variant": "variant.reference.traveling_salesman_problem_tsp_dfj_formulation", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.jssp.micro_due_dates",
+      "type": "case",
+      "title": "Due-date job-shop micro-instance",
+      "summary": "Schedule jobs on shared machines with tardiness beyond due dates.",
+      "retrieval": {"aliases": ["JSSP", "job shop", "due dates tardiness"], "signals": ["due dates tardiness"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"jobs": 2, "machines": 2}, "data": {"due": {"J1": 4, "J2": 5}, "operations": {"J1": [{"machine": "M1", "processing": 2}, {"machine": "M2", "processing": 2}], "J2": [{"machine": "M2", "processing": 2}, {"machine": "M1", "processing": 3}]}}, "known_solution": {"objective": 0, "total_tardiness": 0, "makespan": 5}, "expected_variant": "variant.reference.job_shop_scheduling_jssp", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.gap.micro_load_balance",
+      "type": "case",
+      "title": "Load-balanced generalized-assignment micro-instance",
+      "summary": "Assign tasks to capacitated agents while keeping their loads balanced.",
+      "retrieval": {"aliases": ["GAP", "generalized assignment", "load balance"], "signals": ["load balance"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"agents": 2, "tasks": 4}, "data": {"capacity": {"A": 4, "B": 4}, "resource": {"A": [2, 2, 1, 1], "B": [1, 1, 2, 2]}, "cost": {"A": [1, 1, 3, 3], "B": [3, 3, 1, 1], "load_difference_limit": 1}}, "known_solution": {"objective": 4, "assignment": {"T1": "A", "T2": "A", "T3": "B", "T4": "B"}}, "expected_variant": "variant.reference.generalized_assignment_problem_gap", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.min_cost_flow.micro_capacity",
+      "type": "case",
+      "title": "Capacity-limited min-cost-flow micro-instance",
+      "summary": "Route supply through a cheap arc with a tight capacity and use a fallback arc.",
+      "retrieval": {"aliases": ["min-cost flow", "minimum cost flow", "capacity limited route"], "signals": ["capacity limited route"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 3, "arcs": 3}, "data": {"balance": {"S": 3, "A": 0, "T": -3}, "arc": {"S-A": {"capacity": 2, "cost": 1}, "A-T": {"capacity": 2, "cost": 2}, "S-T": {"capacity": 3, "cost": 5}}}, "known_solution": {"objective": 11, "flow": {"S-A": 2, "A-T": 2, "S-T": 1}}, "expected_variant": "variant.reference.min_cost_flow", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.blending.micro_lower_bound",
+      "type": "case",
+      "title": "Blending with ingredient lower bounds micro-instance",
+      "summary": "Meet nutrient requirements while enforcing a minimum quantity of one ingredient.",
+      "retrieval": {"aliases": ["blending", "diet problem", "ingredient lower bound"], "signals": ["ingredient lower bound"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"ingredients": 2, "nutrients": 1}, "data": {"cost": {"A": 1, "B": 3}, "nutrient": {"N1": {"A": 1, "B": 2, "minimum": 4}}, "lower_bound": {"B": 1}}, "known_solution": {"objective": 5, "quantity": {"A": 2, "B": 1}}, "expected_variant": "variant.reference.blending_diet_problem", "source": "compact synthetic teaching instance"}
+    },
+    {
+      "id": "case.shortest_path.micro_hop_limit",
+      "type": "case",
+      "title": "Hop-limited shortest-path micro-instance",
+      "summary": "Find a least-cost path subject to a maximum number of traversed arcs.",
+      "retrieval": {"aliases": ["shortest path", "hop limit", "maximum hops"], "signals": ["hop limit"]},
+      "payload": {"status": "expert_curated_synthetic", "instance_size": {"nodes": 5, "arcs": 6}, "data": {"source": "S", "destination": "T", "max_hops": 2, "cost": {"S-A": 1, "A-B": 1, "B-T": 1, "S-C": 3, "C-T": 3, "A-T": 6}}, "known_solution": {"objective": 6, "path": ["S", "C", "T"]}, "expected_variant": "variant.reference.shortest_path_as_lp", "source": "compact synthetic teaching instance"}
+    }
+  ],
+  "edges": [
+    {"source": "reference.model.uncapacitated_facility_location_uflp", "relation": "EXEMPLIFIED_BY", "target": "case.uflp.micro_retail"},
+    {"source": "reference.model.set_covering_problem_scp", "relation": "EXEMPLIFIED_BY", "target": "case.scp.micro_coverage"},
+    {"source": "reference.model.transportation_problem", "relation": "EXEMPLIFIED_BY", "target": "case.transportation.micro_supply_demand"},
+    {"source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation", "relation": "EXEMPLIFIED_BY", "target": "case.tsp.micro_four_city"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.jssp.micro_two_job"},
+    {"source": "case.uflp.micro_retail", "relation": "INSTANCE_OF", "target": "reference.model.uncapacitated_facility_location_uflp"},
+    {"source": "case.scp.micro_coverage", "relation": "INSTANCE_OF", "target": "reference.model.set_covering_problem_scp"},
+    {"source": "case.transportation.micro_supply_demand", "relation": "INSTANCE_OF", "target": "reference.model.transportation_problem"},
+    {"source": "case.tsp.micro_four_city", "relation": "INSTANCE_OF", "target": "reference.model.traveling_salesman_problem_tsp_dfj_formulation"},
+    {"source": "case.jssp.micro_two_job", "relation": "INSTANCE_OF", "target": "reference.model.job_shop_scheduling_jssp"},
+    {"source": "reference.model.set_partitioning_problem_spp", "relation": "EXEMPLIFIED_BY", "target": "case.spp.micro_exact_cover"},
+    {"source": "reference.model.bin_packing_problem_bpp", "relation": "EXEMPLIFIED_BY", "target": "case.bpp.micro_four_items"},
+    {"source": "reference.model.0_1_knapsack_problem", "relation": "EXEMPLIFIED_BY", "target": "case.knapsack.micro_four_items"},
+    {"source": "reference.model.linear_assignment_problem_lap", "relation": "EXEMPLIFIED_BY", "target": "case.lap.micro_three_by_three"},
+    {"source": "reference.model.generalized_assignment_problem_gap", "relation": "EXEMPLIFIED_BY", "target": "case.gap.micro_two_agents"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.cvrp.micro_three_customers"},
+    {"source": "reference.model.flow_shop_scheduling_fssp_permutation", "relation": "EXEMPLIFIED_BY", "target": "case.fssp.micro_three_jobs"},
+    {"source": "reference.model.max_flow", "relation": "EXEMPLIFIED_BY", "target": "case.max_flow.micro_four_nodes"},
+    {"source": "reference.model.min_cost_flow", "relation": "EXEMPLIFIED_BY", "target": "case.min_cost_flow.micro_transshipment"},
+    {"source": "reference.model.blending_diet_problem", "relation": "EXEMPLIFIED_BY", "target": "case.blending.micro_two_ingredients"},
+    {"source": "reference.model.shortest_path_as_lp", "relation": "EXEMPLIFIED_BY", "target": "case.shortest_path.micro_four_nodes"},
+    {"source": "reference.model.portfolio_optimization_markowitz_mean_variance", "relation": "EXEMPLIFIED_BY", "target": "case.portfolio.micro_two_assets"},
+    {"source": "case.spp.micro_exact_cover", "relation": "INSTANCE_OF", "target": "reference.model.set_partitioning_problem_spp"},
+    {"source": "case.bpp.micro_four_items", "relation": "INSTANCE_OF", "target": "reference.model.bin_packing_problem_bpp"},
+    {"source": "case.knapsack.micro_four_items", "relation": "INSTANCE_OF", "target": "reference.model.0_1_knapsack_problem"},
+    {"source": "case.lap.micro_three_by_three", "relation": "INSTANCE_OF", "target": "reference.model.linear_assignment_problem_lap"},
+    {"source": "case.gap.micro_two_agents", "relation": "INSTANCE_OF", "target": "reference.model.generalized_assignment_problem_gap"},
+    {"source": "case.cvrp.micro_three_customers", "relation": "INSTANCE_OF", "target": "reference.model.capacitated_vrp_cvrp"},
+    {"source": "case.fssp.micro_three_jobs", "relation": "INSTANCE_OF", "target": "reference.model.flow_shop_scheduling_fssp_permutation"},
+    {"source": "case.max_flow.micro_four_nodes", "relation": "INSTANCE_OF", "target": "reference.model.max_flow"},
+    {"source": "case.min_cost_flow.micro_transshipment", "relation": "INSTANCE_OF", "target": "reference.model.min_cost_flow"},
+    {"source": "case.blending.micro_two_ingredients", "relation": "INSTANCE_OF", "target": "reference.model.blending_diet_problem"},
+    {"source": "case.shortest_path.micro_four_nodes", "relation": "INSTANCE_OF", "target": "reference.model.shortest_path_as_lp"},
+    {"source": "case.portfolio.micro_two_assets", "relation": "INSTANCE_OF", "target": "reference.model.portfolio_optimization_markowitz_mean_variance"},
+    {"source": "reference.model.uncapacitated_facility_location_uflp", "relation": "EXEMPLIFIED_BY", "target": "case.uflp.micro_tradeoff"},
+    {"source": "reference.model.uncapacitated_facility_location_uflp", "relation": "EXEMPLIFIED_BY", "target": "case.uflp.micro_capacity_extension"},
+    {"source": "reference.model.set_covering_problem_scp", "relation": "EXEMPLIFIED_BY", "target": "case.scp.micro_redundant_cover"},
+    {"source": "reference.model.set_partitioning_problem_spp", "relation": "EXEMPLIFIED_BY", "target": "case.spp.micro_crew_partition"},
+    {"source": "reference.model.bin_packing_problem_bpp", "relation": "EXEMPLIFIED_BY", "target": "case.bpp.micro_tight_bins"},
+    {"source": "reference.model.0_1_knapsack_problem", "relation": "EXEMPLIFIED_BY", "target": "case.knapsack.micro_budget_selection"},
+    {"source": "reference.model.linear_assignment_problem_lap", "relation": "EXEMPLIFIED_BY", "target": "case.lap.micro_forbidden_pair"},
+    {"source": "reference.model.generalized_assignment_problem_gap", "relation": "EXEMPLIFIED_BY", "target": "case.gap.micro_resource_tradeoff"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.cvrp.micro_capacity_boundary"},
+    {"source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation", "relation": "EXEMPLIFIED_BY", "target": "case.tsp.micro_asymmetric_cost"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.jssp.micro_three_jobs"},
+    {"source": "reference.model.flow_shop_scheduling_fssp_permutation", "relation": "EXEMPLIFIED_BY", "target": "case.fssp.micro_alternate_order"},
+    {"source": "reference.model.max_flow", "relation": "EXEMPLIFIED_BY", "target": "case.max_flow.micro_bottleneck"},
+    {"source": "reference.model.min_cost_flow", "relation": "EXEMPLIFIED_BY", "target": "case.min_cost_flow.micro_route_choice"},
+    {"source": "reference.model.transportation_problem", "relation": "EXEMPLIFIED_BY", "target": "case.transportation.micro_unbalanced_supply"},
+    {"source": "reference.model.blending_diet_problem", "relation": "EXEMPLIFIED_BY", "target": "case.blending.micro_upper_bound"},
+    {"source": "reference.model.shortest_path_as_lp", "relation": "EXEMPLIFIED_BY", "target": "case.shortest_path.micro_forbidden_arc"},
+    {"source": "reference.model.portfolio_optimization_markowitz_mean_variance", "relation": "EXEMPLIFIED_BY", "target": "case.portfolio.micro_target_shift"},
+    {"source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation", "relation": "EXEMPLIFIED_BY", "target": "case.tsp.micro_subtour_guard"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.jssp.micro_machine_conflict"},
+    {"source": "case.uflp.micro_tradeoff", "relation": "INSTANCE_OF", "target": "reference.model.uncapacitated_facility_location_uflp"},
+    {"source": "case.uflp.micro_capacity_extension", "relation": "INSTANCE_OF", "target": "reference.model.uncapacitated_facility_location_uflp"},
+    {"source": "case.scp.micro_redundant_cover", "relation": "INSTANCE_OF", "target": "reference.model.set_covering_problem_scp"},
+    {"source": "case.spp.micro_crew_partition", "relation": "INSTANCE_OF", "target": "reference.model.set_partitioning_problem_spp"},
+    {"source": "case.bpp.micro_tight_bins", "relation": "INSTANCE_OF", "target": "reference.model.bin_packing_problem_bpp"},
+    {"source": "case.knapsack.micro_budget_selection", "relation": "INSTANCE_OF", "target": "reference.model.0_1_knapsack_problem"},
+    {"source": "case.lap.micro_forbidden_pair", "relation": "INSTANCE_OF", "target": "reference.model.linear_assignment_problem_lap"},
+    {"source": "case.gap.micro_resource_tradeoff", "relation": "INSTANCE_OF", "target": "reference.model.generalized_assignment_problem_gap"},
+    {"source": "case.cvrp.micro_capacity_boundary", "relation": "INSTANCE_OF", "target": "reference.model.capacitated_vrp_cvrp"},
+    {"source": "case.tsp.micro_asymmetric_cost", "relation": "INSTANCE_OF", "target": "reference.model.traveling_salesman_problem_tsp_dfj_formulation"},
+    {"source": "case.jssp.micro_three_jobs", "relation": "INSTANCE_OF", "target": "reference.model.job_shop_scheduling_jssp"},
+    {"source": "case.fssp.micro_alternate_order", "relation": "INSTANCE_OF", "target": "reference.model.flow_shop_scheduling_fssp_permutation"},
+    {"source": "case.max_flow.micro_bottleneck", "relation": "INSTANCE_OF", "target": "reference.model.max_flow"},
+    {"source": "case.min_cost_flow.micro_route_choice", "relation": "INSTANCE_OF", "target": "reference.model.min_cost_flow"},
+    {"source": "case.transportation.micro_unbalanced_supply", "relation": "INSTANCE_OF", "target": "reference.model.transportation_problem"},
+    {"source": "case.blending.micro_upper_bound", "relation": "INSTANCE_OF", "target": "reference.model.blending_diet_problem"},
+    {"source": "case.shortest_path.micro_forbidden_arc", "relation": "INSTANCE_OF", "target": "reference.model.shortest_path_as_lp"},
+    {"source": "case.portfolio.micro_target_shift", "relation": "INSTANCE_OF", "target": "reference.model.portfolio_optimization_markowitz_mean_variance"},
+    {"source": "case.tsp.micro_subtour_guard", "relation": "INSTANCE_OF", "target": "reference.model.traveling_salesman_problem_tsp_dfj_formulation"},
+    {"source": "case.jssp.micro_machine_conflict", "relation": "INSTANCE_OF", "target": "reference.model.job_shop_scheduling_jssp"},
+    {"source": "reference.model.uncapacitated_facility_location_uflp", "relation": "EXEMPLIFIED_BY", "target": "case.uflp.micro_opening_budget"},
+    {"source": "reference.model.uncapacitated_facility_location_uflp", "relation": "EXEMPLIFIED_BY", "target": "case.uflp.micro_mixed_service"},
+    {"source": "reference.model.set_covering_problem_scp", "relation": "EXEMPLIFIED_BY", "target": "case.scp.micro_weighted_cover"},
+    {"source": "reference.model.set_covering_problem_scp", "relation": "EXEMPLIFIED_BY", "target": "case.scp.micro_budget_cover"},
+    {"source": "reference.model.transportation_problem", "relation": "EXEMPLIFIED_BY", "target": "case.transportation.micro_shortage_penalty"},
+    {"source": "reference.model.transportation_problem", "relation": "EXEMPLIFIED_BY", "target": "case.transportation.micro_forbidden_lane"},
+    {"source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation", "relation": "EXEMPLIFIED_BY", "target": "case.tsp.micro_fixed_start"},
+    {"source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation", "relation": "EXEMPLIFIED_BY", "target": "case.tsp.micro_time_window"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.jssp.micro_release_dates"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.jssp.micro_no_wait"},
+    {"source": "reference.model.set_partitioning_problem_spp", "relation": "EXEMPLIFIED_BY", "target": "case.spp.micro_pattern_limit"},
+    {"source": "reference.model.bin_packing_problem_bpp", "relation": "EXEMPLIFIED_BY", "target": "case.bpp.micro_identical_bins"},
+    {"source": "reference.model.0_1_knapsack_problem", "relation": "EXEMPLIFIED_BY", "target": "case.knapsack.micro_cardinality"},
+    {"source": "reference.model.0_1_knapsack_problem", "relation": "EXEMPLIFIED_BY", "target": "case.knapsack.micro_two_constraint"},
+    {"source": "reference.model.linear_assignment_problem_lap", "relation": "EXEMPLIFIED_BY", "target": "case.lap.micro_balance_penalty"},
+    {"source": "reference.model.generalized_assignment_problem_gap", "relation": "EXEMPLIFIED_BY", "target": "case.gap.micro_activation_cost"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.cvrp.micro_time_windows"},
+    {"source": "reference.model.capacitated_vrp_cvrp", "relation": "EXEMPLIFIED_BY", "target": "case.cvrp.micro_multi_depot"},
+    {"source": "reference.model.flow_shop_scheduling_fssp_permutation", "relation": "EXEMPLIFIED_BY", "target": "case.fssp.micro_setup_times"},
+    {"source": "reference.model.max_flow", "relation": "EXEMPLIFIED_BY", "target": "case.max_flow.micro_multi_source"},
+    {"source": "reference.model.min_cost_flow", "relation": "EXEMPLIFIED_BY", "target": "case.min_cost_flow.micro_lower_bound"},
+    {"source": "reference.model.blending_diet_problem", "relation": "EXEMPLIFIED_BY", "target": "case.blending.micro_ratio"},
+    {"source": "reference.model.shortest_path_as_lp", "relation": "EXEMPLIFIED_BY", "target": "case.shortest_path.micro_resource_limit"},
+    {"source": "reference.model.portfolio_optimization_markowitz_mean_variance", "relation": "EXEMPLIFIED_BY", "target": "case.portfolio.micro_cardinality"},
+    {"source": "reference.model.traveling_salesman_problem_tsp_dfj_formulation", "relation": "EXEMPLIFIED_BY", "target": "case.tsp.micro_forbidden_arc"},
+    {"source": "reference.model.job_shop_scheduling_jssp", "relation": "EXEMPLIFIED_BY", "target": "case.jssp.micro_due_dates"},
+    {"source": "case.uflp.micro_opening_budget", "relation": "INSTANCE_OF", "target": "reference.model.uncapacitated_facility_location_uflp"},
+    {"source": "case.uflp.micro_mixed_service", "relation": "INSTANCE_OF", "target": "reference.model.uncapacitated_facility_location_uflp"},
+    {"source": "case.scp.micro_weighted_cover", "relation": "INSTANCE_OF", "target": "reference.model.set_covering_problem_scp"},
+    {"source": "case.scp.micro_budget_cover", "relation": "INSTANCE_OF", "target": "reference.model.set_covering_problem_scp"},
+    {"source": "case.transportation.micro_shortage_penalty", "relation": "INSTANCE_OF", "target": "reference.model.transportation_problem"},
+    {"source": "case.transportation.micro_forbidden_lane", "relation": "INSTANCE_OF", "target": "reference.model.transportation_problem"},
+    {"source": "case.tsp.micro_fixed_start", "relation": "INSTANCE_OF", "target": "reference.model.traveling_salesman_problem_tsp_dfj_formulation"},
+    {"source": "case.tsp.micro_time_window", "relation": "INSTANCE_OF", "target": "reference.model.traveling_salesman_problem_tsp_dfj_formulation"},
+    {"source": "case.jssp.micro_release_dates", "relation": "INSTANCE_OF", "target": "reference.model.job_shop_scheduling_jssp"},
+    {"source": "case.jssp.micro_no_wait", "relation": "INSTANCE_OF", "target": "reference.model.job_shop_scheduling_jssp"},
+    {"source": "case.spp.micro_pattern_limit", "relation": "INSTANCE_OF", "target": "reference.model.set_partitioning_problem_spp"},
+    {"source": "case.bpp.micro_identical_bins", "relation": "INSTANCE_OF", "target": "reference.model.bin_packing_problem_bpp"},
+    {"source": "case.knapsack.micro_cardinality", "relation": "INSTANCE_OF", "target": "reference.model.0_1_knapsack_problem"},
+    {"source": "case.knapsack.micro_two_constraint", "relation": "INSTANCE_OF", "target": "reference.model.0_1_knapsack_problem"},
+    {"source": "case.lap.micro_balance_penalty", "relation": "INSTANCE_OF", "target": "reference.model.linear_assignment_problem_lap"},
+    {"source": "case.gap.micro_activation_cost", "relation": "INSTANCE_OF", "target": "reference.model.generalized_assignment_problem_gap"},
+    {"source": "case.cvrp.micro_time_windows", "relation": "INSTANCE_OF", "target": "reference.model.capacitated_vrp_cvrp"},
+    {"source": "case.cvrp.micro_multi_depot", "relation": "INSTANCE_OF", "target": "reference.model.capacitated_vrp_cvrp"},
+    {"source": "case.fssp.micro_setup_times", "relation": "INSTANCE_OF", "target": "reference.model.flow_shop_scheduling_fssp_permutation"},
+    {"source": "case.max_flow.micro_multi_source", "relation": "INSTANCE_OF", "target": "reference.model.max_flow"},
+    {"source": "case.min_cost_flow.micro_lower_bound", "relation": "INSTANCE_OF", "target": "reference.model.min_cost_flow"},
+    {"source": "case.blending.micro_ratio", "relation": "INSTANCE_OF", "target": "reference.model.blending_diet_problem"},
+    {"source": "case.shortest_path.micro_resource_limit", "relation": "INSTANCE_OF", "target": "reference.model.shortest_path_as_lp"},
+    {"source": "case.portfolio.micro_cardinality", "relation": "INSTANCE_OF", "target": "reference.model.portfolio_optimization_markowitz_mean_variance"},
+    {"source": "case.tsp.micro_forbidden_arc", "relation": "INSTANCE_OF", "target": "reference.model.traveling_salesman_problem_tsp_dfj_formulation"},
+    {"source": "case.jssp.micro_due_dates", "relation": "INSTANCE_OF", "target": "reference.model.job_shop_scheduling_jssp"}
+    ,{"source": "reference.model.generalized_assignment_problem_gap", "relation": "EXEMPLIFIED_BY", "target": "case.gap.micro_load_balance"}
+    ,{"source": "reference.model.min_cost_flow", "relation": "EXEMPLIFIED_BY", "target": "case.min_cost_flow.micro_capacity"}
+    ,{"source": "reference.model.blending_diet_problem", "relation": "EXEMPLIFIED_BY", "target": "case.blending.micro_lower_bound"}
+    ,{"source": "reference.model.shortest_path_as_lp", "relation": "EXEMPLIFIED_BY", "target": "case.shortest_path.micro_hop_limit"}
+    ,{"source": "case.gap.micro_load_balance", "relation": "INSTANCE_OF", "target": "reference.model.generalized_assignment_problem_gap"}
+    ,{"source": "case.min_cost_flow.micro_capacity", "relation": "INSTANCE_OF", "target": "reference.model.min_cost_flow"}
+    ,{"source": "case.blending.micro_lower_bound", "relation": "INSTANCE_OF", "target": "reference.model.blending_diet_problem"}
+    ,{"source": "case.shortest_path.micro_hop_limit", "relation": "INSTANCE_OF", "target": "reference.model.shortest_path_as_lp"}
+  ],
+  "source_manifest": {"authority": "Compact synthetic teaching instances; known solutions are regression oracles, not public benchmark claims."}
+}

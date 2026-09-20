@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0", "graph_id": "production-inventory-optgraph", "graph_version": "2026-09-04.1", "domain": "operations_planning",
+  "domain_signals": ["production", "manufacturing", "inventory", "stock", "backlog", "lot size", "safety stock", "生产", "制造", "库存", "补货", "批量"],
+  "feature_catalog": {
+    "inventory_balance": {"positive": ["inventory balance", "ending inventory", "stock balance", "库存平衡", "期末库存"], "negative": []},
+    "setup_binary": {"positive": ["setup binary", "setup cost", "setup decision", "准备成本", "开机决策"], "negative": []},
+    "backlog": {"positive": ["backlog", "shortage", "backorder", "欠交", "缺货"], "negative": []}
+  },
+  "nodes": [
+    {"id": "variant.production_plan", "type": "variant", "title": "Capacitated production planning", "summary": "Choose production quantities across periods under resource, demand, and capacity constraints.", "retrieval": {"aliases": ["production planning", "manufacturing plan"], "signals": ["production", "capacity", "demand"], "feature_support": ["inventory", "inventory_balance", "capacity"], "feature_weights": {"inventory_balance": 2.0, "capacity": 2.0}}},
+    {"id": "variant.lot_sizing", "type": "variant", "title": "Lot-sizing with setup decisions", "summary": "Coordinate production quantities, inventory carryover, binary setup decisions, capacity, and optional backlog.", "retrieval": {"aliases": ["lot sizing", "production inventory"], "signals": ["inventory", "lot size", "setup cost"], "feature_support": ["inventory", "inventory_balance", "setup_binary", "setup_times", "capacity", "backlog"], "feature_weights": {"inventory_balance": 5.0, "setup_binary": 4.0, "capacity": 2.0, "backlog": 1.0}}},
+    {"id": "variant.inventory_replenishment", "type": "variant", "title": "Inventory replenishment", "summary": "Choose replenishment and stock levels over time with lead times, service requirements, and optional shortage backlog.", "retrieval": {"aliases": ["inventory", "replenishment"], "signals": ["inventory", "safety stock", "replenishment"], "feature_support": ["inventory", "inventory_balance", "backlog"], "feature_weights": {"inventory_balance": 5.0, "backlog": 1.0}}},
+    {"id": "model.lot_sizing.canonical", "type": "math_model", "title": "Canonical lot-sizing model", "summary": "Production plus prior inventory meets demand and creates next inventory, with setup linking.", "payload": {"constraints": ["I[t-1] + q[t] = demand[t] + I[t]", "q[t] <= capacity[t]*y[t]"], "objective": "min production + holding + setup costs"}},
+    {"id": "error.inventory_balance_missing_period", "type": "typical_error", "title": "Inventory balance omits a period or initial stock", "summary": "The recurrence does not connect all periods or mishandles initial inventory.", "payload": {"severity": "critical"}},
+    {"id": "error.setup_not_linked", "type": "typical_error", "title": "Production is not linked to setup", "summary": "Production can occur without paying or selecting the setup decision.", "payload": {"severity": "high"}},
+    {"id": "fix.write_inventory_recurrence", "type": "fix_hint", "title": "Write complete inventory recurrence", "summary": "State initial inventory, every period balance, and terminal inventory policy explicitly."},
+    {"id": "fix.link_setup_capacity", "type": "fix_hint", "title": "Link setup and production", "summary": "Use production <= capacity times setup binary and validate capacity units."},
+    {"id": "check.inventory_rollforward", "type": "validation_check", "title": "Inventory roll-forward check", "summary": "Recompute each period's beginning stock plus production minus demand and compare with ending stock."}
+  ],
+  "edges": [
+    {"source": "variant.production_plan", "relation": "IS_A", "target": "family.operations_planning"},
+    {"source": "variant.lot_sizing", "relation": "IS_A", "target": "family.operations_planning"},
+    {"source": "variant.inventory_replenishment", "relation": "IS_A", "target": "family.operations_planning"},
+    {"source": "variant.lot_sizing", "relation": "HAS_MODEL", "target": "model.lot_sizing.canonical"},
+    {"source": "variant.lot_sizing", "relation": "PRONE_TO", "target": "error.inventory_balance_missing_period"},
+    {"source": "variant.lot_sizing", "relation": "PRONE_TO", "target": "error.setup_not_linked"},
+    {"source": "error.inventory_balance_missing_period", "relation": "FIXED_BY", "target": "fix.write_inventory_recurrence"},
+    {"source": "error.setup_not_linked", "relation": "FIXED_BY", "target": "fix.link_setup_capacity"},
+    {"source": "variant.inventory_replenishment", "relation": "CHECK_WITH", "target": "check.inventory_rollforward"}
+  ]
+}
