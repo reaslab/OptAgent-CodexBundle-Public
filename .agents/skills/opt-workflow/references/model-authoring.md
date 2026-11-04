@@ -11,6 +11,8 @@ direct_python 的 solve(bundle) 每次从当前绑定输入运行登记的算法
 
 ## 候选入口
 
+登记 `business_checker_path` 后，native 与 direct_python 的模型模块都须提供可调用的 `extract_solution(bundle, witness)`，checker 模块提供 `check_solution(bundle, solution)`；结构与返回值见[后文 ABI 段](#业务方案提取与-checker-abi)。
+
 ### direct_python
 
 选择 `backend_id="direct_python"` 后，Core 从该 backend 推断候选入口类型；公开候选参数不传 `authoring`。登记的模型模块须能通过冻结闭包导入 `solve(bundle)`；函数可以从已登记 helper 导入，不限制为模型文件中的 top-level `def`。`bundle` 是已按当前输入绑定、规范化并切到当前实例的 `DataBundle`。该入口首版只支持 `scalar` 与 `feasibility` 目标计划，不自动分解或衔接 lexicographic 层。
@@ -47,7 +49,7 @@ direct Result 的 `check` 指向 BusinessCheck；不存在 ModelCheck PASS、nat
 
 ### Pyomo builder
 
-native 候选模块必须提供 `build_model(bundle)`，接收运行时已经规范化并绑定到当前实例的 `DataBundle`，并返回已经构造好的 Pyomo `ConcreteModel`。新案例默认将 builder 保存为 `code/optimization_model.py`；需要业务方案时默认使用 `code/solution_check.py`。它们只是便于识别的默认文件名；登记 checker 后，模型模块还须提供 `extract_solution(bundle, witness)`，checker 模块须提供 `check_solution(bundle, solution)`。可以登记其他符合模块路径规则的文件名，已有用户文件不重命名。不要返回字典或自定义 build 描述，不要在候选里调用求解器或 `SolverFactory`，也不要重新打开原始文件、访问网络、重读或再次规范化输入。本地 worker 根据登记的 backend_id 和目标计划调用对应 solver 适配器；本参考中的[后端支持边界](#后端支持边界)列出当前实际接线的接口族与模型范围。
+native 候选模块必须提供 `build_model(bundle)`，接收运行时已经规范化并绑定到当前实例的 `DataBundle`，并返回已经构造好的 Pyomo `ConcreteModel`。新案例默认将 builder 保存为 `code/optimization_model.py`；需要业务方案时默认使用 `code/solution_check.py`。它们只是便于识别的默认文件名。可以登记其他符合模块路径规则的文件名，已有用户文件不重命名。不要返回字典或自定义 build 描述，不要在候选里调用求解器或 `SolverFactory`，也不要重新打开原始文件、访问网络、重读或再次规范化输入。本地 worker 根据登记的 backend_id 和目标计划调用对应 solver 适配器；本参考中的[后端支持边界](#后端支持边界)列出当前实际接线的接口族与模型范围。
 
 
 构造时可以给 Pyomo 变量设置 `.value`。若要通过受支持的 adapter 提交这些值，在 `optagent.run_prepare` 的 `solve_options.warm_start` 中显式设为 `true`；赋值本身不会开启提交。更换 backend 或创建新的 Prepared 时，只按本次冻结的选项判断，不沿袭旧假设。省略或 `false` 只表示 Core 不请求显式 warm-start 提交，不清除变量初值，也不保证所有 backend 都从冷点开始（例如 IPOPT 的 NL 写入仍可能包括初值）。`true` 表示提交请求；requested/submitted、native accepted/effective 与已检查可行点是不同事实，适配器可以拒绝请求，solver 也可能接受、修复、忽略或拒绝初值。初值可以不完整或不可行，不能用来填补求解器未返回的活动决策变量。数值和可行性结论以本次 Run 的 Result、ModelCheck 及适用业务检查为准；builder 当前 `.value` 不是结果证据，LP 松弛的非整数向量不能作为 MIP 方案。固定值和合法确定性补全仍可按既有候选点流程核验；error/no-point Run 也可能有 Result 记录，应按实际状态和检查结果说明。`warm_start=true` 不会自动开启构造启发式或运行前业务检查。
@@ -267,7 +269,7 @@ model.md 是首次编写当前模型建模或求解代码前展示的简短数�
 
 ## 业务方案提取与 checker ABI
 
-登记 `business_checker_path` 后，模型模块须提供 `extract_solution(bundle, witness)`。`bundle` 是当前实例 `DataBundle`；`witness` 的顶层字段固定为 `input_digest`、`instance_key`、`instance_binding_digest`、`variables`、`objective_values`。每条 witness variable 包含 `component`、`key`、`domain`、`value`、`origin`；Pyomo native `component` 是 Pyomo 变量组件名，原生 CpModel 的 `component` 与 typed `key` 必须由 builder 显式映射到模型变量，再由 Core 转为内部 proto-index 投影；direct_python 则由算法声明稳定的变量名；`key` 是 typed key 数组，元素只能是字符串或整数（布尔值不算整数），标量变量使用空数组。复合和其他业务索引按原顺序逐项保留，例如 `(10, "east")` 对应 `[10, "east"]`；不要把 key 扁平化成字符串或替换成无业务依据的序号。`domain` 是字符串或 `null`，`value` 是有限数值且不能是布尔值；native `origin` 为 `fixed_model_value`、`solver_primal` 或 `deterministic_completion`，direct_python 的 `origin` 由运行时固定为 `direct_python`。Pyomo native 中，受支持 integer/binary 域的 `solver_primal` 若距最近整数不超过既定 integrality tolerance，ModelCheck 会将其规范化为最近整数；Witness、目标、变量界和全部约束行均核验同一规范化点。原始求解器向量另存于 `raw-primals.jsonl`，`origin` 表示值来源；超出容差仍报告整数核验失败。`instance_key` 同样保留字符串/整数类型及原顺序。
+`extract_solution(bundle, witness)` 的 `bundle` 是当前实例 `DataBundle`；`witness` 的顶层字段固定为 `input_digest`、`instance_key`、`instance_binding_digest`、`variables`、`objective_values`。每条 witness variable 包含 `component`、`key`、`domain`、`value`、`origin`；Pyomo native `component` 是 Pyomo 变量组件名，原生 CpModel 的 `component` 与 typed `key` 必须由 builder 显式映射到模型变量，再由 Core 转为内部 proto-index 投影；direct_python 则由算法声明稳定的变量名；`key` 是 typed key 数组，元素只能是字符串或整数（布尔值不算整数），标量变量使用空数组。复合和其他业务索引按原顺序逐项保留，例如 `(10, "east")` 对应 `[10, "east"]`；不要把 key 扁平化成字符串或替换成无业务依据的序号。`domain` 是字符串或 `null`，`value` 是有限数值且不能是布尔值；native `origin` 为 `fixed_model_value`、`solver_primal` 或 `deterministic_completion`，direct_python 的 `origin` 由运行时固定为 `direct_python`。Pyomo native 中，受支持 integer/binary 域的 `solver_primal` 若距最近整数不超过既定 integrality tolerance，ModelCheck 会将其规范化为最近整数；Witness、目标、变量界和全部约束行均核验同一规范化点。原始求解器向量另存于 `raw-primals.jsonl`，`origin` 表示值来源；超出容差仍报告整数核验失败。`instance_key` 同样保留字符串/整数类型及原顺序。
 
 `extract_solution` 按用户明确给出的字段、索引和省略规则，从当前输入与已检查 witness 构造并区分业务方案 `S` 中的决策。`solution_schema` 可以是描述性约定，不要假定它符合标准 JSON Schema，也不要让 Core 猜测字段或变量族。在交给 checker 前，模型代码应完成变量映射、索引、轮次和有限 JSON 值处理。若另指定输出文件，应写出同一投影并读回实际文件核对；checker 核验传入的实际 `S`，不能用另一内存映射或内部 witness 代替。worker 会把这份 `S` 交给冻结 checker 的 `check_solution(bundle, S)`；checker 只核验传入方案，不得返回另一个 `solution`。Core 将同一份预检查 `S` 放入既有 `BusinessCheck.solution`，无论检查通过、失败还是未覆盖。若 checker 抛错或改动 `S`，该次检查不会通过，Core 保留调用前的有效方案。方案可以是 null、有限数字、字符串、数组或仅含字符串键的对象；循环引用、非有限数和其他 Python 对象不属于有效 JSON。
 
