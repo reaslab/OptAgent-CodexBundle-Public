@@ -1497,6 +1497,7 @@
               },
               "run_ids": {
                 "type": "array",
+                "description": "显式列出此次要直接核对其 Result 或诊断信息的 Run；列表不会自动扩充。可列入状态未知的 Run 做诊断核查，也可在无 Run 的数学/Proof 审查中留空。",
                 "items": {
                   "type": "string",
                   "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"

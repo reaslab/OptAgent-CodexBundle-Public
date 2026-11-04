@@ -2660,6 +2660,10 @@ def _worker_failure_diagnostic(
         if not isinstance(value["message"], str):
             raise ContractError("output_invalid", "worker failure message is invalid")
         diagnostic["message"] = value["message"]
+    if "details" in value:
+        if not isinstance(value["details"], Mapping):
+            raise ContractError("output_invalid", "worker failure details are invalid")
+        diagnostic["details"] = dict(value["details"])
     return diagnostic
 
 

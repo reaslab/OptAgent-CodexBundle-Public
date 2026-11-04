@@ -1648,6 +1648,12 @@ def _run_instances(
             backend_profile=backend_profile,
             enforce_execution_budget=enforce_execution_budget,
         )
+    if backend_profile.get("interface_available") is False:
+        raise ContractError(
+            "environment_unavailable",
+            "the selected solver interface is unavailable in the worker environment",
+            details={"backend_profile": dict(backend_profile)},
+        )
     data_info = prepared_manifest["data"]
     if data_info is None:
         if data_bundle.data_id is not None:
@@ -2182,6 +2188,8 @@ def _fail_seal(
             "error_type": type(error).__name__,
             "message": error.message if isinstance(error, ContractError) else str(error),
         }
+        if isinstance(error, ContractError) and error.details:
+            failure["details"] = dict(error.details)
         output_ref = _json_output(workspace, output_path, "worker-failure.json", failure)
         outputs = dict(_OUTPUT_REFS.get(output_path, {}))
         outputs[output_ref["path"]] = output_ref

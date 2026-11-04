@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from optagent_core.contracts import ContractError, canonical_json_bytes, ref_from_bytes
+from optagent_core.contracts import ContractError, canonical_json_bytes, ref_from_bytes, windows_long_path
 from optagent_core import runner as runner_module
 from optagent_core.runner import _inspect, _start_receipt, _worker_failure_diagnostic
 from optagent_core.store import CaseStore
@@ -85,6 +85,7 @@ def test_failure_diagnostic_checks_current_run_prepared_and_input_identity():
         "error_code": "engine:stopped",
         "error_type": "RuntimeError",
         "message": "the actual worker failure",
+        "details": {"backend_profile": {"id": "cp_sat", "interface_available": False}},
         "future_worker_field": {"kept": "in the sealed artifact"},
     }
 
@@ -93,6 +94,7 @@ def test_failure_diagnostic_checks_current_run_prepared_and_input_identity():
     )
     assert diagnosis["ref"] == ref
     assert diagnosis["message"] == "the actual worker failure"
+    assert diagnosis["details"] == failure["details"]
 
     old_failure = {key: value for key, value in failure.items() if key != "message"}
     old_diagnosis = _worker_failure_diagnostic(
@@ -102,6 +104,15 @@ def test_failure_diagnostic_checks_current_run_prepared_and_input_identity():
     with pytest.raises(ContractError, match="message is invalid"):
         _worker_failure_diagnostic(
             {**failure, "message": None},
+            ref,
+            run_id=run_id,
+            prepared_id=prepared_id,
+            input_digest=input_digest,
+        )
+
+    with pytest.raises(ContractError, match="details are invalid"):
+        _worker_failure_diagnostic(
+            {**failure, "details": []},
             ref,
             run_id=run_id,
             prepared_id=prepared_id,
@@ -127,7 +138,7 @@ def test_worker_failure_seal_keeps_the_actual_exception_message(tmp_path: Path, 
     monkeypatch.setitem(_OUTPUT_REFS, output_path, {})
 
     _fail_seal(
-        tmp_path,
+        windows_long_path(tmp_path),
         {
             "case_id": case_id,
             "run_id": run_id,
@@ -138,15 +149,20 @@ def test_worker_failure_seal_keeps_the_actual_exception_message(tmp_path: Path, 
         },
         "d" * 64,
         "2026-10-09T00:00:00Z",
-        ContractError("output_invalid", "the precise model validation error"),
+        ContractError(
+            "environment_unavailable",
+            "the selected solver interface is unavailable",
+            details={"backend_profile": {"id": "cp_sat", "interface_available": False}},
+        ),
         [],
     )
 
     failure_path = tmp_path / output_path / "worker-failure.json"
-    failure = json.loads(failure_path.read_text(encoding="utf-8"))
+    failure = json.loads(windows_long_path(failure_path).read_text(encoding="utf-8"))
     assert failure["error_type"] == "ContractError"
-    assert failure["error_code"] == "output_invalid"
-    assert failure["message"] == "the precise model validation error"
+    assert failure["error_code"] == "environment_unavailable"
+    assert failure["message"] == "the selected solver interface is unavailable"
+    assert failure["details"]["backend_profile"] == {"id": "cp_sat", "interface_available": False}
 
 
 def test_inspect_repeats_current_sealed_failure_while_new_artifacts_stay_delta(monkeypatch):
@@ -170,6 +186,7 @@ def test_inspect_repeats_current_sealed_failure_while_new_artifacts_stay_delta(m
         "error_code": "worker_error",
         "error_type": "RuntimeError",
         "message": "candidate import failed at the recorded line",
+        "details": {"backend_profile": {"id": "cp_sat", "interface_available": False}},
     })
     failure_ref = ref_from_bytes(
         f".reaslab/optagent/cases/{case_id}/runs/{run_id}/output/worker-failure.json",
@@ -230,6 +247,7 @@ def test_inspect_repeats_current_sealed_failure_while_new_artifacts_stay_delta(m
 
     presented_diagnosis = {**diagnosis, "receipt_ref": transport_ref}
     assert first["diagnostics"] == second["diagnostics"] == [presented_diagnosis]
+    assert first["diagnostics"][0]["details"]["backend_profile"]["interface_available"] is False
     assert failure_ref in first["new_artifacts"] and seal_ref in first["new_artifacts"]
     assert second["new_artifacts"] == []
     assert first["result_refs"] == second["result_refs"] == [result_ref]
@@ -325,6 +343,7 @@ def test_start_returns_current_failure_diagnostic_and_new_artifact_delta(monkeyp
         "error_code": "worker_error",
         "error_type": "ImportError",
         "message": "candidate import failed",
+        "details": {"backend_profile": {"id": "cp_sat", "interface_available": False}},
     }
     failure_raw = canonical_json_bytes(failure_value)
     failure_ref = ref_from_bytes(
@@ -374,6 +393,7 @@ def test_start_returns_current_failure_diagnostic_and_new_artifact_delta(monkeyp
     started = _start_receipt(store, phase, {"stamp": stamp})["reply"]["result"]
 
     assert started["diagnostics"][0] == {**failure, "receipt_ref": receipt_ref}
+    assert started["diagnostics"][0]["details"]["backend_profile"]["interface_available"] is False
     assert started["new_artifacts"] == [failure_ref, seal_ref]
     assert started["run"]["worker_status"] == "incomplete"
 

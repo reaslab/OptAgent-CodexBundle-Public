@@ -81,98 +81,122 @@ def _read_json_argument(args: argparse.Namespace, workspace: Path) -> dict[str, 
     return value
 
 
-def _operation_binding(operation: str, arguments: dict[str, Any]) -> tuple[str, dict[str, Any]]:
-    """Map one of the 28 public operation names to the five Core groups."""
-    name = operation.removeprefix("optagent.")
+def _public_operation_specs() -> list[dict[str, Any]]:
+    """Derive local public aliases from the checked-in tool schema branches."""
+    result = []
     for group_name, entry in load_tool_schemas().items():
-        group = group_name.removeprefix("optagent.")
-        schema = entry["input_schema"]
-        branches = schema.get("oneOf") if isinstance(schema, dict) else None
+        group_schema = entry["input_schema"]
+        branches = group_schema.get("oneOf") if isinstance(group_schema, dict) else None
         if not isinstance(branches, list):
             continue
         for branch in branches:
             properties = branch.get("properties", {})
-            op_schema = properties.get("op", {})
-            op_value = op_schema.get("const")
+            if not isinstance(properties, dict):
+                continue
+            op_value = properties.get("op", {}).get("const")
             if not isinstance(op_value, str):
                 continue
-            kind_value = None
             discriminator = None
+            kind_value = None
             for key in ("kind", "record_kind"):
                 value = properties.get(key, {}).get("const")
                 if isinstance(value, str):
-                    kind_value, discriminator = value, key
+                    discriminator, kind_value = key, value
                     break
-            public_name = f"{group}_{op_value}"
+            public_name = f"{group_name.removeprefix('optagent.')}_{op_value}"
             if kind_value is not None:
                 public_name += f"_{kind_value}"
             if public_name == "deliver_audit":
                 continue
-            if name == public_name:
-                full = dict(arguments)
-                full["op"] = op_value
-                if discriminator is not None:
-                    full[discriminator] = kind_value
-                if public_name == "case_create":
-                    full.setdefault("capture_id", str(uuid.uuid4()))
-                validate_schema(full, schema)
-                return group_name, full
-    raise ContractError("unknown_operation", f"unknown public operation: {operation}")
+            result.append({
+                "name": public_name,
+                "group_name": group_name,
+                "group_schema": group_schema,
+                "branch": branch,
+                "op_value": op_value,
+                "discriminator": discriminator,
+                "kind_value": kind_value,
+            })
+    return result
 
 
-def _operation_schema(operation: str) -> dict[str, Any]:
+def _public_operation_names() -> list[str]:
+    return [spec["name"] for spec in _public_operation_specs()]
+
+
+def _unknown_operation(operation: str) -> ContractError:
+    return ContractError(
+        "unknown_operation",
+        f"unknown public operation: {operation}; run 'schema' without an operation to list available names",
+        details={"available_operations": _public_operation_names()},
+    )
+
+
+def _operation_binding(operation: str, arguments: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    """Map one public alias to its Core group using the schema-derived index."""
     name = operation.removeprefix("optagent.")
-    for group_name, entry in load_tool_schemas().items():
-        group = group_name.removeprefix("optagent.")
-        for branch in entry["input_schema"].get("oneOf", []):
-            properties = branch.get("properties", {})
-            op_value = properties.get("op", {}).get("const")
-            discriminator = next((key for key in ("kind", "record_kind") if isinstance(properties.get(key, {}).get("const"), str)), None)
-            suffix = f"_{properties[discriminator]['const']}" if discriminator else ""
-            public_name = f"{group}_{op_value}{suffix}"
-            if public_name == "deliver_audit":
-                continue
-            if name == public_name:
-                schema = json.loads(json.dumps(branch))
-                schema["properties"].pop("op", None)
-                schema["required"] = [key for key in schema.get("required", []) if key != "op"]
-                if discriminator:
-                    schema["properties"].pop(discriminator, None)
-                    schema["required"] = [key for key in schema.get("required", []) if key != discriminator]
-                local_options = None
-                if public_name == "case_create":
-                    schema["properties"].pop("capture_id", None)
-                    schema["required"] = [key for key in schema["required"] if key != "capture_id"]
-                    local_options = {
-                        "--capture-file": {
-                            "required": True,
-                            "type": "workspace-relative UTF-8 text file",
-                            "provenance": "local workspace file; no host Capture or session authenticity is asserted",
-                        }
-                    }
-                elif public_name == "case_question":
-                    local_options = {
-                        "--capture-file": {
-                            "required": True,
-                            "type": "workspace-relative UTF-8 text file",
-                            "provenance": "explicit local workspace import; not an authenticated host capture",
-                        }
-                    }
-                elif public_name == "case_answer":
-                    schema["required"] = [key for key in schema["required"] if key != "capture_id"]
-                    local_options = {
-                        "--capture-file": {
-                            "required": True,
-                            "type": "workspace-relative UTF-8 text file",
-                            "sets_argument": "capture_id",
-                            "provenance": "explicit local workspace import; not an authenticated host capture",
-                        }
-                    }
-                result = {"operation": public_name, "schema": schema}
-                if local_options is not None:
-                    result["local_cli_options"] = local_options
-                return result
-    raise ContractError("unknown_operation", f"unknown public operation: {operation}")
+    for spec in _public_operation_specs():
+        if name != spec["name"]:
+            continue
+        full = dict(arguments)
+        full["op"] = spec["op_value"]
+        if spec["discriminator"] is not None:
+            full[spec["discriminator"]] = spec["kind_value"]
+        if spec["name"] == "case_create":
+            full.setdefault("capture_id", str(uuid.uuid4()))
+        validate_schema(full, spec["group_schema"])
+        return spec["group_name"], full
+    raise _unknown_operation(operation)
+
+
+def _operation_schema(operation: str | None) -> dict[str, Any]:
+    if operation is None:
+        return {"operations": _public_operation_names()}
+    name = operation.removeprefix("optagent.")
+    for spec in _public_operation_specs():
+        if name != spec["name"]:
+            continue
+        schema = json.loads(json.dumps(spec["branch"]))
+        schema["properties"].pop("op", None)
+        schema["required"] = [key for key in schema.get("required", []) if key != "op"]
+        discriminator = spec["discriminator"]
+        if discriminator:
+            schema["properties"].pop(discriminator, None)
+            schema["required"] = [key for key in schema.get("required", []) if key != discriminator]
+        local_options = None
+        if spec["name"] == "case_create":
+            schema["properties"].pop("capture_id", None)
+            schema["required"] = [key for key in schema["required"] if key != "capture_id"]
+            local_options = {
+                "--capture-file": {
+                    "required": True,
+                    "type": "workspace-relative UTF-8 text file",
+                    "provenance": "local workspace file; no host Capture or session authenticity is asserted",
+                }
+            }
+        elif spec["name"] == "case_question":
+            local_options = {
+                "--capture-file": {
+                    "required": True,
+                    "type": "workspace-relative UTF-8 text file",
+                    "provenance": "explicit local workspace import; not an authenticated host capture",
+                }
+            }
+        elif spec["name"] == "case_answer":
+            schema["required"] = [key for key in schema["required"] if key != "capture_id"]
+            local_options = {
+                "--capture-file": {
+                    "required": True,
+                    "type": "workspace-relative UTF-8 text file",
+                    "sets_argument": "capture_id",
+                    "provenance": "explicit local workspace import; not an authenticated host capture",
+                }
+            }
+        result = {"operation": spec["name"], "schema": schema}
+        if local_options is not None:
+            result["local_cli_options"] = local_options
+        return result
+    raise _unknown_operation(operation)
 
 
 def _create_local_case(arguments: dict[str, Any], file_value: str, workspace: Path, stamp: dict[str, str]) -> dict[str, Any]:
@@ -322,8 +346,8 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--session-id", help="显式使用已有 Case 的 owner_session_id；默认保存在本工作区。")
     parser.add_argument("--role", choices=("root", "opt-verifier", "opt-worker"), default="root")
     sub = parser.add_subparsers(dest="command", required=True)
-    schema = sub.add_parser("schema", help="输出一个公开 operation 的输入 JSON Schema。")
-    schema.add_argument("operation")
+    schema = sub.add_parser("schema", help="输出 operation 输入 JSON Schema；不带名称时列出公开 operation。")
+    schema.add_argument("operation", nargs="?", help="可选公开 operation 名称")
     call = sub.add_parser("call", help="按工具 schema 调用一个 Core 工具。")
     call.add_argument("operation", help="例如 case_create、case_get、data_capture、run_prepare")
     call.add_argument("--json", help="工具参数 JSON object")
@@ -653,7 +677,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             response["local_import"] = local_import_record
         return _write_response(response)
     except ContractError as exc:
-        payload = {"kind": "complete", "reply": {"ok": False, "error": {"code": exc.code, "message": exc.message}}}
+        error = {"code": exc.code, "message": exc.message}
+        if exc.pointer is not None:
+            error["pointer"] = exc.pointer
+        if exc.details:
+            error["details"] = exc.details
+        payload = {"kind": "complete", "reply": {"ok": False, "error": error}}
         sys.stdout.buffer.write(canonical_json_bytes(payload) + b"\n")
         return 2
     except (OSError, ValueError, UnicodeError) as exc:

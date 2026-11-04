@@ -18,7 +18,7 @@ python -m optagent_core.local_cli --session-id <owner_session_id> --role root ca
 
 公开的 28 个 operation 可通过 `python -m optagent_core.local_cli schema <operation>` 查看输入 schema。`call` 使用精确 operation 名称，例如 `optagent.case_inputs`、`optagent.case_create`、`optagent.case_question`、`optagent.case_answer`、`optagent.run_prepare` 和 `optagent.run_start`。`--capture-file` 仅用于 `case_create`、`case_question` 和 `case_answer`，并显式导入位于当前工作区内的 UTF-8 文件；`case_answer` 的 `capture_id` 由 CLI 从该输入文件生成并传入 Core。问答文件的来源标记为 `workspace_file`，不是经过认证的宿主 Capture。其他数据通过各自公开 operation 的 schema 和路径字段录入。本地流程不自动读取宿主聊天记录或隐式用户消息；只有实际提供并经公开操作录入的内容才是 Source。
 
-run_prepare 必须显式提供 execution_budget_seconds、relative_gap 和 absolute_gap。Candidate 必须指定 backend_id；Core 对所选本地接口实际探测并记录结果，不保证安装或许可证。每个 Prepared 仅启动一次；未知执行状态不能当作失败后盲目重跑。
+run_prepare 必须显式提供 execution_budget_seconds、relative_gap 和 absolute_gap。Candidate 必须指定 backend_id；prepare 只对冻结配置做静态校验。worker 在自己的执行环境中对所选接口执行定向可用性检查并记录结果：`False` 表示检查失败并作为结构化失败记录，`None` 表示未知。检查通过不保证许可证、模型构造或求解可用。每个 Prepared 仅启动一次；未知执行状态不能当作失败后盲目重跑。
 
 Verifier 使用 Codex 原生 opt-verifier 协作能力和同一 owner_session_id，但 CLI 参数改为 --role opt-verifier。仅使用当前客户端实际支持的协作参数；新审查优先使用新上下文。终稿或返工需要继续审查时，须实际唤醒原核验者，否则启动新的核验上下文并说明重审范围，不能向已结束的 Agent 发送消息后盲目等待。角色/session 字段是业务流程身份，不提供用户或进程级 ACL；不要把它描述成安全隔离。
 

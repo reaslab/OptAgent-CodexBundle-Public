@@ -60,9 +60,11 @@ CLI 当前公开 28 个精确 operation 名称；使用 `schema <operation>` 查
 
     python -m optagent_core.local_cli schema optagent.case_create
 
+不确定公开 operation 名称时，可运行不带名称的 `schema` 查看公开名录；不需要每个任务都先查询名录。
+
 `call` 使用 schema 中对应的 operation，例如 `optagent.case_inputs`、`optagent.case_create`、`optagent.case_question`、`optagent.case_answer`、`optagent.run_prepare`、`optagent.run_start`。`--capture-file` 仅用于 `case_create`、`case_question` 和 `case_answer`：前者导入题面；问答操作导入显式的本地 UTF-8 输入文件，答复的 `capture_id` 由 CLI 根据该文件生成并传入 Core。Schema 将这些问答文件标为 `workspace_file`，并明确它们不是经认证的宿主 Capture。其他业务数据按 `data_capture`、`data_normalize` 等公开 operation 的自身 schema 显式录入；不要把这些数据操作的路径字段替换为 `--capture-file`。CLI 不读取宿主聊天轮次或隐式控制消息。CLI 将 JSON envelope 写到 stdout，并以退出码区分调用成功、操作失败和输入错误；本机 worker 的 stdout/stderr 会记录在运行凭据中。运行是否可行、是否最优仍以 Core 记录及独立检查证据为准。
 
-run_prepare 必须显式提供 execution_budget_seconds、relative_gap 和 absolute_gap。Candidate 必须声明 backend_id。Core 会探测本地所选接口并记录实际结果；不能从安装包名称或 solver 注册表推断后端可用，也不自动安装缺失求解器。
+run_prepare 必须显式提供 execution_budget_seconds、relative_gap 和 absolute_gap。Candidate 必须声明 backend_id。prepare 只校验并冻结静态配置；实际 worker 在自己的执行环境中对所选接口执行定向可用性检查并记录结果：`False` 表示检查失败并作为结构化失败记录，`None` 表示未知。检查通过不保证许可证、模型构造或求解可用；Core 不自动安装缺失求解器。
 
 独立核验使用本机 Codex 的 `opt-verifier` 子 Agent。它由 `.codex/config.toml` 注册，并加载 `.codex/agents/opt-verifier.toml`；首次使用前须信任该项目。启动新审查时，使用当前客户端支持的原生协作能力；若客户端提供新上下文选项则选择它。只传递 Case ID、`owner_session_id`、核验范围与必要 Source refs。终稿或返工需要继续时，实际唤醒原核验者；客户端不支持继续时，另启核验上下文并标明重审范围。Verifier 与 Owner 对同一 Case 使用相同 `owner_session_id`，CLI 参数将 role 改为 `opt-verifier`。role 和 session 是 Core 的流程身份标签，不构成操作系统级 ACL，也不提供安全隔离。
 
@@ -93,7 +95,7 @@ solve 的可读方案与摘要分别位于 results/local/solution.json 和 resul
 
 ## 求解器和许可
 
-backend_id 必须在 Candidate 中明确指定，没有隐式默认求解器。Core 会针对当前运行时探测接口并记录能力、版本、状态和失败原因。一个 solver 出现在 schema、技能参考、pip 包列表或历史日志中，并不证明当前机器可用。
+backend_id 必须在 Candidate 中明确指定，没有隐式默认求解器。worker 只在自身执行环境对所选接口执行定向可用性检查并记录结果；一个 solver 出现在 schema、技能参考、pip 包列表或历史日志中，并不证明当前机器可用。检查通过也不保证许可证、模型构造或求解可用。
 
 Highs 安装组提供 Pyomo、highspy 和 NumPy。其他后端可能需要额外 Python 包、外部二进制、环境变量或商业许可。Gurobi、CPLEX、Xpress、MOSEK 等商业后端必须使用用户本机合法配置的许可证；不可用时按实际失败记录，不能伪称支持或自动切换到语义不同的模型。
 

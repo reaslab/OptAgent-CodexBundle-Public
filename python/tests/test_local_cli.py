@@ -16,7 +16,7 @@ import pytest
 
 from optagent_core import local_cli
 from optagent_core import api
-from optagent_core.contracts import windows_long_path
+from optagent_core.contracts import ContractError, windows_long_path
 
 
 def _call_local_cli(tmp_path: Path, capsysbinary, operation: str, arguments: dict, *, capture_file: str | None = None):
@@ -28,6 +28,61 @@ def _call_local_cli(tmp_path: Path, capsysbinary, operation: str, arguments: dic
     return_code = local_cli.main(argv)
     output = capsysbinary.readouterr().out
     return return_code, json.loads(output)
+
+
+def test_local_cli_schema_without_operation_lists_unique_public_names(capsysbinary):
+    return_code = local_cli.main(["schema"])
+    response = json.loads(capsysbinary.readouterr().out)
+    assert return_code == 0
+    names = response["reply"]["result"]["operations"]
+    assert len(names) == 28
+    assert len(set(names)) == 28
+    assert "deliver_audit" not in names
+
+
+def test_local_cli_specific_schema_and_call_still_work(tmp_path, capsysbinary, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    return_code = local_cli.main(["schema", "optagent.case_list"])
+    schema_response = json.loads(capsysbinary.readouterr().out)
+    assert return_code == 0
+    assert schema_response["reply"]["result"]["operation"] == "case_list"
+    assert schema_response["reply"]["result"]["schema"]["type"] == "object"
+
+    return_code, call_response = _call_local_cli(tmp_path, capsysbinary, "case_list", {"op": "list"})
+    assert return_code == 0
+    assert call_response["reply"]["ok"] is True
+
+
+@pytest.mark.parametrize("command", ["schema", "call"])
+def test_local_cli_unknown_operation_returns_public_name_catalog(command, tmp_path, capsysbinary, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    if command == "schema":
+        return_code = local_cli.main(["schema", "optagent.not_real"])
+        response = json.loads(capsysbinary.readouterr().out)
+    else:
+        return_code, response = _call_local_cli(tmp_path, capsysbinary, "optagent.not_real", {})
+    assert return_code == 2
+    error = response["reply"]["error"]
+    assert error["code"] == "unknown_operation"
+    assert "schema" in error["message"]
+    names = local_cli._public_operation_names()
+    assert error["details"]["available_operations"] == names
+    assert "deliver_audit" not in names
+    assert "effect" not in error
+
+
+def test_local_cli_contract_error_keeps_pointer_and_details(monkeypatch, capsysbinary):
+    def raise_contract_error(_operation):
+        raise ContractError("invalid_argument", "invalid operation input", pointer="/case_id", details={"expected": "uuid"})
+
+    monkeypatch.setattr(local_cli, "_operation_schema", raise_contract_error)
+    return_code = local_cli.main(["schema", "case_get"])
+    response = json.loads(capsysbinary.readouterr().out)
+    assert return_code == 2
+    error = response["reply"]["error"]
+    assert error["pointer"] == "/case_id"
+    assert error["details"] == {"expected": "uuid"}
+    assert "effect" not in error
 
 
 def test_local_cli_question_and_answer_import_workspace_files_with_provenance(tmp_path, capsysbinary, monkeypatch):

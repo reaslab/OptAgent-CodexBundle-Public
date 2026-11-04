@@ -358,6 +358,31 @@ def test_direct_python_run_distinguishes_no_point_from_a_valid_empty_point(tmp_p
         assert result["termination"] == "unknown"
 
 
+def test_direct_python_dispatch_bypasses_native_interface_availability_gate(monkeypatch):
+    expected = object()
+    observed = {}
+
+    def direct_instances(*_args, **kwargs):
+        observed.update(kwargs)
+        return expected
+
+    monkeypatch.setattr(worker_module, "_run_direct_instances", direct_instances)
+    result = _run_instances(
+        object(),
+        object(),
+        {"candidate": {"authoring": "direct_python"}},
+        (),
+        input_digest="a" * 64,
+        data_bundle=None,
+        base_consumed_inputs=(),
+        execution_started=time.monotonic(),
+        backend_profile={"id": "direct_python", "interface_available": False},
+    )
+
+    assert result is expected
+    assert observed["backend_profile"]["interface_available"] is False
+
+
 def _local_prepared_fixture(
     tmp_path: Path,
     *,
@@ -1161,7 +1186,8 @@ def test_local_reproduction_uses_empty_bundle_and_keeps_real_input_closure(tmp_p
     assert strict_json_loads((tmp_path / "fresh-no-data-output" / "local-reproduction.json").read_bytes()) == report
 
 
-def test_run_instances_no_data_uses_one_empty_key_and_same_instance_context(tmp_path: Path, monkeypatch):
+@pytest.mark.parametrize("interface_available", [True, None])
+def test_run_instances_no_data_uses_one_empty_key_and_same_instance_context(tmp_path: Path, monkeypatch, interface_available):
     class FakeVar:
         pass
 
@@ -1270,7 +1296,7 @@ def test_run_instances_no_data_uses_one_empty_key_and_same_instance_context(tmp_
         data_bundle=bundle,
         base_consumed_inputs=(),
         execution_started=time.monotonic(),
-        backend_profile={"id": "highs", "version": "test-only"},
+        backend_profile={"id": "highs", "version": "test-only", "interface_available": interface_available},
     )
 
     context = bundle.for_instance(None, ()).instance_context
@@ -1298,6 +1324,49 @@ def test_run_instances_no_data_uses_one_empty_key_and_same_instance_context(tmp_
     assert backend["nonfinite_fields"] == {}
     assert not consumed
     assert solver_invoked is False and solver_returned is False
+
+
+@pytest.mark.parametrize(
+    ("backend_id", "engine", "interface", "interface_key"),
+    [
+        ("highs", "HiGHS", "Pyomo APPSI", "appsi_highs"),
+        ("cp_sat", "CP-SAT", "OR-Tools native CpModel", "CpModel"),
+    ],
+)
+def test_native_run_stops_before_candidate_execution_when_interface_is_unavailable(
+    tmp_path: Path, monkeypatch, backend_id, engine, interface, interface_key
+):
+    backend_profile = {
+        "id": backend_id,
+        "engine": engine,
+        "interface": interface,
+        "interface_key": interface_key,
+        "interface_available": False,
+        "interface_diagnostic": "ModuleNotFoundError",
+        "python_implementation": "CPython",
+    }
+    monkeypatch.setattr(
+        worker_module,
+        "build_native_model",
+        lambda *_args, **_kwargs: pytest.fail("candidate model execution must not begin"),
+    )
+    output = _OutputTarget.create_local(tmp_path / "unavailable-interface")
+
+    with pytest.raises(ContractError) as raised:
+        _run_instances(
+            object(),
+            output,
+            {"candidate": {"authoring": "pyomo", "backend_id": backend_id}},
+            (),
+            input_digest="f" * 64,
+            data_bundle=None,
+            base_consumed_inputs=(),
+            execution_started=time.monotonic(),
+            backend_profile=backend_profile,
+        )
+
+    assert raised.value.code == "environment_unavailable"
+    assert raised.value.details == {"backend_profile": backend_profile}
 
 
 def test_run_instances_passes_frozen_warm_start_to_solver(tmp_path: Path, monkeypatch):

@@ -275,7 +275,7 @@ model.md 是首次编写当前模型建模或求解代码前展示的简短数�
 
 本地 Case 从 `data/inputs.json` 重建 `DataBundle`，不带导入定位信息，因此 `source_locations` 合法为空数组；checker 不应硬编码Core 捕获的 Source ID。
 
-`objective_values` 是按顺序排列的行数组，每行恰含 `component`、`sense`、`unit`、`value`，数值必须有限且不能是布尔值。checker 应从 `bundle` 和传入的 `S` 独立核验并重算目标值，不要原样回传 witness 或旧 Result 的目标值。native/direct Run 只有在业务检查通过且重算值与当前机器点目标一致时才记为通过；原生 CpModel 的整数目标按真实 proto 精确重算并对账。check-only 会对保存的当前 `S` 重算，不用旧 Result 目标值否决或替代这次业务检查，也不调用 extractor、solve 或求解器。当前 ModelCheck、历史 Review、native bound、全局最优性与当前 `S` 的业务可行性是分开事实；本地 check 不会把旧证据转授给用户编辑后的方案，全局最优性保持 `not_checked`。既有 `rel_tol=1e-8`、`abs_tol=1e-8` 只适用于通用数值目标比较，不用于原生整数目标、bound、gap 或 lexicographic lock。
+`objective_values` 是按顺序排列的行数组，每行恰含 `component`、`sense`、`unit`、`value`，数值必须有限且不能是布尔值。checker 应按 Source 明示的原始业务域与约束核验传入的实际 `S`，并从 `bundle` 与 `S` 独立重算目标值。Candidate 或算法因变量族、候选表示或搜索范围造成的额外限制不构成 Source 违例；checker 未核验的原域范围须记录在 `uncovered`。不要原样回传 witness 或旧 Result 的目标值。native/direct Run 只有在业务检查通过且重算值与当前机器点目标一致时才记为通过；原生 CpModel 的整数目标按真实 proto 精确重算并对账。check-only 会对保存的当前 `S` 重算，不用旧 Result 目标值否决或替代这次业务检查，也不调用 extractor、solve 或求解器。当前 ModelCheck、历史 Review、native bound、全局最优性与当前 `S` 的业务可行性是分开事实；本地 check 不会把旧证据转授给用户编辑后的方案，全局最优性保持 `not_checked`。既有 `rel_tol=1e-8`、`abs_tol=1e-8` 只适用于通用数值目标比较，不用于原生整数目标、bound、gap 或 lexicographic lock。
 
 下面用前述 `jobs` table 和 `quantity` 变量说明两段函数：提取器把 witness 转成业务方案；checker 从当前 table 与传入方案重建需求及目标，并返回检查记录。`objective_values` 的组件名、方向和单位须与登记的目标一致；`evidence` 应写入本次核对的具体数值，来源位置沿用真实导入记录。
 
