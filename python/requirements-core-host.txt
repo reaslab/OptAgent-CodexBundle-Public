@@ -1,0 +1,2 @@
+# Narrow CoreBridge host dependency. Installed into /app/python for Python 3.11 -I -S.
+protobuf==5.29.5

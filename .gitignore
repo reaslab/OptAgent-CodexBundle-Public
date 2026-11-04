@@ -1,0 +1,29 @@
+# Project-internal Core records and local environments
+/.reaslab/
+/.venv*/
+/venv*/
+**/.venv*/
+**/venv*/
+*.egg-info/
+build/
+dist/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+testcache/
+testlogs/
+.testlogs/
+
+# Local credentials
+.env
+.env.*
+!.env.example

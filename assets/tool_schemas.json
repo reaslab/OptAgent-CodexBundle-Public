@@ -1,0 +1,2114 @@
+{
+  "schema_version": 1,
+  "tools": [
+    {
+      "name": "optagent.case",
+      "description": "Create, inspect, and revise one optimization case.",
+      "input_schema": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "list"
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 200
+              },
+              "after_case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              }
+            },
+            "required": [
+              "op"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "get"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              }
+            },
+            "required": [
+              "op",
+              "case_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "inputs"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "after_arrival_seq": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "op"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "create"
+              },
+              "capture_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "description": "Exact capture_id returned by optagent.case_inputs; call it without case_id before creating the first case."
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "task_kind": {
+                "type": "string",
+                "enum": [
+                  "optimize",
+                  "feasibility",
+                  "proof",
+                  "compare"
+                ]
+              },
+              "world_relation": {
+                "type": "string",
+                "enum": [
+                  "single",
+                  "joint",
+                  "exclusive_scenarios",
+                  "shared_first_stage",
+                  "independent_batch"
+                ]
+              },
+              "authorization_note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "capture_id",
+              "title",
+              "task_kind",
+              "world_relation",
+              "authorization_note"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "revise"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "const": "display"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "kind",
+              "title"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "revise"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "const": "note_input"
+              },
+              "capture_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "disposition": {
+                "type": "string",
+                "enum": [
+                  "no_math_change",
+                  "defer",
+                  "superseded"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "superseding_capture_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "default": null
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "kind",
+              "capture_id",
+              "disposition",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "revise"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "const": "sources"
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+              },
+              "facts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "fact_id": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "source_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                      }
+                    },
+                    "interpretation": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "fact_id",
+                    "text",
+                    "source_ids",
+                    "interpretation"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "capture_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "kind",
+              "source_ids",
+              "facts",
+              "capture_ids",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "revise"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "const": "candidate"
+              },
+              "model_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "local_module_paths": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "data_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[0-9a-f-]{36}$"
+              },
+              "instance_parameter_object_id": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Only for per-row independent instances: normalized table object ID whose every keyed row is one separate model/run instance. For one instance using the whole bundle, omit this field."
+              },
+              "backend_id": {
+                "type": "string",
+                "enum": [
+                  "direct_python",
+                  "highs",
+                  "cplex",
+                  "scip",
+                  "glpk",
+                  "cbc",
+                  "xpress",
+                  "gurobi",
+                  "mosek",
+                  "ipopt",
+                  "cp_optimizer",
+                  "cvxpy_copt",
+                  "cvxpy_clarabel",
+                  "cvxpy_cvxopt",
+                  "cvxpy_scs",
+                  "cvxpy_osqp",
+                  "cvxpy_glop",
+                  "cvxpy_pdlp",
+                  "ortools_clp",
+                  "cp_sat"
+                ],
+                "description": "Selects either the direct_python solve(bundle) family or a managed native solver adapter. Native adapter model-family, license, and runtime limits are checked during execution; direct_python has no native bound. solver_invoked reports managed adapter calls only and does not indicate whether a direct function called a solver library internally."
+              },
+              "objective_plan": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "mode": {
+                        "const": "scalar"
+                      },
+                      "objective_component": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "sense": {
+                        "type": "string",
+                        "enum": [
+                          "min",
+                          "max"
+                        ]
+                      },
+                      "unit": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "preference_note": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "objective_component",
+                      "sense",
+                      "unit",
+                      "preference_note"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "mode": {
+                        "const": "feasibility"
+                      },
+                      "preference_note": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "preference_note"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "mode": {
+                        "const": "lexicographic"
+                      },
+                      "layers": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "objective_component": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "sense": {
+                              "type": "string",
+                              "enum": [
+                                "min",
+                                "max"
+                              ]
+                            },
+                            "unit": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "absolute_tolerance": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "relative_tolerance": {
+                              "type": "number",
+                              "minimum": 0
+                            }
+                          },
+                          "required": [
+                            "objective_component",
+                            "sense",
+                            "unit",
+                            "absolute_tolerance",
+                            "relative_tolerance"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "minItems": 1
+                      },
+                      "preference_note": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "layers",
+                      "preference_note"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "business_checker_path": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "input_closure": {
+                "type": "string",
+                "enum": [
+                  "declared",
+                  "unknown"
+                ]
+              },
+              "closure_note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "kind",
+              "model_path",
+              "local_module_paths",
+              "data_id",
+              "backend_id",
+              "objective_plan",
+              "business_checker_path",
+              "input_closure",
+              "closure_note"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "revise"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "const": "handoff"
+              },
+              "capture_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "kind",
+              "capture_id",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "revise"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "const": "withdraw_question"
+              },
+              "request_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_question_version": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "byte_len": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "media_type": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "sha256",
+                    "byte_len",
+                    "media_type"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "kind",
+              "request_id",
+              "expected_question_version",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "question"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "missing_fact": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "model",
+                    "execute",
+                    "claim"
+                  ]
+                }
+              },
+              "independent_work": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "request_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "description": "Optional when first asking a question; Core generates an ID. If supplied, use a UUID. Use the returned request_id for later answers or withdrawal; it is not an idempotency guarantee."
+              },
+              "rebind_note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "text",
+              "missing_fact",
+              "blocks",
+              "independent_work"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "answer"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "request_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_question_version": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "capture_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "interpretation": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rebind_note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "request_id",
+              "expected_question_version",
+              "capture_id",
+              "interpretation"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "optagent.data",
+      "description": "Capture source files and normalize explicit tabular inputs.",
+      "input_schema": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "capture"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "description": "Choose requirement for the original problem or business rules, data for business inputs used by the model, or reference for consulted background/provenance that does not enter the mathematical binding.",
+                "enum": [
+                  "requirement",
+                  "data",
+                  "reference"
+                ]
+              },
+              "locations": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "path",
+              "purpose",
+              "locations"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "normalize"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                },
+                "minItems": 1
+              },
+              "plan": {
+                "type": "object",
+                "properties": {
+                  "encoding": {
+                    "type": "string",
+                    "enum": [
+                      "utf-8",
+                      "utf-8-sig"
+                    ]
+                  },
+                  "blocks": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "object_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "source_id": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                        },
+                        "format": {
+                          "type": "string",
+                          "enum": [
+                            "csv",
+                            "json",
+                            "whitespace_table",
+                            "xlsx_values",
+                            "pdf_text"
+                          ],
+                          "description": "csv, json, or whitespace_table is supported; xlsx_values and pdf_text are recognized but not enabled."
+                        },
+                        "layout": {
+                          "type": "object",
+                          "description": "The required fields and values depend on format; select the matching format/layout pair."
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "table",
+                            "scalar",
+                            "set",
+                            "relation",
+                            "json"
+                          ],
+                          "description": "Use json with format=json, empty columns and key_fields to preserve the selected JSON node."
+                        },
+                        "key_fields": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "columns": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "position": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ],
+                                "minimum": 0,
+                                "description": "Zero-based input position for CSV/whitespace_table. Set to null when input_name is used."
+                              },
+                              "input_name": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "minLength": 1,
+                                "description": "Exact CSV/whitespace_table header or field name. JSON table rows use the declared column name."
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "string",
+                                  "integer",
+                                  "number",
+                                  "boolean",
+                                  "date"
+                                ]
+                              },
+                              "unit": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "nullable": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "name",
+                              "position",
+                              "input_name",
+                              "type",
+                              "unit",
+                              "nullable"
+                            ],
+                            "additionalProperties": false,
+                            "oneOf": [
+                              {
+                                "properties": {
+                                  "position": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                  },
+                                  "input_name": {
+                                    "const": null
+                                  }
+                                },
+                                "required": [
+                                  "position",
+                                  "input_name"
+                                ]
+                              },
+                              {
+                                "properties": {
+                                  "position": {
+                                    "const": null
+                                  },
+                                  "input_name": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                },
+                                "required": [
+                                  "position",
+                                  "input_name"
+                                ]
+                              }
+                            ],
+                            "description": "Choose exactly one selector: a non-null position with input_name=null, or position=null with a non-empty input_name."
+                          },
+                          "description": "Declare columns for typed table, relation, scalar, and set objects. For kind=json, use an empty array."
+                        },
+                        "duplicate_policy": {
+                          "const": "error"
+                        },
+                        "missing_policy": {
+                          "type": "string",
+                          "enum": [
+                            "error",
+                            "allow_nullable"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "object_id",
+                        "source_id",
+                        "format",
+                        "layout",
+                        "kind",
+                        "key_fields",
+                        "columns",
+                        "duplicate_policy",
+                        "missing_policy"
+                      ],
+                      "additionalProperties": false,
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "format": {
+                              "const": "csv"
+                            },
+                            "layout": {
+                              "type": "object",
+                              "properties": {
+                                "delimiter": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1,
+                                  "description": "One-character CSV delimiter."
+                                },
+                                "header": {
+                                  "type": "string",
+                                  "enum": [
+                                    "first_row",
+                                    "none"
+                                  ]
+                                },
+                                "skip_lines": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": [
+                                "delimiter",
+                                "header",
+                                "skip_lines"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Example: {\"delimiter\":\",\",\"header\":\"first_row\",\"skip_lines\":0}."
+                            }
+                          },
+                          "required": [
+                            "format",
+                            "layout"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "format": {
+                              "const": "json"
+                            },
+                            "layout": {
+                              "type": "object",
+                              "properties": {
+                                "pointer": {
+                                  "type": "string",
+                                  "description": "RFC 6901 JSON Pointer, such as \"/items\"; use \"\" for the whole document.",
+                                  "pattern": "^(?:/(?:[^~/]|~[01])*)*$"
+                                }
+                              },
+                              "required": [
+                                "pointer"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Example: {\"pointer\":\"/items\"}. kind=json preserves the selected node; typed kinds keep their declared shape."
+                            }
+                          },
+                          "required": [
+                            "format",
+                            "layout"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "format": {
+                              "const": "whitespace_table"
+                            },
+                            "layout": {
+                              "type": "object",
+                              "properties": {
+                                "skip_lines": {
+                                  "type": "integer",
+                                  "minimum": 0
+                                },
+                                "header": {
+                                  "type": "string",
+                                  "enum": [
+                                    "none",
+                                    "first_row"
+                                  ]
+                                },
+                                "take_rows": {
+                                  "type": [
+                                    "integer",
+                                    "null"
+                                  ],
+                                  "minimum": 0
+                                },
+                                "skip_blank_lines": {
+                                  "type": "boolean"
+                                },
+                                "field_count": {
+                                  "type": "integer",
+                                  "minimum": 1
+                                }
+                              },
+                              "required": [
+                                "skip_lines",
+                                "header",
+                                "take_rows",
+                                "skip_blank_lines",
+                                "field_count"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Example: {\"skip_lines\":0,\"header\":\"first_row\",\"take_rows\":null,\"skip_blank_lines\":true,\"field_count\":3}."
+                            }
+                          },
+                          "required": [
+                            "format",
+                            "layout"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "format": {
+                              "const": "xlsx_values"
+                            },
+                            "layout": {
+                              "type": "object",
+                              "properties": {},
+                              "required": [],
+                              "additionalProperties": true,
+                              "description": "The current ingestion batch reports this format as unsupported."
+                            }
+                          },
+                          "required": [
+                            "format",
+                            "layout"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "format": {
+                              "const": "pdf_text"
+                            },
+                            "layout": {
+                              "type": "object",
+                              "properties": {},
+                              "required": [],
+                              "additionalProperties": true,
+                              "description": "The current ingestion batch reports this format as unsupported."
+                            }
+                          },
+                          "required": [
+                            "format",
+                            "layout"
+                          ]
+                        }
+                      ],
+                      "description": "Use exactly one layout matching format: csv, json, or whitespace_table. xlsx_values and pdf_text are recognized but not enabled in this ingestion batch."
+                    },
+                    "minItems": 1
+                  },
+                  "conversions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "object_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "column": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "scale",
+                            "offset",
+                            "date_parse"
+                          ]
+                        },
+                        "factor": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        },
+                        "offset": {
+                          "type": [
+                            "number",
+                            "null"
+                          ]
+                        },
+                        "format": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "timezone": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "basis": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "source_id": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                              },
+                              "locator": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "source_id",
+                              "locator"
+                            ],
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "required": [
+                        "object_id",
+                        "column",
+                        "kind",
+                        "factor",
+                        "offset",
+                        "format",
+                        "timezone",
+                        "basis"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "encoding",
+                  "blocks",
+                  "conversions"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "source_ids",
+              "plan"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "inspect"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "data_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "sample_rows": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "data_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "optagent.run",
+      "description": "Prepare, dispatch once, inspect, or cancel a frozen run.",
+      "input_schema": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "prepare"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "candidate_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "solver_override_reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "description": "Required only when the frozen Candidate backend differs from the configured default solver. Explain why this Run follows the Candidate's already-frozen backend; run_prepare never changes it."
+              },
+              "solve_options": {
+                "type": "object",
+                "properties": {
+                  "execution_budget_seconds": {
+                    "type": "number",
+                    "minimum": 30.000001,
+                    "description": "Total managed worker execution budget in seconds. This outer budget is separate from an optional native solver time limit. Omit only when the saved managed-run-budget supplies a value; an auto setting requires an explicit value for this Run."
+                  },
+                  "time_limit_seconds": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "exclusiveMinimum": 0,
+                    "description": "Optional native solver time limit in seconds. Null means no native time limit was requested; the independent execution budget still applies. If the selected adapter has no supported mapping, a non-null request is rejected. Otherwise the adapter maps seconds using supported units and granularity and records submitted parameters; this does not prove the current native build accepted or applied them."
+                  },
+                  "relative_gap": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Choose and freeze this finite non-negative Core relative optimality-closure target for the Run. Omit only when the saved relative-gap setting supplies it; auto requires explicit relative and absolute targets. Closure is checked from a verified solution and a valid global bound."
+                  },
+                  "absolute_gap": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Choose and freeze this finite non-negative Core absolute optimality-closure target for the Run, independent of native solver options. Omit only when the saved relative-gap setting is selected, in which case zero is supplied; otherwise give it explicitly. Core closes against max(absolute_gap, relative_gap * abs(checked_objective))."
+                  },
+                  "threads": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 1,
+                    "description": "Optional native thread count. Prefer null unless explicitly needed. A value with no supported adapter mapping is rejected; mapping and submission do not prove acceptance or effect in the current native build."
+                  },
+                  "random_seed": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 0,
+                    "description": "Optional native random seed. Prefer null unless explicitly needed. A value with no supported adapter mapping is rejected; mapping and submission do not prove acceptance or effect in the current native build."
+                  },
+                  "warm_start": {
+                    "type": "boolean",
+                    "description": "Optional native solver warm-start request; omitted means false. Assigning a Pyomo variable's .value does not enable it; set solve_options.warm_start=true in optagent.run_prepare to request submission through a supported native adapter. direct_python does not use warm starts and rejects true. A native solver may accept, repair, ignore, or reject submitted values; a request does not prove acceptance or effect. Native numerical and feasibility conclusions use the current Run's Result, ModelCheck, and applicable business checks; direct_python feasibility uses its passed BusinessCheck and has no ModelCheck. Builder values alone are not result evidence. Unsupported adapters reject true."
+                  },
+                  "feasibility_tolerance": {
+                    "type": "number",
+                    "minimum": 1e-10
+                  },
+                  "integrality_tolerance": {
+                    "type": "number",
+                    "minimum": 1e-10
+                  },
+                  "write_log": {
+                    "type": "boolean"
+                  },
+                  "export_model": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "time_limit_seconds",
+                  "threads",
+                  "random_seed",
+                  "feasibility_tolerance",
+                  "integrality_tolerance",
+                  "write_log",
+                  "export_model"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "candidate_id",
+              "solve_options"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "start"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "prepared_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "supersedes_run_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "description": "When the latest Run is requested or unknown and the Owner explicitly chooses another attempt, identify that exact latest Run ID."
+              },
+              "attempt_reason": {
+                "type": "string",
+                "minLength": 1,
+                "description": "A nonblank Owner reason for continuing after the latest requested or unknown Run; this does not establish that the prior execution stopped."
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "prepared_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "inspect"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "after_instance": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "cancel"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "run_id",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "optagent.review",
+      "description": "Record source-first review evidence and dispositions.",
+      "input_schema": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "begin"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "candidate_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "proof_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+              },
+              "run_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+              },
+              "prior_review_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "candidate_id",
+              "proof_ids",
+              "run_ids"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "note"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "review_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_review_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_locations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source_id": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    "locator": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "source_id",
+                    "locator"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "review_id",
+              "expected_review_revision",
+              "body",
+              "source_locations"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "submit"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "review_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_review_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "record_kind": {
+                "const": "issue"
+              },
+              "claim": {
+                "type": "string",
+                "minLength": 1
+              },
+              "locations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "source_id": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                    },
+                    "locator": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "source_id",
+                    "locator"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "candidate_locations": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "evidence_paths": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "review_id",
+              "expected_review_revision",
+              "record_kind",
+              "claim",
+              "locations",
+              "candidate_locations",
+              "evidence_paths"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "submit"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "review_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_review_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "record_kind": {
+                "const": "outcome"
+              },
+              "decision": {
+                "type": "string",
+                "enum": [
+                  "ready",
+                  "needs_changes"
+                ]
+              },
+              "claims": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "description": "Choose a claim kind whose primary evidence anchor matches the claim: formulation_fidelity uses the current Candidate plus active Source or a matching Proof; native feasibility uses a checked Result whose ModelCheck passed and whose business check passed or explicitly marks obligations uncovered (those obligations remain unchecked); direct_python feasibility uses a complete checked point with its matching BusinessCheck passed and has no ModelCheck; either may use a matching Proof. Optimality uses a checked native Result with closed applicable global bound or a matching Proof; local_optimality uses a checked native Result with applicable local-optimality status or a matching Proof; bound uses a checked native Result with applicable global bound or a matching Proof; infeasibility and unboundedness require a matching Proof; diagnostic covers Run execution/transport/stop state. diagnostic and tradeoff use the linked Run record as the simplest primary anchor, an actual transport.response, platform.status_evidence, cancel.stop_ack, or cancel.stop_attempt.receipt Ref from that Run, or a matching Proof. These are anchor types, not automatic support. A direct_python feasible point's objective is not a Result global bound and does not establish optimality.",
+                      "enum": [
+                        "formulation_fidelity",
+                        "feasibility",
+                        "optimality",
+                        "local_optimality",
+                        "infeasibility",
+                        "unboundedness",
+                        "bound",
+                        "tradeoff",
+                        "diagnostic"
+                      ]
+                    },
+                    "scope": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "conditions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "evidence_paths": {
+                      "type": "array",
+                      "description": "Provide exact normalized workspace-relative paths returned by the current Review/evidence tools. Examples include `.reaslab/optagent/cases/<case_id>/candidates/<candidate_id>.json`, a Result path under `.reaslab/optagent/cases/<case_id>/runs/<run_id>/`, and `.reaslab/optagent/cases/<case_id>/proofs/<proof_id>.json`; use the exact active Source or primary-anchor path allowed by kind and returned for this scope. Paths are locators only: they must resolve to a reachable primary anchor of the selected kind and claim scope; do not invent refs or use another Case/Run.",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "support": {
+                      "type": "string",
+                      "enum": [
+                        "supported",
+                        "conditional",
+                        "unresolved",
+                        "refuted"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "kind",
+                    "scope",
+                    "conditions",
+                    "evidence_paths",
+                    "support"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "feedback": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "remaining": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "report_path": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "review_id",
+              "expected_review_revision",
+              "record_kind",
+              "decision",
+              "claims",
+              "feedback",
+              "remaining",
+              "report_path"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "submit"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "review_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_review_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "record_kind": {
+                "const": "disposition"
+              },
+              "issue_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "diagnosis": {
+                "type": "string",
+                "enum": [
+                  "confirmed",
+                  "disproved",
+                  "unresolved"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "patch_status": {
+                "type": "string",
+                "enum": [
+                  "unchecked",
+                  "accepted",
+                  "rejected"
+                ]
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "review_id",
+              "expected_review_revision",
+              "record_kind",
+              "issue_id",
+              "diagnosis",
+              "reason",
+              "patch_status"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "submit"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "review_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_review_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "record_kind": {
+                "const": "proof"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "analytic",
+                  "reuse",
+                  "enumeration",
+                  "diagnostic"
+                ]
+              },
+              "body_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "premises": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "evidence_refs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "byte_len": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "media_type": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "sha256",
+                    "byte_len",
+                    "media_type"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "claim_kinds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "formulation_fidelity",
+                    "feasibility",
+                    "optimality",
+                    "local_optimality",
+                    "infeasibility",
+                    "unboundedness",
+                    "bound",
+                    "tradeoff",
+                    "diagnostic"
+                  ]
+                }
+              },
+              "candidate_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "review_id",
+              "expected_review_revision",
+              "record_kind",
+              "kind",
+              "body_path",
+              "premises",
+              "evidence_refs",
+              "claim_kinds",
+              "candidate_id"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+
+    {
+      "name": "optagent.deliver",
+      "description": "Select scoped evidence, build or audit a report, or package a case. After a successful selection with numerical Results, the Case's visible artifact folder also receives the selected model, normalized inputs, selected solution, a local run/check entrypoint, Core helpers, dependencies, and a short guide. Proof-only selections do not create a numerical execution folder.",
+      "input_schema": {
+        "type": "object",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "select"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "run",
+                  "proof",
+                  "reuse",
+                  "mixed"
+                ]
+              },
+              "candidate_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "review_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "proof_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+              },
+              "run_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+                }
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "kind",
+              "candidate_id",
+              "review_id",
+              "proof_ids",
+              "run_ids"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "build"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "delivery_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "target_path": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "delivery_id",
+              "target_path"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "audit"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "delivery_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "report_path": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "delivery_id",
+              "report_path"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "package"
+              },
+              "case_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "expected_state_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "delivery_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              },
+              "target_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "include_raw_sources": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "op",
+              "case_id",
+              "expected_state_revision",
+              "delivery_id",
+              "target_path",
+              "include_raw_sources"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  ]
+}

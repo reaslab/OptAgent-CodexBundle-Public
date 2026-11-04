@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "optagent-core"
+version = "0.1.0"
+description = "File-backed local OptAgent Core bundle"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+highs = ["numpy>=1.26", "pyomo>=6.7", "highspy>=1.7"]
+cp-sat = ["ortools>=9.8"]
+full = ["numpy>=1.26", "pyomo>=6.7", "highspy>=1.7", "ortools>=9.8", "cvxpy>=1.4", "pulp>=2.8"]
+
+[project.scripts]
+optagent-local = "optagent_core.local_cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "python"}
+packages = ["optagent_core"]
+include-package-data = true
+
+[tool.setuptools.data-files]
+assets = ["assets/tool_schemas.json"]

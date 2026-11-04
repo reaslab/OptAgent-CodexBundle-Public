@@ -1,239 +1,112 @@
-# OptAgent Codex Bundle
+# OptAgent 本地 Codex 版
 
-一个在本地 Codex 中运行的优化建模智能体，可以从读取题目和数据开始，完成数学建模、求解代码编写与执行、独立验证和报告生成。
+本分支把 Reaslab OptAgent 的优化建模、求解和独立核验工作流接入本地 Codex。Codex 负责理解请求与协调；Case 状态、证据读写、求解执行和 Case 导出由仓库内的 Python Core 与本机进程完成。
 
-最后更新：**2026-10-10**
+本地版不依赖 ReasLab 托管平台、manager HTTP、python-execute、Docker 服务或远端求解器。Codex 模型请求仍遵循用户当前 Codex provider 配置；本仓库只保证 Core 与 solver 的执行路径在本机。
 
-## 开始使用
+## 安装和启动
 
-### 1. 准备 Codex
+需要：
 
-安装并登录 Codex CLI，使用支持项目配置和原生多智能体角色的版本。然后获取本项目并启动：
+- 已安装并登录的 Codex CLI，支持项目 AGENTS.md、`.agents/skills/` 与原生自定义子 Agent。项目级 `.codex/config.toml` 仅在用户信任该项目后加载。
+- Python 3.11 或更新版本。
+- 用户所选求解器的 Python 接口、系统二进制和许可（若需要）。
+- 若要求 PDF，还需要本机 TeX 环境；中文模板通常使用 XeLaTeX，建议安装 latexmk。
 
-```bash
-git clone https://github.com/reaslab/OptAgent-CodexBundle-Public.git
-cd OptAgent-CodexBundle-Public
-codex
-```
+在仓库根目录创建或启用适合本项目的 Python 环境，然后安装 Core。Windows PowerShell 示例：
 
-已经下载项目时，也可以从任意位置运行：
+    python -m venv .venv
+    .\.venv\Scripts\Activate.ps1
+    python -m pip install -e .
 
-```bash
-codex -C /path/to/OptAgent-CodexBundle-Public
-```
+macOS/Linux 示例：
 
-如果 Codex 询问是否信任该目录，请确认信任，并检查项目配置是否已加载。项目中的 `.codex/`、`.agents/` 和 `AGENTS.md` 应当完整保留，它们提供协调流程、角色配置、技能和本地工具。
+    python3 -m venv .venv
+    source .venv/bin/activate
+    python -m pip install -e .
 
-本项目直接使用本地 Python 和工具运行。普通使用无需部署 ReasLab 平台或 Docker 服务。
+如需使用 Highs 默认依赖组，可安装 Pyomo、highspy 和 NumPy：
 
-### 2. 放入题目和数据
+    python -m pip install -e ".[highs]"
 
-建议将题目保存为项目根目录下的 `Problem.md`，把数据放入 `data/`，例如：
+在同一个已激活项目环境的 shell 中，从仓库根目录启动 Codex：
 
-```text
-OptAgent-CodexBundle-Public/
-├── Problem.md
-└── data/
-    ├── demand.csv
-    ├── capacity.csv
-    └── cost.xlsx
-```
+    codex
 
-也可以提供 PDF、Word、Excel、图片或其他文本文件，让 Codex 先读取并整理题目。具体读取能力取决于本地工具，扫描版文件可能需要 OCR。
+首次在 Codex 中打开仓库时，按本机提示信任该项目；项目未受信任时，Codex 不加载仓库的 `.codex/config.toml`，`opt-verifier` 角色也就不会注册。该文件只注册 `.codex/agents/opt-verifier.toml`，不固定模型、推理强度、审批策略或权限；这些仍使用用户当前 Codex 配置。若从 Codex 桌面端或另一个 shell 启动，应明确使用项目 `.venv` 中的解释器，或该进程已经可用的 `optagent-local` 入口；不要假定通用系统 `python` 已安装本项目 Core。下文的 `python` 命令均指当前选定的项目 Python。
 
-题目中尽量写明决策目标、必须满足的约束、数据字段含义和单位。不要修改原始数据；生成的代码、结果和报告会保存在对应案例目录中。
+## 处理一个优化问题
 
-仓库已经带有示例题目和历史案例。处理自己的问题时，请明确指定文件，避免将示例数据当成当前任务输入。
+将题面和输入文件放在当前项目工作区内，可以使用任意可读文件名和目录。`case_create` 通过 `--capture-file` 显式导入工作区内的 UTF-8 题面文件。当前 Core 初始导入支持 UTF-8 文本、CSV、严格 JSON 和显式 `whitespace_table`；其他格式需由实际 ingestion 实现并核验，安装相关 Python 包本身不代表 Core 已支持该格式。不要求建立固定名称的 `Problem.md`。
 
-### 3. 告诉 Codex 要完成什么
+典型请求：
 
-完整解决一个优化问题并生成中文报告：
+    读取 inputs/problem.md 和 data/demand.csv，建立并求解成本最小化模型。
+    先向我展示变量、定义域、目标、约束和关键假设，再编写模型代码。
+    实际运行求解并独立核对方案、目标值和约束，默认给我 Markdown 报告。
+    若生成 PDF，请使用本机 TeX 编译并读取最终 PDF。
 
-```text
-完整解决 Problem.md 中的优化问题，数据在 data/。
-实际运行求解代码，独立检查目标值和约束，使用中文撰写报告并编译最终 PDF。
-```
+首次写建模或求解代码前，OptAgent 会先生成短 model.md，列出变量与定义域、目标方向和单位、约束族、必要符号和假设；随后在对话中展示可点击的文件路径和数学说明，再继续写代码，不等待额外审批。模型语义变化时先更新并再次展示。即使用户只要代码，仍先展示这份短数学说明；完整报告只在用户要求时生成，未指定格式时默认为 Markdown。
 
-从其他格式的题目开始：
+材料性题意或数据事实缺失且会改变目标或可行域时，Codex 会提出具体问题。`case_question` 和 `case_answer` 都要求通过 `--capture-file` 显式导入工作区内的 UTF-8 文本文件；实际收到答复后，将答复写入工作区文件，再把该文件提交给 `case_answer`。CLI 会为答复生成并传递 `capture_id`。这类输入的来源标为 `workspace_file`，且 `host_capture_authenticated=false`；它们不表示宿主聊天记录已被自动捕获或认证。
 
-```text
-读取 problem.pdf，数据在 data.xlsx。
-整理题目和数据，完成优化建模、实际求解、独立验证和最终报告。
-```
+## 本地 Core CLI
 
-指定求解器和求解时间：
+Core 操作必须在仓库根目录通过本地 CLI 执行；当前工作目录就是工作根，没有 `--workspace` 参数。未指定 `--session-id` 时，CLI 会在 `.reaslab/optagent/local-session.json` 中为工作区保存一个稳定的本地 ID；同一工作区操作时可以继续省略。跨工作区访问已有 Case 时，从该 Case 状态读取准确的 `owner_session_id` 并显式传入。调用参数以 UTF-8 JSON 请求文件提供。
 
-```text
-求解这个生产计划问题，优先使用 PuLP/CBC，单次求解时间上限为 300 秒。
-报告目标值、可行性、求解状态，以及是否已经证明最优。
-```
+    python -m optagent_core.local_cli --session-id <owner_session_id> --role root call <operation> --json-file <request.json>
 
-先审阅方案再执行：
+CLI 当前公开 28 个精确 operation 名称；使用 `schema <operation>` 查看单个 operation 的输入 JSON Schema，例如：
 
-```text
-先分析 Problem.md，给出建模方案、关键假设和求解计划。
-等待我确认后再开始建模和运行。
-```
+    python -m optagent_core.local_cli schema optagent.case_create
 
-只生成 Markdown 报告：
+`call` 使用 schema 中对应的 operation，例如 `optagent.case_inputs`、`optagent.case_create`、`optagent.case_question`、`optagent.case_answer`、`optagent.run_prepare`、`optagent.run_start`。`--capture-file` 仅用于 `case_create`、`case_question` 和 `case_answer`：前者导入题面；问答操作导入显式的本地 UTF-8 输入文件，答复的 `capture_id` 由 CLI 根据该文件生成并传入 Core。Schema 将这些问答文件标为 `workspace_file`，并明确它们不是经认证的宿主 Capture。其他业务数据按 `data_capture`、`data_normalize` 等公开 operation 的自身 schema 显式录入；不要把这些数据操作的路径字段替换为 `--capture-file`。CLI 不读取宿主聊天轮次或隐式控制消息。CLI 将 JSON envelope 写到 stdout，并以退出码区分调用成功、操作失败和输入错误；本机 worker 的 stdout/stderr 会记录在运行凭据中。运行是否可行、是否最优仍以 Core 记录及独立检查证据为准。
 
-```text
-完整求解并验证这个问题，只输出 Markdown 技术报告，不生成 LaTeX 和 PDF。
-```
+run_prepare 必须显式提供 execution_budget_seconds、relative_gap 和 absolute_gap。Candidate 必须声明 backend_id。Core 会探测本地所选接口并记录实际结果；不能从安装包名称或 solver 注册表推断后端可用，也不自动安装缺失求解器。
 
-继续修改已有案例：
+独立核验使用本机 Codex 的 `opt-verifier` 子 Agent。它由 `.codex/config.toml` 注册，并加载 `.codex/agents/opt-verifier.toml`；首次使用前须信任该项目。启动新审查时，使用当前客户端支持的原生协作能力；若客户端提供新上下文选项则选择它。只传递 Case ID、`owner_session_id`、核验范围与必要 Source refs。终稿或返工需要继续时，实际唤醒原核验者；客户端不支持继续时，另启核验上下文并标明重审范围。Verifier 与 Owner 对同一 Case 使用相同 `owner_session_id`，CLI 参数将 role 改为 `opt-verifier`。role 和 session 是 Core 的流程身份标签，不构成操作系统级 ACL，也不提供安全隔离。
 
-```text
-在 case_001_base 的基础上，将仓库容量提高 20%，重新求解并验证。
-比较调整前后的总成本和配送方案。
-```
+## Case 与结果
 
-任务中可以继续指定报告语言、求解器、时间限制、精度要求、必须保留的约束和最终文件格式。
+项目级内部状态和不可变证据存放在：
 
-## 运行过程
+    .reaslab/optagent/
 
-完整任务通常会依次完成：
+Case 导出的可编辑用户交付存放在 Core 返回的 artifact_dir，常见内容包括 Problem.md、model.md、README.md、code/、data/、report 或 paper/。实际路径与文件以本次 CLI 返回为准，不能从 Case ID 猜路径。
 
-1. 读取题目和数据，明确目标、约束与必要假设；
-2. 检索内置建模知识，建立变量、目标函数和约束；
-3. 编写求解代码，检查可用后端并实际运行；
-4. 独立复核目标值、约束和模型与题目的对应关系；
-5. 根据诊断修正模型或代码，必要时重新求解；
-6. 撰写报告、尝试编译 PDF，并检查交付文件。
+项目内部的 .reaslab/optagent/ 与可编辑 Case 内部的 .optagent/ 用途不同：
 
-项目已经配置 Coordinator、Formulator、Solver、Verifier 和 Reporter。Coordinator 管理整体流程，其余角色分别负责建模、求解、独立验证和报告，按依赖顺序工作。用户不需要手动启动这些角色。
+- .reaslab/optagent/ 保存 Core Case 状态、来源绑定、Candidate、Run、Result、Review 和 Delivery 证据。
+- 可编辑 Case 根目录中的 .optagent/ 保存该 Case 独立 solve/check 所需的运行配置与 helper。复制或移交该 Case 时必须保留。
 
-普通求解请求默认自动推进到验证和报告交付。如果希望在执行前亲自审核模型、假设或计划，请在任务开始时明确要求等待确认。
+可编辑 Case 的本机运行方式使用当前选定的项目 Python：
 
-OptAgent 会区分可行解、已证明的最优解、时间限制、不可行、无界以及环境或程序错误，并根据实际证据说明验证范围。
+    cd <artifact_dir>
+    python run.py solve
+    python run.py check
 
-## Python 和其他依赖
+solve 的可读方案与摘要分别位于 results/local/solution.json 和 results/local/summary.md；执行记录位于 results/local/.optagent/execution.json。check 摘要位于 results/check/summary.md，检查记录位于 results/check/.optagent/check.json。修改输入或代码后，应重新运行 solve 和 check；本地 Case 的新结果不会自动改变原 Core Review 的绑定证据。
 
-项目需要可用的本地 Python。建议使用 Python 3.11 或更新版本，并按当前任务安装所需的计算库和求解器。
+明确要求可复现 ZIP 时，按导出 README 的说明运行；标准入口为：
 
-仓库提供角色配置、工具脚本和求解模板，不包含已经安装好的 Python 环境、商业求解器许可证或完整 TeX 环境。Codex 会检查本地解释器、求解器及其可用性；具体安装方式根据操作系统和现有环境选择。
+    python -I reproduce/run.py --output-dir <新的绝对路径>
 
-当前提供自动代码模板的后端包括：
+## 求解器和许可
 
-| 后端 | 主要用途 | 环境要求 |
-| --- | --- | --- |
-| `pulp` | 线性与混合整数规划 | PuLP 及可用的 CBC |
-| `gurobipy` | 线性、整数和 Gurobi 支持的其他规划 | Gurobi Python 接口及有效授权 |
-| `ortools-linear` | OR-Tools 线性求解接口 | OR-Tools 及适合问题的后端 |
-| `ortools-cp-sat` | 整数与约束规划 | OR-Tools |
-| `cvxpy` | 凸优化建模 | CVXPY 及适用的求解器 |
-| `pyomo-cbc` | 通过 Pyomo 求解线性与整数模型 | Pyomo 和 CBC |
-| `pyomo-ipopt` | 通过 Pyomo 求解适用的连续非线性模型 | Pyomo 和 Ipopt |
+backend_id 必须在 Candidate 中明确指定，没有隐式默认求解器。Core 会针对当前运行时探测接口并记录能力、版本、状态和失败原因。一个 solver 出现在 schema、技能参考、pip 包列表或历史日志中，并不证明当前机器可用。
 
-实际选择取决于模型结构、运行环境和用户要求。注册表中列出的其他求解器不等于已经提供自动生成模板；商业求解器还需检查授权和规模限制。
+Highs 安装组提供 Pyomo、highspy 和 NumPy。其他后端可能需要额外 Python 包、外部二进制、环境变量或商业许可。Gurobi、CPLEX、Xpress、MOSEK 等商业后端必须使用用户本机合法配置的许可证；不可用时按实际失败记录，不能伪称支持或自动切换到语义不同的模型。
 
-生成中文报告 PDF 通常需要 XeLaTeX，建议同时安装 `latexmk`，并准备模板所需字体和宏包。英文报告也需要可用的 TeX 编译环境。模板含有 `ctex` 等中文支持，编译时应核对实际使用的引擎。
+完整报告默认使用 Markdown。用户明确要求 LaTeX/PDF 时使用随 opt-writing 技能提供的中英文模板，在本机安装的 TeX 工具下构建，并核对实际 PDF；存在 .tex 或编译命令成功都不能代替读取 PDF 成品。模板不包含 TeX 系统、字体或外部求解器。
 
-如果只需要 Markdown 报告，可以在任务开始时明确指定，无需安装 TeX。读取文件、处理数据和绘图可能还需要 pandas、openpyxl、NumPy、Matplotlib 等库，按任务需要配置即可。
+## 本地路径和安全边界
 
-## OptGraph 建模参考
+- `.agents/skills/` 存放随仓库提供的 `opt-workflow`、`opt-review`、`opt-report` 和 `opt-writing`；Codex 从此项目技能目录发现技能。
+- `.codex/config.toml` 注册专职 `opt-verifier` 角色，`.codex/agents/opt-verifier.toml` 提供其指令。两者都不固定用户模型、effort、sandbox、审批或权限。
+- Core 的 role/session 校验是工作流身份管理，不是强安全边界；同一用户可在本机提供其他角色值。
+- `.reaslab/optagent/` 与本地凭证、密钥和运行临时文件不应提交到公开仓库。仓库忽略本地 Core 状态、环境文件、虚拟环境、Python 缓存与 pytest 产物。
+- 只清理自己在本任务中创建且已确认不再使用的临时材料；保留用户输入、正式代码、Case 运行闭包和证据。
 
-OptGraph 是随项目附带的本地优化建模知识图谱，收录问题类别、标准模型、约束模式、变量规则、参考案例、典型错误、修正建议和验证检查项。
+## 许可证
 
-建模时，OptAgent 会根据题目特征检索相关结构，作为模型选择和约束检查的参考。对于带有模型蓝图的条目，可以在核对适用条件后绑定当前数据，构建具体模型。
-
-本地检索采用确定性规则，不需要下载向量模型。当本地匹配不足时，检索工具默认尝试从允许的官方来源补充参考案例，并保存缓存；网络不可用时保留本地结果。需要完全离线运行时，可以明确要求关闭网络回退，工具也提供 `--no-network-fallback` 选项。
-
-图谱中的教学案例、官方来源案例和已复现结果有各自的来源与验证标记。找到参考代码或相似模型后，仍需检查它是否覆盖当前题目的约束，并实际求解和验证。
-
-知识结构、来源及检索说明见 [OptGraph README](https://github.com/reaslab/OptAgent-CodexBundle-Public/blob/main/.agents/skills/opt-formulation/knowledge/README.md)。
-
-## 在哪里查看结果
-
-每个任务按案例保存在：
-
-```text
-OptAgent-CodexBundle-Public/cases/<案例名称>/
-```
-
-默认 LaTeX 报告任务的目录通常包括：
-
-```text
-cases/case_001_base/
-├── README.md
-├── Problem.md
-├── code/
-│   ├── README.md
-│   ├── run.py
-│   ├── requirements.txt
-│   └── data/
-├── outputs/
-└── paper/
-    ├── main.tex
-    ├── sections/
-    └── main.pdf
-```
-
-其中：
-
-- `README.md`：案例入口、当前结果和文件导航；
-- `Problem.md`：案例题目；
-- `code/`：可复跑代码、依赖、公开输入快照和适用的模型导出；
-- `outputs/`：实际结果表、图表、数据导出和附件；
-- `paper/`：LaTeX 源码，以及编译成功后生成的 `main.pdf`。
-
-明确选择 Markdown 时，最终报告保存在 `report/final.md`，无需创建 LaTeX 文稿或 PDF。当前版本默认选择 LaTeX 报告，Markdown 是可选的单格式交付方式。
-
-内部状态、结构化模型、运行日志、验证诊断和决策记录保存在隐藏的 `.optagent/` 目录中。日常查看结果，从对应案例的 `README.md` 进入即可。
-
-求解代码的统一入口为 `code/run.py`。独立复跑前，先阅读该案例的 `code/README.md`，按照依赖、后端、输入和参数说明运行。
-
-继续修改时，直接告诉 Codex 当前案例和要修改的内容，不需要重新开始整个问题。更换题目、调整参数、重新验证或只修订报告，会根据影响范围进入相应流程。
-
-## 常见情况
-
-**Codex 没有加载角色或 skills**
-
-确认启动时进入了本项目目录，或使用了 `codex -C /path/to/OptAgent-CodexBundle-Public`。检查目录信任、Codex 版本，以及 `.codex/config.toml`、`.codex/agents/` 和 `.agents/skills/` 是否完整。
-
-**无法读取 PDF、Word 或 Excel**
-
-把报错交给 Codex，它会检查所需的本地读取工具。扫描版 PDF 和图片可能需要 OCR，复杂表格需要核对提取结果。
-
-**求解器无法运行或提示许可证问题**
-
-让 Codex 检查实际使用的 Python 环境、求解器和授权。必要时选择能保持模型含义的可用后端；安装 Python 接口后仍需确认求解器能够实际运行。
-
-**求解结束但没有证明最优**
-
-查看求解状态、可行解、界限和最优性间隙。可以要求增加时间预算、调整模型或比较其他后端。已有可行解与最优性证明需要分别报告。
-
-**模型被判定不可行**
-
-要求检查数据、单位、变量边界和冲突约束。若允许放宽要求，请明确指出可以调整哪些约束；报告应说明调整及其影响。
-
-**报告没有生成 PDF**
-
-让 Codex 检查 XeLaTeX、`latexmk`、字体、宏包和编译记录，并继续修复。当前版本在编译不可用或失败时可以保留完整 LaTeX 源码并说明状态；文件夹中有源码不代表已经生成 PDF。
-
-**网络不可用或无法补充参考案例**
-
-使用本地 OptGraph 继续建模，必要时明确关闭网络回退。在线参考未获取成功不能当成已核对的证据。
-
-**想比较多个方案或进行敏感性分析**
-
-指出原案例、调整项和比较指标，要求实际运行必要的变体。比较、敏感性、基准和 Pareto 等分析会建立相应案例，表格放在 `outputs/`，解释写入所选报告格式。
-
-## 贡献者
-
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/optsuite"><img src="https://github.com/optsuite.png?size=96" width="80" alt="Wen Zaiwen"><br><sub><b>Wen Zaiwen</b></sub><br><sub>@optsuite</sub></a></td>
-    <td align="center"><a href="https://github.com/TraFifholz"><img src="https://github.com/TraFifholz.png?size=96" width="80" alt="Zheng Libin"><br><sub><b>Zheng Libin</b></sub><br><sub>@TraFifholz</sub></a></td>
-    <td align="center"><a href="https://github.com/ChenYuxuan-maple"><img src="https://github.com/ChenYuxuan-maple.png?size=96" width="80" alt="Chen Yuxuan"><br><sub><b>Chen Yuxuan</b></sub><br><sub>@ChenYuxuan-maple</sub></a></td>
-    <td align="center"><a href="https://github.com/glhglhglh6"><img src="https://github.com/glhglhglh6.png?size=96" width="80" alt="Guo Luhong"><br><sub><b>Guo Luhong</b></sub><br><sub>@glhglhglh6</sub></a></td>
-  </tr>
-</table>
-
-## 来源与许可证
-
-本项目是 [ReasLab OptAgent](https://github.com/reaslab/Reaslab-OptAgent) 工作流的本地 Codex 配置包，包含原生角色、领域技能、工具脚本、求解模板和 OptGraph 建模知识。
-
-OptGraph 中的部分参考案例来自 [Google OR-Tools](https://github.com/google/or-tools) 和 [Gurobi Modeling Examples](https://github.com/Gurobi/modeling-examples)，各条目保留来源与验证信息。第三方软件和材料遵循各自的许可证与授权条款。
-
-当前仓库未附顶层 `LICENSE` 文件，项目许可证以维护者后续发布的声明为准。
+当前仓库没有顶层 LICENSE 文件，也没有声明第一方代码和 skills 的通用再分发许可。没有在本次迁移中添加或推断 MIT、Apache 等许可。Core 内附的第三方 schema 文件及其 LICENSE/NOTICE 按原样保留，并应与第一方代码许可分别理解。
