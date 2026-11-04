@@ -921,6 +921,187 @@ def test_python_execute_deadline_is_shared_and_bound_into_dispatch_digest(core):
         _dispatch_plan(store, case_id, changed_digest_run, prepared)
 
 
+def test_local_dispatch_rebuild_and_diagnostic_receipt_anchor_use_frozen_run_identity(core, monkeypatch):
+    from optagent_core.api import dispatch_dynamic
+    from optagent_core import runner as runner_module
+    from optagent_core.delivery import _run_observation_refs
+    from optagent_core.runner import _dispatch_plan, _load_prepared
+
+    case_id, _, _ = core["create_case"](raw=b"The diagnostic claim cites the exact local process receipt.")
+    candidate_id = _core11_register_candidate(core, case_id)
+    state = core["store"]().read_case(case_id)
+    prepared_reply = core["call"]("optagent.run", {
+        "op": "prepare", "case_id": case_id,
+        "expected_state_revision": state["state_revision"],
+        "candidate_id": candidate_id, "solve_options": _core11_solve_options(),
+    })
+    assert prepared_reply["ok"], prepared_reply
+    prepared_id = prepared_reply["result"]["prepared"]["id"]
+
+    state = core["store"]().read_case(case_id)
+    local_context = {**core["context"](), "local_mode": True}
+    started = dispatch_dynamic("optagent.run", {
+        "op": "start", "case_id": case_id, "prepared_id": prepared_id,
+        "expected_state_revision": state["state_revision"],
+    }, local_context)
+    assert started.get("kind") == "start_plan", started
+    run_id = started["plan"]["run_id"]
+    store = core["store"]()
+    run, run_ref = read_run(store, case_id, run_id)
+    prepared, _, _ = _load_prepared(store, case_id, prepared_id)
+
+    # A reader's current interpreter must not replace the executable frozen by this Run.
+    frozen_executable = run["local_process"]["executable"]
+    monkeypatch.setattr(runner_module.sys, "executable", str(core["workspace"] / "reader-python.exe"))
+    rebuilt = _dispatch_plan(store, case_id, run, prepared)
+    assert rebuilt["local_process"]["executable"] == frozen_executable
+    assert rebuilt["request_digest"] == run["local_process"]["request_digest"]
+
+    changed_request = dict(run)
+    changed_request["local_process"] = {
+        **run["local_process"],
+        "request_digest": "f" * 64,
+    }
+    with pytest.raises(ContractError, match="reconstructed local process digest"):
+        _dispatch_plan(store, case_id, changed_request, prepared)
+
+    changed_http_identity = dict(run)
+    changed_http_identity["http_request_digest"] = "1" * 64
+    with pytest.raises(ContractError, match="non-placeholder HTTP request digest"):
+        _dispatch_plan(store, case_id, changed_http_identity, prepared)
+
+    receipt = {
+        "schema_version": 2,
+        "request_digest": run["local_process"]["request_digest"],
+        "observation": "spawned",
+        "pid": 1234,
+        "returncode": 1,
+        "timed_out": False,
+        "stop_reason": None,
+        "stop_confirmed": None,
+        "started_at": "2026-01-01T00:00:00Z",
+        "completed_at": "2026-01-01T00:00:01Z",
+        "stdout_base64": "",
+        "stderr_base64": "",
+        "error_code": "worker_failed",
+    }
+    receipt_path = f".reaslab/optagent/cases/{case_id}/runs/{run_id}/local-process/execute-receipt.json"
+    receipt_ref = store.write_immutable(receipt_path, canonical_json_bytes(receipt), "application/json")
+
+    def attach_receipt(latest):
+        latest["local_process"]["receipt"] = receipt_ref
+
+    _updated, run_ref = publish_run_update(store, case_id, run_id, attach_receipt)
+    run, _ = read_run(store, case_id, run_id)
+    allowed = _run_observation_refs(store, case_id, run, run_ref)
+    assert receipt_ref in allowed
+
+    foreign_run_id = str(uuid.uuid4())
+    foreign_receipt_ref = store.write_immutable(
+        f".reaslab/optagent/cases/{case_id}/runs/{foreign_run_id}/local-process/execute-receipt.json",
+        canonical_json_bytes(receipt),
+        "application/json",
+    )
+    foreign_receipt_run = dict(run)
+    foreign_receipt_run["local_process"] = {**run["local_process"], "receipt": foreign_receipt_ref}
+    with pytest.raises(ContractError, match="outside its fixed Run path"):
+        _run_observation_refs(store, case_id, foreign_receipt_run, run_ref)
+
+    http_response_ref = store.write_immutable(
+        f".reaslab/optagent/cases/{case_id}/runs/{run_id}/output/transport-response.json",
+        b'{"dispatch":"unexpected-http-response"}',
+        "application/json",
+    )
+    mixed_transport_run = dict(run)
+    mixed_transport_run["transport"] = {**run["transport"], "response": http_response_ref}
+    with pytest.raises(ContractError, match="mixes local and remote observations"):
+        _run_observation_refs(store, case_id, mixed_transport_run, run_ref)
+
+    malformed_receipt_run = dict(run)
+    malformed_receipt_run["local_process"] = {**run["local_process"], "receipt": "receipt.json"}
+    with pytest.raises(ContractError):
+        _run_observation_refs(store, case_id, malformed_receipt_run, run_ref)
+
+    changed_receipt_run = dict(run)
+    changed_receipt_run["local_process"] = {
+        **run["local_process"],
+        "receipt": {**receipt_ref, "sha256": "0" * 64},
+    }
+    with pytest.raises(ContractError):
+        _run_observation_refs(store, case_id, changed_receipt_run, run_ref)
+
+    review_id = _core11_begin_note(core, case_id, candidate_id, [run_id])
+    claims = [
+        {
+            "kind": "formulation_fidelity", "scope": "The formulation remains unresolved.",
+            "conditions": [], "evidence_refs": [], "support": "unresolved",
+        },
+        {
+            "kind": "feasibility", "scope": "No feasible point is claimed.",
+            "conditions": [], "evidence_refs": [], "support": "unresolved",
+        },
+        {
+            "kind": "optimality", "scope": "No optimality result is claimed.",
+            "conditions": [], "evidence_refs": [], "support": "unresolved",
+        },
+        {
+            "kind": "diagnostic", "scope": "The exact local worker receipt records the failed execution.",
+            "conditions": [], "evidence_refs": [receipt_ref], "support": "supported",
+        },
+    ]
+    closed = _core11_close(core, case_id, review_id, claims)
+    assert closed["ok"], closed
+    reviewed, _ = store.read_family_record(case_id, "reviews", review_id)
+    assert reviewed["conclusion"]["claims"][-1]["evidence_refs"] == [receipt_ref]
+
+
+def test_local_without_dispatch_error_code_remains_a_diagnostic_observation(core):
+    from optagent_core.api import dispatch_dynamic
+    from optagent_core.runner import dispatch_run_bridge
+
+    case_id, _, _ = core["create_case"](raw=b"A cancelled pre-dispatch local attempt remains auditable.")
+    candidate_id = _core11_register_candidate(core, case_id)
+    state = core["store"]().read_case(case_id)
+    prepared_reply = core["call"]("optagent.run", {
+        "op": "prepare", "case_id": case_id,
+        "expected_state_revision": state["state_revision"],
+        "candidate_id": candidate_id, "solve_options": _core11_solve_options(),
+    })
+    assert prepared_reply["ok"], prepared_reply
+    prepared_id = prepared_reply["result"]["prepared"]["id"]
+
+    state = core["store"]().read_case(case_id)
+    local_context = {**core["context"](), "local_mode": True}
+    started = dispatch_dynamic("optagent.run", {
+        "op": "start", "case_id": case_id, "prepared_id": prepared_id,
+        "expected_state_revision": state["state_revision"],
+    }, local_context)
+    assert started.get("kind") == "start_plan", started
+    plan = started["plan"]
+    bridge = dispatch_run_bridge(core["store"](), {
+        "kind": "start_recheck", "case_id": case_id,
+        "run_id": plan["run_id"], "prepared_id": prepared_id,
+        "dispatch_nonce": plan["dispatch_nonce"],
+        "request_digest": plan["request_digest"],
+    }, {**local_context, "cancellation_observed": True})
+    assert bridge["kind"] == "complete", bridge
+    assert bridge["reply"]["error"]["code"] == "stale_revision"
+
+    store = core["store"]()
+    run, run_ref = read_run(store, case_id, plan["run_id"])
+    assert run["dispatch_state"] == "without_dispatch"
+    assert run["transport"]["error_code"] == "stale_revision"
+    review_id = _core11_begin_note(core, case_id, candidate_id, [plan["run_id"]])
+    closed = _core11_close(core, case_id, review_id, [{
+        "kind": "diagnostic",
+        "scope": "The local attempt was fenced before dispatch and has no worker result.",
+        "conditions": [],
+        "evidence_refs": [run_ref],
+        "support": "supported",
+    }])
+    assert closed["ok"], closed
+
+
 def test_new_start_after_unresolved_latest_requires_exact_supersession_and_recheck_head(core, monkeypatch):
     from optagent_core.api import dispatch_dynamic
     from optagent_core import runner as runner_module

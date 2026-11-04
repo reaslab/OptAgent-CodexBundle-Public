@@ -9,6 +9,7 @@ from .contracts import ContractError, canonical_json_bytes, require_id, require_
 from .delivery import (
     _ref_identity,
     _result_path_parts,
+    _run_observation_refs,
     _validate_candidate_record,
     _validate_case_evidence_ref,
     _verified_run,
@@ -890,6 +891,9 @@ def _review_evidence_index(
         run, _ = _read_json_ref(store, run_ref, pointer=f"/binding_evidence_refs/runs/{run_id}")
         if run.get("run_id") != run_id:
             raise ContractError("artifact_changed", "pinned Run record identity differs")
+        if run.get("local_process") is not None:
+            for ref in _run_observation_refs(store, case_id, run, run_ref):
+                _add_index_ref(index, ref)
         for container, key in ((run.get("transport"), "response"), (run.get("platform"), "status_evidence")):
             if isinstance(container, Mapping):
                 _add_index_ref(index, container.get(key))

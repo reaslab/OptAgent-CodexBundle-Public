@@ -3717,7 +3717,7 @@ def _claim_anchors(
             verified = _diagnostic_run_context(store, state, run_id)
             # Keep every actual RunRecord/transport observation included in this
             # one ReviewedClaim; none can disappear by filtering selected IDs.
-            for ref in _run_observation_refs(verified["run"], verified["run_ref"]):
+            for ref in _run_observation_refs(store, case_id, verified["run"], verified["run_ref"]):
                 if _ref_identity(ref) in _refs_by_identity(refs, pointer="/claim/evidence_refs"):
                     anchors.add(_ref_identity(ref))
                     anchor_runs.add(run_id)
@@ -4226,11 +4226,48 @@ def _claim_selected_runs(
     return result
 
 
-def _run_observation_refs(run: Mapping[str, Any], run_ref: Mapping[str, Any]) -> list[dict[str, Any]]:
+def _run_observation_refs(
+    store: CaseStore,
+    case_id: str,
+    run: Mapping[str, Any],
+    run_ref: Mapping[str, Any],
+) -> list[dict[str, Any]]:
     result = [dict(run_ref)]
+    local_process = run.get("local_process")
+    if local_process is not None:
+        transport = run.get("transport")
+        platform = run.get("platform")
+        if (
+            not isinstance(local_process, Mapping)
+            or (
+                isinstance(transport, Mapping)
+                and any(transport.get(key) is not None for key in ("http_status", "response"))
+            )
+            or (isinstance(platform, Mapping) and platform.get("status_evidence") is not None)
+        ):
+            raise ContractError("artifact_changed", "diagnostic Run mixes local and remote observations")
     for container, key in ((run.get("transport"), "response"), (run.get("platform"), "status_evidence")):
         if isinstance(container, Mapping) and isinstance(container.get(key), Mapping):
             result.append(validate_ref_shape(dict(container[key])))
+    if local_process is not None:
+        receipt_value = local_process.get("receipt")
+        if receipt_value is not None:
+            receipt_ref = validate_ref_shape(receipt_value, pointer="/run/local_process/receipt")
+            expected_path = (
+                f".reaslab/optagent/cases/{case_id}/runs/{run['run_id']}"
+                "/local-process/execute-receipt.json"
+            )
+            if receipt_ref["path"] != expected_path:
+                raise ContractError("artifact_changed", "local process receipt is outside its fixed Run path")
+            receipt_raw = store.read_ref(receipt_ref)
+            receipt = strict_json_loads(receipt_raw, max_bytes=len(receipt_raw))
+            if (
+                not isinstance(receipt, Mapping)
+                or receipt.get("schema_version") != 2
+                or receipt.get("request_digest") != local_process.get("request_digest")
+            ):
+                raise ContractError("artifact_changed", "local process receipt does not match its frozen Run identity")
+            result.append(receipt_ref)
     cancel = run.get("cancel")
     if isinstance(cancel, Mapping):
         for value in (cancel.get("evidence"), cancel.get("stop_ack")):
@@ -4248,12 +4285,12 @@ def _run_observation_refs(run: Mapping[str, Any], run_ref: Mapping[str, Any]) ->
 def _has_observation_ref(store: CaseStore, state: Mapping[str, Any], run_id: str, ref: Mapping[str, Any]) -> bool:
     try:
         verified = _diagnostic_run_context(store, state, run_id)
+        allowed = _run_observation_refs(store, state["case_id"], verified["run"], verified["run_ref"])
+        if _ref_identity(ref) not in {_ref_identity(item) for item in allowed}:
+            return False
+        store.read_ref(ref)
     except ContractError:
         return False
-    allowed = _run_observation_refs(verified["run"], verified["run_ref"])
-    if _ref_identity(ref) not in {_ref_identity(item) for item in allowed}:
-        return False
-    store.read_ref(ref)
     return True
 
 

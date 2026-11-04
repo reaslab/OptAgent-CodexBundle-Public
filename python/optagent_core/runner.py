@@ -933,9 +933,15 @@ def _python_execute_request(code: str, execution_budget_seconds: Any) -> tuple[s
     return request_body, http_timeout_seconds, request_digest
 
 
-def _local_process_request(store: CaseStore, invocation_ref: Mapping[str, Any], execution_budget_seconds: Any) -> dict[str, Any]:
+def _local_process_request(
+    store: CaseStore,
+    invocation_ref: Mapping[str, Any],
+    execution_budget_seconds: Any,
+    *,
+    executable: str | None = None,
+) -> dict[str, Any]:
     timeout_seconds = math.ceil(float(execution_budget_seconds))
-    executable = os.path.abspath(sys.executable)
+    executable = os.path.abspath(sys.executable if executable is None else executable)
     arguments = [
         "-I",
         "-m",
@@ -958,7 +964,6 @@ def _dispatch_plan(
     case_id: str,
     run: Mapping[str, Any],
     prepared: Mapping[str, Any],
-    context: Mapping[str, Any],
 ) -> dict[str, Any]:
     invocation_ref = validate_ref_shape(run["worker_invocation"], pointer="/run/worker_invocation")
     input_ref = validate_ref_shape(prepared["input_manifest"], pointer="/prepared/input_manifest")
@@ -976,9 +981,23 @@ def _dispatch_plan(
     invocation_raw = store.read_ref(invocation_ref)
     if invocation_raw != canonical_json_bytes(invocation):
         raise ContractError("artifact_changed", "worker invocation bytes differ from its run binding")
-    if context.get("local_mode") is True:
-        local_process = _local_process_request(store, invocation_ref, prepared["solve_options"]["execution_budget_seconds"])
-        if local_process["request_digest"] != run.get("local_process", {}).get("request_digest"):
+    frozen_local = run.get("local_process")
+    if frozen_local is not None:
+        if not isinstance(frozen_local, Mapping):
+            raise ContractError("artifact_changed", "persisted local process identity is invalid")
+        if run.get("http_request_digest") != "0" * 64:
+            raise ContractError("artifact_changed", "local Run has a non-placeholder HTTP request digest")
+        frozen_executable = frozen_local.get("executable")
+        if not isinstance(frozen_executable, str) or not frozen_executable:
+            raise ContractError("artifact_changed", "persisted local process executable is invalid")
+        local_process = _local_process_request(
+            store,
+            invocation_ref,
+            prepared["solve_options"]["execution_budget_seconds"],
+            executable=frozen_executable,
+        )
+        identity_fields = ("schema_version", "executable", "arguments", "timeout_seconds", "request_digest")
+        if any(frozen_local.get(key) != local_process[key] for key in identity_fields):
             raise ContractError("artifact_changed", "reconstructed local process digest differs from persisted run")
         return {
             "run_id": run["run_id"],
@@ -3165,7 +3184,7 @@ def _start_recheck(store: CaseStore, phase: Mapping[str, Any], context: Mapping[
             manifest["runtime_bundle"]["manifest"],
             prepared_schema_version=manifest["schema_version"],
         )
-        plan = _dispatch_plan(store, case_id, run, prepared, context)
+        plan = _dispatch_plan(store, case_id, run, prepared)
     except ContractError as exc:
         return _mark_without_dispatch(store, case_id, run_id, expected_nonce=nonce, error=exc)
 
