@@ -15,13 +15,6 @@ from .contracts import ContractError
 
 ViolationSink = Callable[[Mapping[str, Any]], None]
 
-_EXPECTED_PLATFORM = {
-    "os": "Linux",
-    "architecture": "x86_64/amd64",
-    "python_implementation": "CPython",
-    "python_version": "3.12.x",
-}
-
 _OBJECTIVE_VALUE_FIELDS = {"component", "sense", "unit", "value"}
 _OBJECTIVE_VALUE_REL_TOLERANCE = 1e-8
 _OBJECTIVE_VALUE_ABS_TOLERANCE = 1e-8

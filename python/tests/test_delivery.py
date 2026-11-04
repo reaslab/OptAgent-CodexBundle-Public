@@ -14,7 +14,7 @@ from urllib.parse import unquote
 
 import pytest
 
-from optagent_core.contracts import ContractError, canonical_json_bytes, ref_from_bytes, strict_json_loads
+from optagent_core.contracts import ContractError, canonical_json_bytes, ref_from_bytes, strict_json_loads, windows_long_path
 from family_fixtures import current_portable_review_fixture, publish_run_update, read_run
 from optagent_core.data import PortableReader, load_data_bundle, read_prepared_source_records
 from optagent_core.delivery import (
@@ -1479,7 +1479,7 @@ def test_direct_e2e(core, business_objective_delta, checker_returns_uncovered, t
     for path, source in ((model_path, model_source), (checker_path, checker_source)):
         target = core["workspace"].joinpath(*path.split("/"))
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(source, encoding="utf-8")
+        target.write_bytes(source.encode("utf-8"))
 
     state = store.read_case(case_id)
     registered = core["call"]("optagent.case", {
@@ -3999,7 +3999,7 @@ def test_real_package_zip_maps_every_selected_run_seal_output_and_uses_product_b
     try:
         _test_real_package_zip(core)
     finally:
-        shutil.rmtree(workspace)
+        shutil.rmtree(windows_long_path(workspace))
 
 
 def _test_real_package_zip(core):
